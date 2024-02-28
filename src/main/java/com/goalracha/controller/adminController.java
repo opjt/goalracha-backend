@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class adminController {
     @GetMapping("/admin2")
     public String admin() {
-        return "admin page2";
+        return "admin page22332";
     }
     
 }
