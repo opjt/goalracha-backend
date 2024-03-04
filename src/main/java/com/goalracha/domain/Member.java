@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name="member")
@@ -30,12 +30,16 @@ public class Member {
     @Column(name = "nickname", unique= true)
     private String nickname;//유저 닉네임
 
+    @Column(name = "name")
+    private String name; //유저 이름
+
     @Column(name = "tel")
     private String tel; //유저 전화번호
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone = "Asia/Seoul")
     @Column(name = "createdate")
-    private LocalDate createDate; //유저 생성날짜
+    private Date createDate; //유저 생성날짜
 
     @Column(name = "email")
     private String email; //이메일

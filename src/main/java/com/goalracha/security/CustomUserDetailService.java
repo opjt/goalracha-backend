@@ -29,6 +29,7 @@ public class CustomUserDetailService implements UserDetailsService {
                 member.getUserId(),
                 member.getPw(),
                 member.getNickname(),
+                member.getName(),
                 member.getTel(),
                 member.getCreateDate(),
                 member.getEmail(),

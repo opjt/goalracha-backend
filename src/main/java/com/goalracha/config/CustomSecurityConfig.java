@@ -2,7 +2,9 @@ package com.goalracha.config;
 
 
 import com.goalracha.security.filter.JWTCheckFilter;
+import com.goalracha.security.handler.APILoginFailHandler;
 import com.goalracha.security.handler.APILoginSuccessHandler;
+import com.goalracha.security.handler.CustomAccessDeniedHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
@@ -42,12 +44,12 @@ public class CustomSecurityConfig {
         http.formLogin(config -> {
             config.loginPage("/api/member/login");
            config.successHandler(new APILoginSuccessHandler()); // 추가
-            /*       config.failureHandler(new APILoginFailHandler()); // 실패시*/
+                   config.failureHandler(new APILoginFailHandler()); // 실패시
         });
         http.addFilterBefore(new JWTCheckFilter(), UsernamePasswordAuthenticationFilter.class); // JWT 체크 추가
- /*       http.exceptionHandling(config -> {
+        http.exceptionHandling(config -> {
             config.accessDeniedHandler(new CustomAccessDeniedHandler());
-        });*/
+        });
         return http.build();
 
     }

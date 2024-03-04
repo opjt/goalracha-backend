@@ -5,8 +5,8 @@ import io.jsonwebtoken.security.Keys;
 import lombok.extern.log4j.Log4j2;
 
 import javax.crypto.SecretKey;
+import java.sql.Date;
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.Map;
 
 @Log4j2
