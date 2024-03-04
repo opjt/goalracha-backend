@@ -28,8 +28,11 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
     annotationProcessor 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.projectlombok:lombok' // 롬복 어노테이션 사용용도
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.2' // modelmapper 추가
+    }
 
 tasks.named('test') {
     useJUnitPlatform()
