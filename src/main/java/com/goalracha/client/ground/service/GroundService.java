@@ -1,6 +1,8 @@
 package com.goalracha.client.ground.service;
 
 import com.goalracha.client.ground.dto.GroundDTO;
+import com.goalracha.client.ground.dto.PageRequestDTO;
+import com.goalracha.client.ground.dto.PageResponseDTO;
 
 public interface GroundService {
 
@@ -15,4 +17,7 @@ public interface GroundService {
 
     // 구장 삭제
     void remove(Long gno);
+
+    // 구장관리 페이지 처리
+    PageResponseDTO<GroundDTO> list(PageRequestDTO pageRequestDTO);
 }

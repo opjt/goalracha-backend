@@ -2,15 +2,23 @@ package com.goalracha.client.ground.service;
 
 
 import com.goalracha.client.ground.dto.GroundDTO;
+import com.goalracha.client.ground.dto.PageRequestDTO;
+import com.goalracha.client.ground.dto.PageResponseDTO;
 import com.goalracha.domain.Ground;
 import com.goalracha.repository.GroundRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -75,6 +83,27 @@ public class GroundServiceImpl implements GroundService {
     @Override
     public void remove(Long gno) {
         groundRepository.deleteById(gno);
+    }
+
+    @Override
+    public PageResponseDTO<GroundDTO> list(PageRequestDTO pageRequestDTO) {
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPage() - 1,    // 1페이지는 0이여서 -1
+                pageRequestDTO.getSize(),
+                Sort.by(new Sort.Order(Sort.Direction.DESC, "gno"))
+        );
+
+        Page<Ground> result = groundRepository.findAll(pageable);
+
+        List<GroundDTO> dtoList = result.getContent().stream()
+                .map(ground -> modelMapper.map(ground, GroundDTO.class)).collect(Collectors.toList());
+
+        long totalCount = result.getTotalElements();
+
+        PageResponseDTO<GroundDTO> responseDTO = PageResponseDTO.<GroundDTO>withAll()
+                .dtoList(dtoList).pageRequestDTO(pageRequestDTO).totalCount(totalCount).build();
+
+        return responseDTO;
     }
 
 }

@@ -17,10 +17,10 @@ import org.springframework.data.domain.Sort;
 @Log4j2
 @SpringBootTest
 public class GoalrachaApplicationTests {
-@Autowired
-private GroundRepository groundRepository;
-@Autowired
-private GroundService groundService;
+    @Autowired
+    private GroundRepository groundRepository;
+    @Autowired
+    private GroundService groundService;
 
     @Test
     public  void test(){
