@@ -30,6 +30,11 @@ public class Board {
     @Column(name = "createdate", nullable = false)
     private Date createdate; //작성일시
 
+    @PrePersist
+    protected void onCreate() {
+        this.createdate = new Date();
+    }
+
     @Column(name = "editdate")
     private Date editdate; //수정일시
 
