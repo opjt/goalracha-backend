@@ -3,20 +3,20 @@ package com.goalracha.service;
 import com.goalracha.domain.Member;
 import com.goalracha.domain.MemberRole;
 import com.goalracha.dto.MemberDTO;
+import com.goalracha.dto.MemberJoinDTO;
 import com.goalracha.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.LinkedHashMap;
 
@@ -25,7 +25,7 @@ import java.util.LinkedHashMap;
 @Log4j2
 public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
     @Override
     public MemberDTO getKakaoMember(String accessToken) {
@@ -57,6 +57,22 @@ public class MemberServiceImpl implements MemberService{
                 member.getType());
         return memberDTO;
     }
+
+    @Override
+    public void modifyMember(MemberJoinDTO memberJoinDTO) {
+        Member member = memberRepository.findByEmail(memberJoinDTO.getEmail());
+//        MemberDTO edit = MemberDTO.entityToDTO(member);
+//        edit.setName(memberJoinDTO.getName());
+//        edit.setNickname(memberJoinDTO.getNickname());
+//        edit.setTel(memberJoinDTO.getTel());
+
+        member.joinMember(memberJoinDTO.getUNo(), memberJoinDTO.getName(),memberJoinDTO.getNickname(),memberJoinDTO.getTel());
+
+
+        log.info("member info::" + member.toString());
+        memberRepository.save(member);
+    }
+
     private Member createKkoMember(String email) { //카카오 유저 빌더
 
         Member member = Member.builder().email(email).userId(email).nickname(email).pw("null").type(MemberRole.USER).createDate(new Date()).state(1).build();

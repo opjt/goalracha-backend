@@ -29,15 +29,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             log.info("JWT claims: " + claims);
 
             MemberDTO memberDTO = MemberDTO.fromClaims(claims);
-//            Long uNo = Long.parseLong(String.valueOf(claims.get("uNo"))); //claims.get("uNo")가 Integer로 반환해서 재반환
-//
-//            String userId = (String) claims.get("userId");
-//            String pw = (String) claims.get("pw");
-//
-//            String typeStr = (String) claims.get("type");
-//            MemberRole type = MemberRole.valueOf(typeStr); //claims.get("type")이 string으로 반환되서 재봔환
-//
-//            MemberDTO memberDTO = new MemberDTO(uNo, userId,pw,type);
+
             log.info("-----------------------------------");
             log.info(memberDTO);
             log.info(memberDTO.getAuthorities());

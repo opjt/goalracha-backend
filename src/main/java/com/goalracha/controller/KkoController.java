@@ -1,12 +1,12 @@
 package com.goalracha.controller;
 
 import com.goalracha.dto.MemberDTO;
+import com.goalracha.dto.MemberJoinDTO;
 import com.goalracha.service.MemberService;
 import com.goalracha.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -27,5 +27,12 @@ public class KkoController {
         claims.put("accessToken", jwtAccessToken);
         claims.put("refreshToken", jwtRefreshToken);
         return claims;
+    }
+    @PutMapping("/api/member/{uNo}")
+    public Map<String, String> modify(@PathVariable(name="uNo") Long uNo, @RequestBody MemberJoinDTO memberJoinDTO) {
+        memberJoinDTO.setUNo(uNo);
+        log.info("member modify: " + memberJoinDTO);
+        memberService.modifyMember(memberJoinDTO);
+        return Map.of("result", "modified");
     }
 }

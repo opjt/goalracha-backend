@@ -56,4 +56,12 @@ public class Member {
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private MemberRole type; //유저타입 user,owner,admin
+
+    public void joinMember(Long uNo, String name, String nickname, String tel) {
+        this.uNo = uNo;
+        this.nickname = nickname;
+        this.name = name;
+        this.tel = tel;
+
+    }
 }

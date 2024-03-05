@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,10 +27,16 @@ import java.util.Arrays;
 @Log4j2
 @RequiredArgsConstructor
 @EnableMethodSecurity
-public class CustomSecurityConfig {
+public class CustomSecurityConfig  {
     @Bean
     public PasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();
+    }
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
+        return web -> web.ignoring()
+                .requestMatchers("/favicon.ico");
     }
 
     @Bean
@@ -40,10 +47,15 @@ public class CustomSecurityConfig {
         });
         http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.csrf(config -> config.disable());
+//        http.authorizeHttpRequests(Authorize ->
+//                Authorize
+//                        .requestMatchers("/test/**").permitAll()
+//                        .anyRequest().authenticated()
+//        );
 
         http.formLogin(config -> {
             config.loginPage("/api/member/login");
-           config.successHandler(new APILoginSuccessHandler()); // 추가
+            config.successHandler(new APILoginSuccessHandler()); // 추가
                    config.failureHandler(new APILoginFailHandler()); // 실패시
         });
         http.addFilterBefore(new JWTCheckFilter(), UsernamePasswordAuthenticationFilter.class); // JWT 체크 추가
