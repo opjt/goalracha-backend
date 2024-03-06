@@ -4,6 +4,7 @@ import com.goalracha.domain.Member;
 import com.goalracha.domain.MemberRole;
 import com.goalracha.dto.MemberDTO;
 import com.goalracha.dto.MemberJoinDTO;
+import com.goalracha.dto.OwnerJoinDTO;
 import com.goalracha.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
@@ -26,7 +28,7 @@ import java.util.LinkedHashMap;
 public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
     private final ModelMapper modelMapper;
-
+    private final PasswordEncoder passwordEncoder;
     @Override
     public MemberDTO getKakaoMember(String accessToken) {
         String email = getEmailFromKakaoAccessToken(accessToken);
@@ -71,6 +73,35 @@ public class MemberServiceImpl implements MemberService{
 
         log.info("member info::" + member.toString());
         memberRepository.save(member);
+    }
+
+    @Override
+    public boolean checkId(String userid) {
+        log.info(userid);
+        Member member = memberRepository.findByUserId(userid);
+        if(member == null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public Long ownerJoin(OwnerJoinDTO joinDto) {
+        Member member = Member.builder()
+                .type(MemberRole.OWNER)
+                .name(joinDto.getName())
+                .email(joinDto.getEmail())
+                .tel(joinDto.getTel())
+                .businessId(joinDto.getBusiness_id())
+                .businessName(joinDto.getBusiness_name())
+                .userId(joinDto.getId())
+                .pw(passwordEncoder.encode(joinDto.getPw()))
+                .createDate(new Date())
+                .build();
+        Member result = memberRepository.save(member);
+        log.info("user 생성 : :" + result.toString());
+        return result.getUNo();
     }
 
     private Member createKkoMember(String email) { //카카오 유저 빌더

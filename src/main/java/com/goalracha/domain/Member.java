@@ -36,7 +36,6 @@ public class Member {
     @Column(name = "tel")
     private String tel; //유저 전화번호
 
-
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone = "Asia/Seoul")
     @Column(name = "createdate")
     private Date createDate; //유저 생성날짜
