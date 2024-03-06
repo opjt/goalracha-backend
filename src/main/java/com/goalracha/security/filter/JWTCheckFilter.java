@@ -15,6 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+
 @Log4j2
 public class JWTCheckFilter extends OncePerRequestFilter {
     @Override
@@ -52,20 +53,27 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        // Preflight 요청은 체크하지 않음
-        if (request.getMethod().equals("OPTIONS")) {
-            return true;
-        }
         String path = request.getRequestURI();
-        log.info("check uri.............." + path);
-        // api/member/ 경로의 호출은 체크하지 않음
-        if (path.startsWith("/api/member/") || path.startsWith("/api/owner/")) {
-            return true;
-        }
-        // 이미지 조회 경로는 체크하지 않는다면
-        if (path.startsWith("/api/products/view/")) {
-            return true;
-        }
-        return false;
+        // 여기서 /image/ 경로를 검사하지 않도록 설정
+        return path.startsWith("/image/") || path.startsWith("/api/member/");
     }
+
+//    @Override
+//    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+//        // Preflight 요청은 체크하지 않음
+//        if (request.getMethod().equals("OPTIONS")) {
+//            return true;
+//        }
+//        String path = request.getRequestURI();
+//        log.info("check uri.............." + path);
+//        // api/member/ 경로의 호출은 체크하지 않음
+//        if (path.startsWith("/api/member/") || path.startsWith("/api/owner/")) {
+//            return true;
+//        }
+//        // 이미지 조회 경로는 체크하지 않는다면
+//        if (path.startsWith("/api/products/view/")) {
+//            return true;
+//        }
+//        return false;
+//    }
 }
