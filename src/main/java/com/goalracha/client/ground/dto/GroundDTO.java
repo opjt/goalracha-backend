@@ -1,6 +1,9 @@
 package com.goalracha.client.ground.dto;
 
 
+import com.goalracha.domain.Ground;
+import com.goalracha.domain.Member;
+import com.goalracha.dto.MemberDTO;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,4 +40,5 @@ public class GroundDTO {
     private boolean roopIsYn;
     private Long state;
     private Long uno;
+
 }

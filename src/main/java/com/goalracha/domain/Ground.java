@@ -95,11 +95,9 @@ public class Ground {
     public void changeName(String name) {
         this.name = name;
     }
-
     public void changeAddr(String addr) {
         this.addr = addr;
     }
-
     public void changeInAndOut(String inAndOut){
         this.inAndOut = inAndOut;
     }
