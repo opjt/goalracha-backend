@@ -90,7 +90,7 @@ public class GroundServiceImpl implements GroundService {
         Pageable pageable = PageRequest.of(
                 pageRequestDTO.getPage() - 1,    // 1페이지는 0이여서 -1
                 pageRequestDTO.getSize(),
-                Sort.by(new Sort.Order(Sort.Direction.DESC, "gno"))
+                Sort.by(Sort.Direction.DESC, "gno")
         );
 
         Page<Ground> result = groundRepository.findAll(pageable);
