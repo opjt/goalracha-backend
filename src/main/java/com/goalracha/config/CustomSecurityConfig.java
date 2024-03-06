@@ -47,11 +47,7 @@ public class CustomSecurityConfig  {
         });
         http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.csrf(config -> config.disable());
-//        http.authorizeHttpRequests(Authorize ->
-//                Authorize
-//                        .requestMatchers("/test/**").permitAll()
-//                        .anyRequest().authenticated()
-//        );
+
 
         http.formLogin(config -> {
             config.loginPage("/api/member/login");
