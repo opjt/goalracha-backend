@@ -1,8 +1,6 @@
 package com.goalracha.repository;
 
-import com.goalracha.domain.Ground;
-
-import org.springframework.data.domain.Sort;
+import com.goalracha.entity.Ground;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -1,10 +1,6 @@
-package com.goalracha.client.ground.dto;
+package com.goalracha.dto;
 
 
-import com.goalracha.domain.Ground;
-import com.goalracha.domain.Member;
-import com.goalracha.dto.MemberDTO;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

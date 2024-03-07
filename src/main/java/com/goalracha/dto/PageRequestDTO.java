@@ -1,4 +1,4 @@
-package com.goalracha.client.ground.dto;
+package com.goalracha.dto;
 
 
 import lombok.AllArgsConstructor;

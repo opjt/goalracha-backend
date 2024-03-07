@@ -1,6 +1,6 @@
 package com.goalracha.security;
 
-import com.goalracha.domain.Member;
+import com.goalracha.entity.Member;
 import com.goalracha.dto.MemberDTO;
 import com.goalracha.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

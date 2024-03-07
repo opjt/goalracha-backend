@@ -1,4 +1,4 @@
-package com.goalracha.domain;
+package com.goalracha.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

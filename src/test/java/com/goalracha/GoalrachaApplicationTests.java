@@ -1,10 +1,10 @@
 package com.goalracha;
 
-import com.goalracha.client.ground.dto.GroundDTO;
-import com.goalracha.client.ground.dto.PageRequestDTO;
-import com.goalracha.client.ground.dto.PageResponseDTO;
-import com.goalracha.client.ground.service.GroundService;
-import com.goalracha.domain.Ground;
+import com.goalracha.dto.GroundDTO;
+import com.goalracha.dto.PageRequestDTO;
+import com.goalracha.dto.PageResponseDTO;
+import com.goalracha.service.GroundService;
+import com.goalracha.entity.Ground;
 import com.goalracha.repository.GroundRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;

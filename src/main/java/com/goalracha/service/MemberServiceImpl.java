@@ -1,7 +1,7 @@
 package com.goalracha.service;
 
-import com.goalracha.domain.Member;
-import com.goalracha.domain.MemberRole;
+import com.goalracha.entity.Member;
+import com.goalracha.entity.MemberRole;
 import com.goalracha.dto.MemberDTO;
 import com.goalracha.dto.MemberJoinDTO;
 import com.goalracha.dto.OwnerJoinDTO;

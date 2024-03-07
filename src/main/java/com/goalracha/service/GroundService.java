@@ -1,8 +1,8 @@
-package com.goalracha.client.ground.service;
+package com.goalracha.service;
 
-import com.goalracha.client.ground.dto.GroundDTO;
-import com.goalracha.client.ground.dto.PageRequestDTO;
-import com.goalracha.client.ground.dto.PageResponseDTO;
+import com.goalracha.dto.GroundDTO;
+import com.goalracha.dto.PageRequestDTO;
+import com.goalracha.dto.PageResponseDTO;
 
 public interface GroundService {
 
@@ -21,5 +21,4 @@ public interface GroundService {
     // 구장관리 페이지 처리
     PageResponseDTO<GroundDTO> list(PageRequestDTO pageRequestDTO);
 
-    PageResponseDTO<GroundDTO> list2(PageRequestDTO pageRequestDTO);
 }

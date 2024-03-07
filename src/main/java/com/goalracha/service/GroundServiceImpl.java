@@ -1,18 +1,15 @@
-package com.goalracha.client.ground.service;
+package com.goalracha.service;
 
 
-import com.goalracha.client.ground.dto.GroundDTO;
-import com.goalracha.client.ground.dto.PageRequestDTO;
-import com.goalracha.client.ground.dto.PageResponseDTO;
-import com.goalracha.domain.Ground;
+import com.goalracha.dto.GroundDTO;
+import com.goalracha.dto.PageRequestDTO;
+import com.goalracha.dto.PageResponseDTO;
+import com.goalracha.entity.Ground;
 import com.goalracha.repository.GroundRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -118,23 +115,7 @@ public class GroundServiceImpl implements GroundService {
         return responseDTO;
     }
 
-    @Override
-    public PageResponseDTO<GroundDTO> list2(PageRequestDTO pageRequestDTO) {
-        Pageable pageable = PageRequest.of(
-                pageRequestDTO.getPage() - 1, // 1페이지가 0이므로 주의
-                pageRequestDTO.getSize(), Sort.by("tno").descending());
 
-        Page<Ground> result = groundRepository.findAll(pageable);
-
-        List<GroundDTO> dtoList = result.getContent().stream().map(todo -> modelMapper.map(todo, GroundDTO.class)).collect(Collectors.toList());
-
-        long totalCount = result.getTotalElements();
-
-        PageResponseDTO<GroundDTO> responseDTO =PageResponseDTO.<GroundDTO>withAll()
-                .dtoList(dtoList).pageRequestDTO(pageRequestDTO).totalCount(totalCount).build();
-
-        return responseDTO;
-    }
 
 
 }
