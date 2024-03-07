@@ -81,29 +81,60 @@ public class GroundServiceImpl implements GroundService {
     }
 
     @Override
-    public void remove(Long gno) {
+    public void delete(Long gno) {
         groundRepository.deleteById(gno);
     }
 
     @Override
     public PageResponseDTO<GroundDTO> list(PageRequestDTO pageRequestDTO) {
+        int page = pageRequestDTO.getPage();
+        int size = pageRequestDTO.getSize();
+
+        // Oracle의 rownum을 사용하기 위해 offset과 limit을 계산
+        int offset = (page - 1) * size + 1;
+        int endRowNum = offset + size - 1;
+
+        // 정렬 방식 설정
+        Sort sort = Sort.by(Sort.Direction.DESC, "gno");
+
+        // 페이징 및 정렬된 결과 가져오기
+        List<Ground> resultList = groundRepository.findWithPaging(offset, endRowNum);
+
+        // DTO로 변환
+        List<GroundDTO> dtoList = resultList.stream()
+                .map(ground -> modelMapper.map(ground, GroundDTO.class))
+                .collect(Collectors.toList());
+
+        // 전체 엔터티 개수 가져오기
+        long totalCount = groundRepository.count();
+
+        // 응답 DTO 생성
+        PageResponseDTO<GroundDTO> responseDTO = PageResponseDTO.<GroundDTO>withAll()
+                .dtoList(dtoList)
+                .pageRequestDTO(pageRequestDTO)
+                .totalCount(totalCount)
+                .build();
+
+        return responseDTO;
+    }
+
+    @Override
+    public PageResponseDTO<GroundDTO> list2(PageRequestDTO pageRequestDTO) {
         Pageable pageable = PageRequest.of(
-                pageRequestDTO.getPage() - 1,    // 1페이지는 0이여서 -1
-                pageRequestDTO.getSize(),
-                Sort.by(Sort.Direction.DESC, "gno")
-        );
+                pageRequestDTO.getPage() - 1, // 1페이지가 0이므로 주의
+                pageRequestDTO.getSize(), Sort.by("tno").descending());
 
         Page<Ground> result = groundRepository.findAll(pageable);
 
-        List<GroundDTO> dtoList = result.getContent().stream()
-                .map(ground -> modelMapper.map(ground, GroundDTO.class)).collect(Collectors.toList());
+        List<GroundDTO> dtoList = result.getContent().stream().map(todo -> modelMapper.map(todo, GroundDTO.class)).collect(Collectors.toList());
 
         long totalCount = result.getTotalElements();
 
-        PageResponseDTO<GroundDTO> responseDTO = PageResponseDTO.<GroundDTO>withAll()
+        PageResponseDTO<GroundDTO> responseDTO =PageResponseDTO.<GroundDTO>withAll()
                 .dtoList(dtoList).pageRequestDTO(pageRequestDTO).totalCount(totalCount).build();
 
         return responseDTO;
     }
+
 
 }

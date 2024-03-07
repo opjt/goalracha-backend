@@ -1,6 +1,8 @@
 package com.goalracha;
 
 import com.goalracha.client.ground.dto.GroundDTO;
+import com.goalracha.client.ground.dto.PageRequestDTO;
+import com.goalracha.client.ground.dto.PageResponseDTO;
 import com.goalracha.client.ground.service.GroundService;
 import com.goalracha.domain.Ground;
 import com.goalracha.repository.GroundRepository;
@@ -82,5 +84,21 @@ public class GoalrachaApplicationTests {
         Long gno = 1L;
         GroundDTO groundDTO = groundService.get(gno);
         log.info(groundDTO);
+    }
+
+    @Test
+    public void testList() {
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(2).size(10).build();
+
+        PageResponseDTO<GroundDTO> response = groundService.list(pageRequestDTO);
+        log.info(response);
+    }
+
+    @Test
+    public void testList2() {
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(2).size(10).build();
+
+        PageResponseDTO<GroundDTO> response = groundService.list2(pageRequestDTO);
+        log.info(response);
     }
 }

@@ -66,6 +66,10 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         if (path.startsWith("/api/products/view/")) {
             return true;
         }
+        // 구장관리 경로는 체크 안함
+        if (path.startsWith("/goalracha/ground")) {
+            return true;
+        }
         return false;
     }
 }
