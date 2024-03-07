@@ -16,8 +16,10 @@ public interface GroundService {
     void modify(GroundDTO groundDTO);
 
     // 구장 삭제
-    void remove(Long gno);
+    void delete(Long gno);
 
     // 구장관리 페이지 처리
     PageResponseDTO<GroundDTO> list(PageRequestDTO pageRequestDTO);
+
+    PageResponseDTO<GroundDTO> list2(PageRequestDTO pageRequestDTO);
 }
