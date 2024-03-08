@@ -10,4 +10,6 @@ public interface MemberService {
 
 
     void modifyMember(MemberJoinDTO memberJoinDTO);
+
+
 }

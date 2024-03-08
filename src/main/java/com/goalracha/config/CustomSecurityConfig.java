@@ -36,7 +36,7 @@ public class CustomSecurityConfig  {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
         return web -> web.ignoring()
-                .requestMatchers("/favicon.ico");
+                .requestMatchers("/favicon.ico", "/test/adminPage", "/api/admin/{userId}/change-password");
     }
 
     @Bean

@@ -19,9 +19,9 @@ public class MemberRepositoryTests {
 
     @Test
     public void testInsertMember() {
-        Member member = Member.builder().email("admin@").pw(passwordEncoder.encode("1234")).type(MemberRole.ADMIN).
-                userId("admin").
-                nickname("admin").build();
+        Member member = Member.builder().email("admin2@").pw(passwordEncoder.encode("1234")).type(MemberRole.ADMIN).
+                userId("admin2").
+                nickname("admin2").build();
         Member save = memberRepository.save(member);
         log.info(save);
 

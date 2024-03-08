@@ -56,6 +56,7 @@ public class Member {
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private MemberRole type; //유저타입 user,owner,admin
+    private String password;
 
     public void joinMember(Long uNo, String name, String nickname, String tel) {
         this.uNo = uNo;
@@ -63,5 +64,9 @@ public class Member {
         this.name = name;
         this.tel = tel;
 
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
