@@ -94,11 +94,5 @@ public class GoalrachaApplicationTests {
         log.info(response);
     }
 
-    @Test
-    public void testList2() {
-        PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(2).size(10).build();
 
-        PageResponseDTO<GroundDTO> response = groundService.list2(pageRequestDTO);
-        log.info(response);
-    }
 }

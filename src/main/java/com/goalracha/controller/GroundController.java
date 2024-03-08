@@ -40,7 +40,7 @@ public class GroundController {
 
     @PutMapping("/modify/{gno}")
     public Map<String, String> modify(@PathVariable(name = "gno") Long gno, @RequestBody GroundDTO groundDTO) {
-        groundDTO.setGno(gno);
+        groundDTO.setGNo(gno);
         log.info("Modify: " + groundDTO);
         service.modify(groundDTO);
 

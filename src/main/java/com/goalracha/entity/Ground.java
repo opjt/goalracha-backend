@@ -19,7 +19,7 @@ public class Ground {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ground_seq_gen")
     @Column(name = "g_no", nullable = false)
-    private Long gno;
+    private Long gNo;
 
     @Column(nullable = false)
     private String name;
@@ -40,13 +40,13 @@ public class Ground {
     private String recommdMan;
 
     @Column(name = "usagetime", nullable = false, length = 2)
-    private Long usageTime;
+    private Integer usageTime;
 
     @Column(name = "opentime", nullable = false, length = 50)
-    private String openTime;
+    private Integer openTime;
 
     @Column(name = "closetime", nullable = false, length = 50)
-    private String closeTime;
+    private Integer closeTime;
 
     @Column(nullable = false)
     private Long fare;
@@ -110,13 +110,13 @@ public class Ground {
     public void changeRecommdMan(String recommdMan){
         this.recommdMan = recommdMan;
     }
-    public void changeUsageTime(Long usageTime){
+    public void changeUsageTime(Integer usageTime){
         this.usageTime = usageTime;
     }
-    public void changeOpentime(String openTime){
+    public void changeOpentime(Integer openTime){
         this.openTime = openTime;
     }
-    public void changeCloseTime(String closeTime){
+    public void changeCloseTime(Integer closeTime){
         this.closeTime = closeTime;
     }
     public void changeFare(Long fare) {

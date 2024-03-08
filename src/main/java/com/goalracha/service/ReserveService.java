@@ -1,11 +1,17 @@
 package com.goalracha.service;
 
-import com.goalracha.dto.ReserveListDTO;
-import org.springframework.transaction.annotation.Transactional;
+import com.goalracha.dto.reserve.ReservDTO;
+import com.goalracha.dto.reserve.ReserveListDTO;
+import com.goalracha.entity.Reserve;
 
 import java.util.List;
 
-@Transactional
 public interface ReserveService {
     List<ReserveListDTO> getList();
+
+    Reserve getOne(Long gno);
+
+    ReserveListDTO getGroundReserve(Long gno);
+
+    Reserve newReserve(ReservDTO reservDTO);
 }

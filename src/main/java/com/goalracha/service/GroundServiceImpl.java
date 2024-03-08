@@ -32,7 +32,7 @@ public class GroundServiceImpl implements GroundService {
         Ground ground = modelMapper.map(groundDTO, Ground.class);
         Ground savedGround = groundRepository.save(ground);
 
-        return savedGround.getGno();
+        return savedGround.getGNo();
     }
 
     @Override
@@ -47,7 +47,7 @@ public class GroundServiceImpl implements GroundService {
 
     @Override
     public void modify(GroundDTO groundDTO) {
-        Optional<Ground> result = groundRepository.findById(groundDTO.getGno());
+        Optional<Ground> result = groundRepository.findById(groundDTO.getGNo());
 
         Ground ground = result.orElseThrow();
 

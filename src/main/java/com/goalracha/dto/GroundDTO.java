@@ -12,16 +12,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GroundDTO {
 
-    private Long gno;
+    private Long gNo;
     private String name;
     private String addr;
     private String inAndOut;
     private String width;
     private String grassInfo;
     private String recommdMan;
-    private Long usageTime;
-    private String openTime;
-    private String closeTime;
+    private Integer usageTime;
+    private Integer openTime;
+    private Integer closeTime;
     private Long fare;
     private String userGuide;
     private String userRules;
