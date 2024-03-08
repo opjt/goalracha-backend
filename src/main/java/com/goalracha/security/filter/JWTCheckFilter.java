@@ -15,6 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+
 @Log4j2
 public class JWTCheckFilter extends OncePerRequestFilter {
     @Override
@@ -59,7 +60,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         log.info("check uri.............." + path);
         // api/member/ 경로의 호출은 체크하지 않음
-        if (path.startsWith("/api/member/") || path.startsWith("/api/owner/")) {
+        if (path.startsWith("/api/member/") || path.startsWith("/api/owner/") || path.startsWith("/reserve/") || path.equals("/favicon.ico")) {
             return true;
         }
         // 이미지 조회 경로는 체크하지 않는다면

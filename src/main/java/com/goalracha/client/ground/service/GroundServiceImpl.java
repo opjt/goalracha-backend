@@ -35,12 +35,12 @@ public class GroundServiceImpl implements GroundService {
         Ground ground = modelMapper.map(groundDTO, Ground.class);
         Ground savedGround = groundRepository.save(ground);
 
-        return savedGround.getGno();
+        return savedGround.getGNo();
     }
 
     @Override
-    public GroundDTO get(Long gno) {
-        java.util.Optional<Ground> result = groundRepository.findById(gno);
+    public GroundDTO get(Long gNo) {
+        java.util.Optional<Ground> result = groundRepository.findById(gNo);
 
         Ground ground = result.orElseThrow();
         GroundDTO dto = modelMapper.map(ground, GroundDTO.class);
@@ -50,7 +50,7 @@ public class GroundServiceImpl implements GroundService {
 
     @Override
     public void modify(GroundDTO groundDTO) {
-        Optional<Ground> result = groundRepository.findById(groundDTO.getGno());
+        Optional<Ground> result = groundRepository.findById(groundDTO.getGNo());
 
         Ground ground = result.orElseThrow();
 
@@ -81,8 +81,8 @@ public class GroundServiceImpl implements GroundService {
     }
 
     @Override
-    public void remove(Long gno) {
-        groundRepository.deleteById(gno);
+    public void remove(Long gNo) {
+        groundRepository.deleteById(gNo);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class GroundServiceImpl implements GroundService {
         Pageable pageable = PageRequest.of(
                 pageRequestDTO.getPage() - 1,    // 1페이지는 0이여서 -1
                 pageRequestDTO.getSize(),
-                Sort.by(Sort.Direction.DESC, "gno")
+                Sort.by(Sort.Direction.DESC, "gNo")
         );
 
         Page<Ground> result = groundRepository.findAll(pageable);

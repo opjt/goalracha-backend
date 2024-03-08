@@ -5,11 +5,12 @@ import lombok.*;
 
 @Entity
 @SequenceGenerator(name = "ground_seq_gen", // 시퀀스 제너레이터 이름
-                sequenceName = "ground_seq",  // 시퀀스 이름
-                initialValue = 1,   // 시작값
-                allocationSize = 1) // 메모리를 통해 할당할 범위 사이즈
+        sequenceName = "ground_seq",  // 시퀀스 이름
+        initialValue = 1,   // 시작값
+        allocationSize = 1) // 메모리를 통해 할당할 범위 사이즈
 @Table(name = "ground")
 @Getter
+@Setter
 @ToString
 @Builder
 @AllArgsConstructor
@@ -19,7 +20,7 @@ public class Ground {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ground_seq_gen")
     @Column(name = "g_no", nullable = false)
-    private Long gno;
+    private Long gNo;
 
     @Column(nullable = false)
     private String name;
@@ -87,75 +88,98 @@ public class Ground {
     @Column(nullable = false)
     private Long state;
 
-    //@ManyToOne
-    //@JoinColumn(name = "u_no")
     @Column(name = "u_no", nullable = false)
-    private Long uno;
+    private Long uNo;
+
+/*    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="u_no", referencedColumnName="u_no", insertable=false, updatable=false)
+    private Member member;*/
 
     public void changeName(String name) {
         this.name = name;
     }
+
     public void changeAddr(String addr) {
         this.addr = addr;
     }
-    public void changeInAndOut(String inAndOut){
+
+    public void changeInAndOut(String inAndOut) {
         this.inAndOut = inAndOut;
     }
-    public void changeWidth(String width){
+
+    public void changeWidth(String width) {
         this.width = width;
     }
-    public void changeGrassInfo(String grassInfo){
+
+    public void changeGrassInfo(String grassInfo) {
         this.grassInfo = grassInfo;
     }
-    public void changeRecommdMan(String recommdMan){
+
+    public void changeRecommdMan(String recommdMan) {
         this.recommdMan = recommdMan;
     }
-    public void changeUsageTime(Long usageTime){
+
+    public void changeUsageTime(Long usageTime) {
         this.usageTime = usageTime;
     }
-    public void changeOpentime(String openTime){
+
+    public void changeOpentime(String openTime) {
         this.openTime = openTime;
     }
-    public void changeCloseTime(String closeTime){
+
+    public void changeCloseTime(String closeTime) {
         this.closeTime = closeTime;
     }
+
     public void changeFare(Long fare) {
         this.fare = fare;
     }
-    public void changeUserGuide(String userGuide){
+
+    public void changeUserGuide(String userGuide) {
         this.userGuide = userGuide;
     }
-    public void changeUserRules(String userRules){
+
+    public void changeUserRules(String userRules) {
         this.userRules = userRules;
     }
-    public void changeRefundRules(String refundRules){
+
+    public void changeRefundRules(String refundRules) {
         this.refundRules = refundRules;
     }
-    public void changeChangeRules(String changeRules){
+
+    public void changeChangeRules(String changeRules) {
         this.changeRules = changeRules;
     }
-    public void changeVestIsYn(boolean vestIsYn){
+
+    public void changeVestIsYn(boolean vestIsYn) {
         this.vestIsYn = vestIsYn;
     }
-    public void changeFootwearIsYn(boolean vestIsYn){
+
+    public void changeFootwearIsYn(boolean vestIsYn) {
         this.footwearIsYn = footwearIsYn;
     }
-    public void changeShowerIsYn(boolean showerIsYn){
+
+    public void changeShowerIsYn(boolean showerIsYn) {
         this.showerIsYn = showerIsYn;
     }
-    public void changeBallIsYn(boolean ballIsYn){
+
+    public void changeBallIsYn(boolean ballIsYn) {
         this.ballIsYn = ballIsYn;
     }
-    public void changeAirconIsYn(boolean airconIsYn){
+
+    public void changeAirconIsYn(boolean airconIsYn) {
         this.airconIsYn = airconIsYn;
     }
-    public void changeParkareaIsYn(boolean parkareaIsYn){
+
+    public void changeParkareaIsYn(boolean parkareaIsYn) {
         this.parkareaIsYn = parkareaIsYn;
     }
-    public void changeRoopIsYn(boolean roopIsYn){
+
+    public void changeRoopIsYn(boolean roopIsYn) {
         this.roopIsYn = roopIsYn;
     }
-    public void changeState(Long state){
+
+    public void changeState(Long state) {
         this.state = state;
     }
 

@@ -18,9 +18,9 @@ import java.util.Map;
 public class GroundController {
     private final GroundService service;
 
-    @GetMapping("/{gno}")
-    public GroundDTO get(@PathVariable(name = "gno") Long gno) {
-        return service.get(gno);
+    @GetMapping("/{gNo}")
+    public GroundDTO get(@PathVariable(name = "gNo") Long gNo) {
+        return service.get(gNo);
     }
 
     @GetMapping("/List")
@@ -33,24 +33,24 @@ public class GroundController {
     @PostMapping("/")
     public Map<String, Long> register(@RequestBody GroundDTO groundDTO) {
         log.info("GroundDTD:" + groundDTO);
-        Long gno = service.register(groundDTO);
+        Long gNo = service.register(groundDTO);
 
-        return Map.of("GNO", gno);
+        return Map.of("GNO", gNo);
     }
 
-    @PutMapping("/{gno}")
-    public Map<String, String> modify(@PathVariable(name = "gno") Long gno, @RequestBody GroundDTO groundDTO) {
-        groundDTO.setGno(gno);
+    @PutMapping("/{gNo}")
+    public Map<String, String> modify(@PathVariable(name = "gNo") Long gNo, @RequestBody GroundDTO groundDTO) {
+        groundDTO.setGNo(gNo);
         log.info("Modify: " + groundDTO);
         service.modify(groundDTO);
 
         return Map.of("RESULT", "SUCCESS");
     }
 
-    @DeleteMapping("/{gno}")
-    public Map<String, String> remove(@PathVariable(name="gno") Long gno) {
-        log.info("Remove: " + gno);
-        service.remove(gno);
+    @DeleteMapping("/{gNo}")
+    public Map<String, String> remove(@PathVariable(name="gNo") Long gNo) {
+        log.info("Remove: " + gNo);
+        service.remove(gNo);
 
         return Map.of("RESULT", "SUCCESS");
     }

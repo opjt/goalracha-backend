@@ -7,6 +7,7 @@ import lombok.*;
 import java.util.Date;
 
 @Entity
+@Setter
 @Table(name="member")
 @Builder
 @AllArgsConstructor

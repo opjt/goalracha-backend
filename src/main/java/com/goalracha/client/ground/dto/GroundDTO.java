@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GroundDTO {
 
-    private Long gno;
+    private Long gNo;
     private String name;
     private String addr;
     private String inAndOut;
