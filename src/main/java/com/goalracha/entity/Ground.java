@@ -87,10 +87,11 @@ public class Ground {
     @Column(nullable = false)
     private Long state;
 
-    //@ManyToOne
-    //@JoinColumn(name = "u_no")
-    @Column(name = "u_no", nullable = false)
-    private Long uno;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="u_no", referencedColumnName="u_no")
+    //@Column(name = "u_no", nullable = false)
+    private Member member;
+
 
     public void changeName(String name) {
         this.name = name;

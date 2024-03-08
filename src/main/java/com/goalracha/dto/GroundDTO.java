@@ -35,6 +35,6 @@ public class GroundDTO {
     private boolean parkareaIsYn;
     private boolean roopIsYn;
     private Long state;
-    private Long uno;
+    private Long uNo;
 
 }

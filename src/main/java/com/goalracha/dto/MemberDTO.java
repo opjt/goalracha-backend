@@ -98,7 +98,6 @@ public class MemberDTO extends User {
                 member.getName(),member.getTel(),member.getCreateDate(),member.getEmail(),member.getBusinessName(),
                 member.getBusinessId(),member.getState(),member.getType());
 
-
         return dto;
 
     }

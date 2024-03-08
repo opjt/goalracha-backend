@@ -36,6 +36,8 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.2.0'//modelmapper 의존성추거
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.2.0'//modelmapper 의존성추거
+    implementation 'net.coobird:thumbnailator:0.4.20' // Thumbnailator 라이브러리 추가
 }
 
 tasks.named('test') {
