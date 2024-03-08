@@ -19,8 +19,8 @@ public class GroundController {
     private final GroundService service;
 
     @GetMapping("/read/{gno}")
-    public GroundDTO get(@PathVariable(name = "gno") Long gno) {
-        return service.get(gno);
+    public GroundDTO get(@PathVariable(name = "gno") Long gNo) {
+        return service.get(gNo);
     }
 
     @GetMapping("/")
@@ -33,14 +33,14 @@ public class GroundController {
     @PostMapping("/register" )
     public Map<String, Long> register(@RequestBody GroundDTO groundDTO) {
         log.info("GroundDTD:" + groundDTO);
-        Long gno = service.register(groundDTO);
+        Long gNo = service.register(groundDTO);
 
-        return Map.of("gno", gno);
+        return Map.of("gno", gNo);
     }
 
     @PutMapping("/modify/{gno}")
-    public Map<String, String> modify(@PathVariable(name = "gno") Long gno, @RequestBody GroundDTO groundDTO) {
-        groundDTO.setGno(gno);
+    public Map<String, String> modify(@PathVariable(name = "gno") Long gNo, @RequestBody GroundDTO groundDTO) {
+        groundDTO.setGNo(gNo);
         log.info("Modify: " + groundDTO);
         service.modify(groundDTO);
 
@@ -48,9 +48,9 @@ public class GroundController {
     }
 
     @DeleteMapping("/delete/{gno}")
-    public Map<String, String> delete(@PathVariable(name="gno") Long gno) {
-        log.info("Remove: " + gno);
-        service.delete(gno);
+    public Map<String, String> delete(@PathVariable(name="gno") Long gNo) {
+        log.info("Remove: " + gNo);
+        service.delete(gNo);
 
         return Map.of("RESULT", "SUCCESS");
     }

@@ -32,17 +32,17 @@ public class GoalrachaApplicationTests {
     }
 
     // GroundRepository test
-    @Test
-    public void groundInsert() {
-        for (int i = 1; i < 10; i++) {
-            Ground ground = Ground.builder().addr("addr"+i).airconIsYn(true).ballIsYn(true).changeRules("교환규정").closeTime("22시").fare(40000L)
-                    .footwearIsYn(false).grassInfo("떼깔죽임").inAndOut("실내").name("김창욱").openTime("06시").parkareaIsYn(true).recommdMan("6:6")
-                    .refundRules("환불규정").roopIsYn(true).showerIsYn(true).state(1L).uno(1L).usageTime(2L).userGuide("이용안내").userRules("이용규칙")
-                    .vestIsYn(true).width("30x40").build();
-
-            groundRepository.save(ground);
-        }
-    }
+//    @Test
+//    public void groundInsert() {
+//        for (int i = 1; i < 10; i++) {
+//            Ground ground = Ground.builder().addr("addr"+i).airconIsYn(true).ballIsYn(true).changeRules("교환규정").closeTime("22시").fare(40000L)
+//                    .footwearIsYn(false).grassInfo("떼깔죽임").inAndOut("실내").name("김창욱").openTime("06시").parkareaIsYn(true).recommdMan("6:6")
+//                    .refundRules("환불규정").roopIsYn(true).showerIsYn(true).state(1L).member(1L).usageTime(2L).userGuide("이용안내").userRules("이용규칙")
+//                    .vestIsYn(true).width("30x40").build();
+//
+//            groundRepository.save(ground);
+//        }
+//    }
 
     @Test
     public void groundRead() {
@@ -72,7 +72,7 @@ public class GoalrachaApplicationTests {
     public void testRsgister() {
         GroundDTO groundDTO = GroundDTO.builder().addr("가산디지털3로 332").airconIsYn(true).ballIsYn(true).changeRules("교환규정").closeTime("22시").fare(40000L)
                 .footwearIsYn(false).grassInfo("떼깔죽임").inAndOut("실내").name("황은지").openTime("06시").parkareaIsYn(true).recommdMan("6:6")
-                .refundRules("환불규정").roopIsYn(true).showerIsYn(true).state(1L).uno(1L).usageTime(2L).userGuide("이용안내").userRules("이용규칙")
+                .refundRules("환불규정").roopIsYn(true).showerIsYn(true).state(1L).uNo(1L).usageTime(2L).userGuide("이용안내").userRules("이용규칙")
                 .vestIsYn(true).width("30x40").build();
 
         Long gno = groundService.register(groundDTO);
@@ -94,11 +94,4 @@ public class GoalrachaApplicationTests {
         log.info(response);
     }
 
-    @Test
-    public void testList2() {
-        PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(2).size(10).build();
-
-        PageResponseDTO<GroundDTO> response = groundService.list2(pageRequestDTO);
-        log.info(response);
-    }
 }

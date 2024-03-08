@@ -10,13 +10,13 @@ public interface GroundService {
     Long register(GroundDTO groundDTO);
 
     // 구장 조회
-    GroundDTO get(Long gno);
+    GroundDTO get(Long gNo);
 
     // 구장 수정
     void modify(GroundDTO groundDTO);
 
     // 구장 삭제
-    void delete(Long gno);
+    void delete(Long gNo);
 
     // 구장관리 페이지 처리
     PageResponseDTO<GroundDTO> list(PageRequestDTO pageRequestDTO);
