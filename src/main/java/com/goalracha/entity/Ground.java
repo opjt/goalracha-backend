@@ -5,9 +5,9 @@ import lombok.*;
 
 @Entity
 @SequenceGenerator(name = "ground_seq_gen", // 시퀀스 제너레이터 이름
-                sequenceName = "ground_seq",  // 시퀀스 이름
-                initialValue = 1,   // 시작값
-                allocationSize = 1) // 메모리를 통해 할당할 범위 사이즈
+        sequenceName = "ground_seq",  // 시퀀스 이름
+        initialValue = 1,   // 시작값
+        allocationSize = 1) // 메모리를 통해 할당할 범위 사이즈
 @Table(name = "ground")
 @Getter
 @ToString
