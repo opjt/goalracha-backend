@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import com.goalracha.domain.Product;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
