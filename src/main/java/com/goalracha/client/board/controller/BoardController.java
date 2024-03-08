@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Log4j2
 //@RequestMapping("/api/board")
-@RequestMapping("/board/*")
+@RequestMapping("/board")
 public class BoardController {
 //    private final BoardService service;
 
@@ -39,12 +39,33 @@ public class BoardController {
     }
 
     // 포스트맨
+    // 입력
     @PostMapping("/")
     public Map<String, Long> register(@RequestBody BoardDTO boardDTO) {
         log.info("BoardDTO : " + boardDTO);
         Long bno = service.register(boardDTO);
 
         return Map.of("BNO", bno);
+    }
+
+    // 수정
+    @PutMapping("/{bno}")
+    public Map<String, String> modify(@PathVariable(name = "bno") Long bno,
+                                      @RequestBody BoardDTO boardDTO) {
+        boardDTO.setBno(bno);
+        log.info("Modify : " + boardDTO);
+        service.modify(boardDTO);
+
+        return Map.of("RESULT", "SUCCESS");
+    }
+
+    // 삭제
+    @DeleteMapping("/{bno}")
+    public Map<String, String> remove(@PathVariable(name = "bno") Long bno) {
+        log.info("Remove : " + bno);
+        service.remove(bno);
+
+        return Map.of("RESILT", "SUCCESS");
     }
 
 
