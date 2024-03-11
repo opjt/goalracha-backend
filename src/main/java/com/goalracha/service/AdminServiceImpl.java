@@ -1,6 +1,6 @@
 package com.goalracha.service;
 
-import com.goalracha.domain.Member;
+import com.goalracha.entity.Member;
 import com.goalracha.repository.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

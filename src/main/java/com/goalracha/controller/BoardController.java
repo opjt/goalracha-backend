@@ -15,13 +15,11 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Log4j2
-//@RequestMapping("/api/board")
-@RequestMapping("/board")
+@RequestMapping("/api/board")
 public class BoardController {
-//    private final BoardService service;
+    private final BoardService service;
 
-    @Autowired
-    private BoardService service;
+
 
     @GetMapping("/{bno}")
     public BoardDTO get(@PathVariable(name = "bno") Long bno) {
