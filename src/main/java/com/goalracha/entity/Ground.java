@@ -92,6 +92,10 @@ public class Ground {
     //@Column(name = "u_no", nullable = false)
     private Member member;
 
+    public void convertToEntity(Member member) {
+        this.member = member;
+    }
+
 
     public void changeName(String name) {
         this.name = name;

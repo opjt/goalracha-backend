@@ -2,12 +2,15 @@ package com.goalracha.repository;
 
 import com.goalracha.dto.reserve.ReservDTO;
 import com.goalracha.entity.Reserve;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
 import java.util.List;
-
 public interface ReserveRepository extends JpaRepository<Reserve, Long> {
     @Query("SELECT NEW com.goalracha.dto.reserve.ReservDTO(r.rNO,r.payType, r.createDate,  r.reserveDate, r.time, r.state, r.member.uNo, r.ground.gNo) " +
             "FROM Reserve r JOIN r.ground g WHERE g.gNo = :gno AND r.state = 1")
@@ -15,5 +18,12 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
 
     @Query("SELECT r.time FROM Reserve r WHERE r.reserveDate = :reserveDate AND r.ground.gNo = :gno")
     List<Integer> findReservationTimesByDate(Long gno, Date reserveDate);
+
+    @Query("SELECT g.gNo, LISTAGG(to_char(r.time), ', ') WITHIN GROUP (ORDER BY r.rNO) AS gg " +
+            "FROM Ground g " +
+            "LEFT OUTER JOIN Reserve r ON g.gNo = r.ground.gNo AND FUNCTION('to_char', r.reserveDate, 'yyyy-mm-dd') = :date " +
+            "where g.state != 0" +
+            "GROUP BY g.gNo")
+    List<Object[]> findGroundsWithReservationsOnDate(@Param("date") String date);
 
 }

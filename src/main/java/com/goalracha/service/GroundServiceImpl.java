@@ -5,6 +5,7 @@ import com.goalracha.dto.GroundDTO;
 import com.goalracha.dto.PageRequestDTO;
 import com.goalracha.dto.PageResponseDTO;
 import com.goalracha.entity.Ground;
+import com.goalracha.entity.Member;
 import com.goalracha.repository.GroundRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +25,15 @@ import java.util.stream.Collectors;
 public class GroundServiceImpl implements GroundService {
 
     private final ModelMapper modelMapper;
+
     private final GroundRepository groundRepository;
     @Override
     public Long register(GroundDTO groundDTO) {
         log.info("------------------");
 
         Ground ground = modelMapper.map(groundDTO, Ground.class);
+
+        ground.convertToEntity(Member.builder().uNo(groundDTO.getUNo()).build());
         Ground savedGround = groundRepository.save(ground);
 
         return savedGround.getGNo();

@@ -1,5 +1,6 @@
 package com.goalracha.service;
 
+import com.goalracha.dto.GroundDTO;
 import com.goalracha.dto.reserve.ReservDTO;
 import com.goalracha.dto.reserve.ReserveListDTO;
 import com.goalracha.entity.Ground;
@@ -8,13 +9,17 @@ import com.goalracha.entity.Reserve;
 import com.goalracha.repository.GroundRepository;
 import com.goalracha.repository.MemberRepository;
 import com.goalracha.repository.ReserveRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +29,73 @@ public class ReserveServiceImpl implements ReserveService{
     private final ReserveRepository reserveRepository;
     private final MemberRepository memberRepository;
     private final GroundRepository groundRepository;
+    private final EntityManager entityManager;
+
+    @Override //날짜,시간,실내외로 예약가능 전체 구장목록 출력하기
+    public Map<String, Object> getAllList(String reqDate, String reqTime, String reqInout) {
+        Map<String, Object> result = new HashMap<>();
+        List<Object[]> list = reserveRepository.findGroundsWithReservationsOnDate("2024-03-11");
+        List<GroundDTO> groundList= groundRepository.findAllGroundsWithoutMember();
+        Map<Long, GroundDTO> groundMap = groundList.stream()
+                .collect(Collectors.toMap(GroundDTO::getGNo, Function.identity()));
+
+        List<String> reqTimeList = Arrays.asList(reqTime.split(","));
+        int timeCount = reqTimeList.size();
+        result.put("reserv", list);
+        result.put("groundlist", groundMap);
+
+        String jpql = "SELECT g.gNo, LISTAGG(TO_Char(r.time), ',') WITHIN GROUP (ORDER BY r.rNO) AS gg " +
+                "FROM Ground g " +
+                "LEFT OUTER JOIN Reserve r ON g.gNo = r.ground.gNo AND FUNCTION('to_char', r.reserveDate, 'yyyy-mm-dd') = :date " +
+                "WHERE g.state != 0 " +
+                "AND g.gNo NOT IN (" +
+                "    SELECT r2.ground.gNo " +
+                "    FROM Reserve r2" +
+                "    WHERE r2.time IN ("+reqTime +") " +
+                "    GROUP BY r2.ground.gNo " +
+                "    HAVING COUNT(DISTINCT time) =  " + timeCount+
+                ") " +
+                "AND g.inAndOut IN ("+reqInout+") " +
+                "GROUP BY g.gNo";
+        Query query = entityManager.createQuery(jpql);
+        query.setParameter("date", reqDate);
+        List<Object[]> result2 = query.getResultList();
+        result.put("result2" , result2);
+
+        List<Object[]> reesult = new ArrayList<>();
+        for (Object[] row : result2) {
+            Long gNo = (Long) row[0];
+            if(row[1] == null) {
+                reesult.add(new Object[]{gNo, null});
+                continue;
+            }
+            String times = (String) row[1];
+            List<String> timesplit = Arrays.asList(times.split(","));
+            if(times.equals(reqTime)) { //시간이 똑같으면 넘어감
+                continue;
+            }
+
+            int i = 0;
+            for(String sf1: reqTimeList) {
+                log.info("timesplit:" + sf1 + "contain : " + reqTimeList.contains(sf1) + "check : " + checkReserveTime(groundMap.get(gNo).getOpenTime(),groundMap.get(gNo).getCloseTime(),Integer.parseInt(sf1),
+                        groundMap.get(gNo).getUsageTime()) );
+                if(checkReserveTime(groundMap.get(gNo).getOpenTime(),groundMap.get(gNo).getCloseTime(),Integer.parseInt(sf1),
+                        groundMap.get(gNo).getUsageTime()) && !timesplit.contains(sf1)) {
+                    i++;
+                    break;
+                }
+            }
+            if(i > 0) {
+                reesult.add(new Object[]{gNo, times});
+            }
+        }
+        result.put("result3", reesult);
+
+
+        return result;
+
+
+    }
 
     @Override
     public List<ReserveListDTO> getList() {
@@ -82,6 +154,8 @@ public class ReserveServiceImpl implements ReserveService{
 
         return result;
     }
+
+
 
     private boolean checkReserveTime(Integer openTime, Integer closeTime, Integer useTime, Integer unit) {
         //가능시간대인지 확인하는 메소드
