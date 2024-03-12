@@ -1,5 +1,6 @@
 package com.goalracha.service;
 
+import com.goalracha.dto.MemberModifyDTO;
 import com.goalracha.entity.Member;
 import com.goalracha.entity.MemberRole;
 import com.goalracha.dto.MemberDTO;
@@ -21,14 +22,16 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Log4j2
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
+
     @Override
     public MemberDTO getKakaoMember(String accessToken) {
         String email = getEmailFromKakaoAccessToken(accessToken);
@@ -60,6 +63,27 @@ public class MemberServiceImpl implements MemberService{
         return memberDTO;
     }
 
+
+    @Override
+    public void userModify(MemberModifyDTO memberModifyDTO) {
+        // 회원 번호로 회원을 조회합니다.
+        Optional<Member> result = memberRepository.findById(memberModifyDTO.getUNo());
+
+        // 조회된 회원이 존재하지 않으면 null을 반환합니다.
+        Member member = result.orElse(null);
+
+        // 조회된 회원이 없으면 메서드를 종료합니다.
+        if (member == null) {
+            return;
+        }
+
+        // 회원 정보를 수정합니다.
+        member.userModify(memberModifyDTO.getUNo(), memberModifyDTO.getNickname(), memberModifyDTO.getTel());
+
+        // 수정된 회원 정보를 저장합니다.
+        memberRepository.save(member);
+    }
+
     @Override
     public void modifyMember(MemberJoinDTO memberJoinDTO) {
         Member member = memberRepository.findByEmail(memberJoinDTO.getEmail());
@@ -68,7 +92,7 @@ public class MemberServiceImpl implements MemberService{
 //        edit.setNickname(memberJoinDTO.getNickname());
 //        edit.setTel(memberJoinDTO.getTel());
 
-        member.joinMember(memberJoinDTO.getUNo(), memberJoinDTO.getName(),memberJoinDTO.getNickname(),memberJoinDTO.getTel());
+        member.joinMember(memberJoinDTO.getUNo(), memberJoinDTO.getName(), memberJoinDTO.getNickname(), memberJoinDTO.getTel());
 
 
         log.info("member info::" + member.toString());
@@ -79,7 +103,7 @@ public class MemberServiceImpl implements MemberService{
     public boolean checkId(String userid) {
         log.info(userid);
         Member member = memberRepository.findByUserId(userid);
-        if(member == null) {
+        if (member == null) {
             return false;
         }
 
@@ -103,6 +127,7 @@ public class MemberServiceImpl implements MemberService{
         log.info("user 생성 : :" + result.toString());
         return result.getUNo();
     }
+
 
     private Member createKkoMember(String email) { //카카오 유저 빌더
 
