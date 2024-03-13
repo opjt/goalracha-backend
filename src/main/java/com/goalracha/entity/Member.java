@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Entity
 @Setter
-@Table(name="member")
+@Table(name = "member")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,7 +17,7 @@ import java.util.Date;
 public class Member {
 
     @Id
-    @SequenceGenerator(name = "user_seq_gen", sequenceName = "user_seq",initialValue = 1, allocationSize = 1)
+    @SequenceGenerator(name = "user_seq_gen", sequenceName = "user_seq", initialValue = 1, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_gen")
     @Column(name = "u_no")
     private Long uNo; //유저 일련번호
@@ -28,7 +28,7 @@ public class Member {
     @Column(name = "pw")
     private String pw; //유저 비밀번호
 
-    @Column(name = "nickname", unique= true)
+    @Column(name = "nickname", unique = true)
     private String nickname;//유저 닉네임
 
     @Column(name = "name")
@@ -37,7 +37,7 @@ public class Member {
     @Column(name = "tel")
     private String tel; //유저 전화번호
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone = "Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     @Column(name = "createdate")
     private Date createDate; //유저 생성날짜
 
@@ -68,5 +68,24 @@ public class Member {
 
     public void setPassword(String password) {
         this.pw = password;
+    }
+
+
+    public void userModify(Long uNo, String nickname, String tel) {
+        this.uNo = uNo;
+        this.nickname = nickname;
+        this.tel = tel;
+
+    }
+
+    public void ownerPwModify(Long uNo, String pw) {
+        this.uNo = uNo;
+        this.pw = pw;
+    }
+
+    public void ownerNameModify(Long uNo, String name, String tel){
+        this.uNo = uNo;
+        this.name = name;
+        this.tel = tel;
     }
 }

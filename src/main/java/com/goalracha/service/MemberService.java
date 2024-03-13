@@ -4,6 +4,7 @@ import com.goalracha.dto.MemberDTO;
 import com.goalracha.dto.MemberJoinDTO;
 import com.goalracha.dto.OwnerJoinDTO;
 import com.goalracha.entity.MemberRole;
+import com.goalracha.dto.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -21,4 +22,10 @@ public interface MemberService {
 
     List<MemberDTO> findMembersByType(MemberRole type); // 타입으로 멤버들 조회
 
+
+    void userModify(MemberModifyDTO memberModifyDTO);
+
+    void ownerPwModify(OwnerPwModifyDTO ownerPwModifyDTO);
+
+    void ownerNameModify(OwnerNameModifyDTO ownerNameModifyDTO);
 }
