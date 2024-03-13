@@ -46,7 +46,6 @@ public class GroundController {
 
         return Map.of("RESULT", "SUCCESS");
     }
-
     @DeleteMapping("/delete/{gno}")
     public Map<String, String> delete(@PathVariable(name="gno") Long gno) {
         log.info("Remove: " + gno);
@@ -55,5 +54,11 @@ public class GroundController {
         return Map.of("RESULT", "SUCCESS");
     }
 
+    @PutMapping("/changeState/{gno}")
+    public Map<String, String> changeState(@PathVariable(name = "gno") Long gno, @RequestBody Map<String, Long> stateMap) {
+        Long newState = stateMap.get("newState");
+        service.changeState(gno, newState);
+        return Map.of("RESULT", "SUCCESS", "gNo", gno.toString(), "newState", newState.toString());
+    }
 }
 

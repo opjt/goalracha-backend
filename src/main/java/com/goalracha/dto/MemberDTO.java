@@ -1,6 +1,5 @@
 package com.goalracha.dto;
 
-
 import com.goalracha.entity.Member;
 import com.goalracha.entity.MemberRole;
 import lombok.Getter;

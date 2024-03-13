@@ -27,6 +27,7 @@ public class GroundServiceImpl implements GroundService {
     private final ModelMapper modelMapper;
 
     private final GroundRepository groundRepository;
+
     @Override
     public Long register(GroundDTO groundDTO) {
         log.info("------------------");
@@ -39,7 +40,6 @@ public class GroundServiceImpl implements GroundService {
         return savedGround.getGNo();
     }
 
-    
 
     @Override
     public GroundDTO get(Long gno) {
@@ -119,8 +119,11 @@ public class GroundServiceImpl implements GroundService {
 
         return responseDTO;
     }
-
-
-
-
+    @Override
+    public void changeState(Long gNo, Long newState) {
+        Ground ground = groundRepository.findById(gNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 구장이 존재하지 않습니다. gNo=" + gNo));
+        ground.changeState(newState);
+        groundRepository.save(ground);
+    }
 }
