@@ -31,10 +31,17 @@ public class ReserveController {
         return ResponseEntity.ok("list");
     }
 
-    @GetMapping("/v/date/")
-    public ResponseEntity<?> getListondate(@RequestBody Map<String, String> request){
+    @PostMapping("/v/date/")
+    public ResponseEntity<?> getListondate(@RequestBody Map<String, Object> request){
 
-        Map<String, Object> response = reservService.getAllList(request.get("date"), request.get("time"),request.get("inout"));
+        Map<String, Object> response = reservService.getAllList((String)request.get("date"), (String)request.get("time"), (List<String>) request.get("inout"), (String)request.get("search"));
+
+        return ResponseEntity.ok().body(response);
+    }
+    @GetMapping("/v/ground/{gno}/{date}")
+    public ResponseEntity<?> showGroundInfo(@PathVariable Long gno, @PathVariable String date){
+        log.info(date);
+        Map<String, Object> response = reservService.showGroundInfo(gno, date);
 
         return ResponseEntity.ok().body(response);
     }

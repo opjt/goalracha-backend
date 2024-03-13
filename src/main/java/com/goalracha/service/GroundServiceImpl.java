@@ -70,7 +70,6 @@ public class GroundServiceImpl implements GroundService {
         ground.changeUserGuide(ground.getUserGuide());
         ground.changeUserRules(ground.getUserRules());
         ground.changeRefundRules(ground.getRefundRules());
-        ground.changeChangeRules(ground.getChangeRules());
         ground.changeVestIsYn(ground.isVestIsYn());
         ground.changeFootwearIsYn(ground.isFootwearIsYn());
         ground.changeShowerIsYn(ground.isShowerIsYn());

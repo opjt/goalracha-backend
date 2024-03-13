@@ -26,7 +26,6 @@ public class GroundDTO {
     private String userGuide;
     private String userRules;
     private String refundRules;
-    private String changeRules;
     private boolean vestIsYn;
     private boolean footwearIsYn;
     private boolean showerIsYn;

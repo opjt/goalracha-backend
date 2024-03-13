@@ -60,8 +60,6 @@ public class Ground {
     @Column(nullable = false, length = 4000)
     private String refundRules;
 
-    @Column(nullable = false, length = 4000)
-    private String changeRules;
 
     @Column(name = "vest_isYN", nullable = false)
     private boolean vestIsYn;
@@ -135,9 +133,6 @@ public class Ground {
     }
     public void changeRefundRules(String refundRules){
         this.refundRules = refundRules;
-    }
-    public void changeChangeRules(String changeRules){
-        this.changeRules = changeRules;
     }
     public void changeVestIsYn(boolean vestIsYn){
         this.vestIsYn = vestIsYn;

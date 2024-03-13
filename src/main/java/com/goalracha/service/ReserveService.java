@@ -16,5 +16,7 @@ public interface ReserveService {
 
     Reserve newReserve(ReservDTO reservDTO);
 
-    Map<String, Object> getAllList(String date, String time, String inout);
+    Map<String, Object> getAllList(String date, String time, List<String> inout, String search);
+
+    Map<String, Object> showGroundInfo(Long gno, String date);
 }

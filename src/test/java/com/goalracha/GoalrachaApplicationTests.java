@@ -6,6 +6,7 @@ import com.goalracha.dto.PageResponseDTO;
 import com.goalracha.service.GroundService;
 import com.goalracha.entity.Ground;
 import com.goalracha.repository.GroundRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Commit;
 
 
 @Log4j2
@@ -25,9 +27,13 @@ public class GoalrachaApplicationTests {
     private GroundService groundService;
 
     @Test
+    @Commit
     public  void test(){
         log.info("-----------------");
-        log.info(groundRepository);
+
+        Long groundNo = 57L; // 변경할 Ground의 ID
+        Long newState = 2L; // 변경할 새로운 상태
+        groundRepository.updateGroundState(groundNo, newState);
 
     }
 
@@ -68,16 +74,6 @@ public class GoalrachaApplicationTests {
     }
 
     // GroundSevice 테스트
-    @Test
-    public void testRsgister() {
-        GroundDTO groundDTO = GroundDTO.builder().addr("가산디지털3로 332").airconIsYn(true).ballIsYn(true).changeRules("교환규정").closeTime("22시").fare(40000L)
-                .footwearIsYn(false).grassInfo("떼깔죽임").inAndOut("실내").name("황은지").openTime("06시").parkareaIsYn(true).recommdMan("6:6")
-                .refundRules("환불규정").roopIsYn(true).showerIsYn(true).state(1L).uno(1L).usageTime(2L).userGuide("이용안내").userRules("이용규칙")
-                .vestIsYn(true).width("30x40").build();
-
-        Long gno = groundService.register(groundDTO);
-        log.info("gno: " + gno);
-    }
 
     @Test
     public void testGet() {

@@ -15,6 +15,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -30,23 +31,24 @@ public class ReserveServiceImpl implements ReserveService{
     private final MemberRepository memberRepository;
     private final GroundRepository groundRepository;
     private final EntityManager entityManager;
+    private final ModelMapper modelMapper;
 
     @Override //날짜,시간,실내외로 예약가능 전체 구장목록 출력하기
-    public Map<String, Object> getAllList(String reqDate, String reqTime, String reqInout) {
-        Map<String, Object> result = new HashMap<>();
-        List<Object[]> list = reserveRepository.findGroundsWithReservationsOnDate("2024-03-11");
+    public Map<String, Object> getAllList(String reqDate, String reqTime, List<String> reqInout, String search) {
+        Map<String, Object> result = new HashMap<>(); //최종리턴맵
+
         List<GroundDTO> groundList= groundRepository.findAllGroundsWithoutMember();
         Map<Long, GroundDTO> groundMap = groundList.stream()
                 .collect(Collectors.toMap(GroundDTO::getGNo, Function.identity()));
 
         List<String> reqTimeList = Arrays.asList(reqTime.split(","));
         int timeCount = reqTimeList.size();
-        result.put("reserv", list);
+
         result.put("groundlist", groundMap);
 
-        String jpql = "SELECT g.gNo, LISTAGG(TO_Char(r.time), ',') WITHIN GROUP (ORDER BY r.rNO) AS gg " +
+        String jpql = "SELECT g.gNo, LISTAGG(TO_Char(r.time), ',') WITHIN GROUP (ORDER BY r.time) AS gg " +
                 "FROM Ground g " +
-                "LEFT OUTER JOIN Reserve r ON g.gNo = r.ground.gNo AND FUNCTION('to_char', r.reserveDate, 'yyyy-mm-dd') = :date " +
+                "LEFT OUTER JOIN Reserve r ON g.gNo = r.ground.gNo AND FUNCTION('to_char', r.reserveDate, 'yyyy-mm-dd') = :date and r.state != 0 " +
                 "WHERE g.state != 0 " +
                 "AND g.gNo NOT IN (" +
                 "    SELECT r2.ground.gNo " +
@@ -55,29 +57,42 @@ public class ReserveServiceImpl implements ReserveService{
                 "    GROUP BY r2.ground.gNo " +
                 "    HAVING COUNT(DISTINCT time) =  " + timeCount+
                 ") " +
-                "AND g.inAndOut IN ("+reqInout+") " +
-                "GROUP BY g.gNo";
+                "AND g.inAndOut IN :inout ";
+        if (search != null) {
+            jpql += "AND (g.addr LIKE :searchParam OR g.name LIKE :searchParam) ";
+            // searchParam에 %1%를 포함하는 문자열을 설정
+        }
+        jpql += "GROUP BY g.gNo";
         Query query = entityManager.createQuery(jpql);
         query.setParameter("date", reqDate);
+        query.setParameter("inout", reqInout);
+        if (search != null) {
+            query.setParameter("searchParam", "%" + search + "%"); // searchParam 변수에 값을 설정
+        }
         List<Object[]> result2 = query.getResultList();
         result.put("result2" , result2);
-
-        List<Object[]> reesult = new ArrayList<>();
+//        List<Long> gnoArrayList = new ArrayList<>(); //구장의번호목록
+//        for (Object[] objArray : result2) {
+//            gnoArrayList.add((Long)objArray[0]);
+//        }
+//        result.put("gnostring", gnoArrayList);
+        List<Object[]> reservList = new ArrayList<>();
         for (Object[] row : result2) {
             Long gNo = (Long) row[0];
-            if(row[1] == null) {
-                reesult.add(new Object[]{gNo, null});
-                continue;
+            String times;
+
+            if(row[1] == null) { //예약이 없으면 물음표값넣어서 for문돌릴때 무조건 포함안되어있지만 올바른 시간인지는 확인
+                times =  "?,?";
+            } else {
+                times = (String) row[1];
             }
-            String times = (String) row[1];
-            List<String> timesplit = Arrays.asList(times.split(","));
             if(times.equals(reqTime)) { //시간이 똑같으면 넘어감
                 continue;
             }
-
+            List<String> timesplit = Arrays.asList(times.split(","));
             int i = 0;
-            for(String sf1: reqTimeList) {
-                log.info("timesplit:" + sf1 + "contain : " + reqTimeList.contains(sf1) + "check : " + checkReserveTime(groundMap.get(gNo).getOpenTime(),groundMap.get(gNo).getCloseTime(),Integer.parseInt(sf1),
+            for(String sf1: reqTimeList) { //시간필터의 값들로 올바른 예약시간인지 확인
+                log.info("timesplit:" + sf1 + "contain : " + timesplit.contains(sf1) + "check : " + checkReserveTime(groundMap.get(gNo).getOpenTime(),groundMap.get(gNo).getCloseTime(),Integer.parseInt(sf1),
                         groundMap.get(gNo).getUsageTime()) );
                 if(checkReserveTime(groundMap.get(gNo).getOpenTime(),groundMap.get(gNo).getCloseTime(),Integer.parseInt(sf1),
                         groundMap.get(gNo).getUsageTime()) && !timesplit.contains(sf1)) {
@@ -85,16 +100,31 @@ public class ReserveServiceImpl implements ReserveService{
                     break;
                 }
             }
-            if(i > 0) {
-                reesult.add(new Object[]{gNo, times});
+            if(i > 0) { //한개라도 있으면 추가
+                reservList.add(new Object[]{gNo, (String)row[1]});
             }
         }
-        result.put("result3", reesult);
-
+        result.put("groundreservList", reservList);
 
         return result;
 
 
+    }
+
+    @Override //그라운드 아이디랑 날짜로 구장상세페이지의 필요한 정보 리턴
+    public Map<String, Object> showGroundInfo(Long gno, String date) {
+
+        Map<String, Object> result = new HashMap<>(); //최종리턴맵
+        Ground groundE = groundRepository.findById(gno).orElse(null);
+        if(groundE == null ) {
+            return null;
+        }
+        GroundDTO ground = modelMapper.map(groundE, GroundDTO.class);
+        result.put("groundInfo", ground);
+        log.info(date);
+        List<ReservDTO> reservList = reserveRepository.listGroundReserveDTO(gno, date);
+        result.put("reservList", reservList);
+        return result;
     }
 
     @Override
@@ -111,7 +141,7 @@ public class ReserveServiceImpl implements ReserveService{
 
     @Override
     public ReserveListDTO getGroundReserve(Long gno) {
-        List<ReservDTO> result = reserveRepository.listGroundReserveDTO(gno);
+        List<ReservDTO> result = reserveRepository.listGroundReserveDTO(gno, "");
         log.info("result :: " + result);
         ReserveListDTO listdto = ReserveListDTO.builder().reserveList(result).groundId(gno).build();
         log.info("listdto :: " + listdto);
