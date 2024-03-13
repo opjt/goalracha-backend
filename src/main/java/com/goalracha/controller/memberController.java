@@ -50,8 +50,6 @@ public class memberController {
         return ResponseEntity.ok(owners);
     }
 
-
-
     @PutMapping("/api/member/user/modify/{uNo}")
     public Map<String, String> userModify(@PathVariable(name = "uNo") Long uNo,
                                           @RequestBody MemberModifyDTO memberModifyDTO) {

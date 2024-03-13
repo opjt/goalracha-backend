@@ -41,9 +41,6 @@ public class GroundServiceImpl implements GroundService {
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize(), Sort.by(Sort.Direction.DESC, "gNo"));
         Page<Object[]> result = groundRepository.selectList(pageable);
 
-        int offset = pageable.getPageNumber() * pageable.getPageSize() + 1; // offset 계산에서 +1
-        int limit = offset + pageable.getPageSize() - 1;
-
         List<GroundDTO> dtoList = result.get().map(arr -> {
             Ground ground = (Ground) arr[0];
             GroundImage groundImage = (GroundImage) arr[1];
@@ -54,7 +51,7 @@ public class GroundServiceImpl implements GroundService {
                     .closeTime(ground.getCloseTime()).fare(ground.getFare()).userGuide(ground.getUserGuide())
                     .userRules(ground.getUserRules()).refundRules(ground.getRefundRules()).vestIsYn(ground.isVestIsYn())
                     .footwearIsYn(ground.isFootwearIsYn()).showerIsYn(ground.isShowerIsYn()).roopIsYn(ground.isRoopIsYn())
-                    .airconIsYn(ground.isAirconIsYn()).parkareaIsYn(ground.isParkareaIsYn()).build();
+                    .airconIsYn(ground.isAirconIsYn()).parkareaIsYn(ground.isParkareaIsYn()).state(ground.getState()).build();
             String imageStr = groundImage.getFileDirectory();
             groundDTO.setUploadFileNames(List.of(imageStr));
 
@@ -83,7 +80,6 @@ public Long register(GroundDTO groundDTO) {
 
         return groundDTO;
     }
-
 
     @Override
     public void modify(GroundDTO groundDTO) {
