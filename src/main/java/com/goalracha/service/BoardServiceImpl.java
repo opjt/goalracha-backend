@@ -62,6 +62,7 @@ public class BoardServiceImpl implements BoardService {
         Board board = result.orElseThrow();
         BoardDTO dto = modelMapper.map(board, BoardDTO.class);
 
+
         return dto;
     }
 
