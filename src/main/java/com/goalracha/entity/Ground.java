@@ -2,6 +2,10 @@ package com.goalracha.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.cglib.core.Block;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @SequenceGenerator(name = "ground_seq_gen", // 시퀀스 제너레이터 이름
@@ -60,9 +64,6 @@ public class Ground {
     @Column(nullable = false, length = 4000)
     private String refundRules;
 
-    @Column(nullable = false, length = 4000)
-    private String changeRules;
-
     @Column(name = "vest_isYN", nullable = false)
     private boolean vestIsYn;
 
@@ -84,14 +85,17 @@ public class Ground {
     @Column(name = "roop_isYn", nullable = false)
     private boolean roopIsYn;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long state;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="u_no", referencedColumnName="u_no")
     //@Column(name = "u_no", nullable = false)
     private Member member;
 
+    public void convertToEntity(Member member) {
+        this.member = member;
+    }
 
     public void changeName(String name) {
         this.name = name;
@@ -132,9 +136,6 @@ public class Ground {
     public void changeRefundRules(String refundRules){
         this.refundRules = refundRules;
     }
-    public void changeChangeRules(String changeRules){
-        this.changeRules = changeRules;
-    }
     public void changeVestIsYn(boolean vestIsYn){
         this.vestIsYn = vestIsYn;
     }
@@ -160,5 +161,23 @@ public class Ground {
         this.state = state;
     }
 
+
+    @ElementCollection
+    @Builder.Default
+    private List<GroundImage> imageList = new ArrayList<>();
+
+    public void registerImage(GroundImage groundImage) {
+        groundImage.setOrd(this.imageList.size());
+        imageList.add(groundImage);
+    }
+
+    public void registerImageName(String fileName) {
+        GroundImage groundImage = GroundImage.builder().fileDirectory(fileName).build();
+        registerImage(groundImage);
+    }
+
+    public void clearList() {
+        this.imageList.clear();
+    }
 
 }
