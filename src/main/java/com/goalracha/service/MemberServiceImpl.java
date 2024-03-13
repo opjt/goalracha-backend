@@ -21,6 +21,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -131,6 +133,13 @@ public class MemberServiceImpl implements MemberService{
         LinkedHashMap<String, String> kakaoAccount = bodyMap.get("kakao_account");
         log.info("kakaoAccount: " + kakaoAccount);
         return kakaoAccount.get("email");
+    }
+    @Override
+    public List<MemberDTO> findMembersByType(MemberRole type) {
+        List<Member> members = memberRepository.findByType(type);
+        return members.stream()
+                .map(member -> MemberDTO.entityToDTO(member)) // ModelMapper 대신 사용
+                .collect(Collectors.toList());
     }
 
 }

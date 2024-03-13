@@ -21,4 +21,6 @@ public interface GroundService {
     // 구장관리 페이지 처리
     PageResponseDTO<GroundDTO> list(PageRequestDTO pageRequestDTO);
 
+
+    void changeState(Long gNo, Long newState);
 }
