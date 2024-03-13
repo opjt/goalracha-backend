@@ -2,6 +2,10 @@ package com.goalracha.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.cglib.core.Block;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @SequenceGenerator(name = "ground_seq_gen", // 시퀀스 제너레이터 이름
@@ -82,7 +86,7 @@ public class Ground {
     @Column(name = "roop_isYn", nullable = false)
     private boolean roopIsYn;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long state;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -93,7 +97,6 @@ public class Ground {
     public void convertToEntity(Member member) {
         this.member = member;
     }
-
 
     public void changeName(String name) {
         this.name = name;
@@ -159,5 +162,23 @@ public class Ground {
         this.state = state;
     }
 
+
+    @ElementCollection
+    @Builder.Default
+    private List<GroundImage> imageList = new ArrayList<>();
+
+    public void registerImage(GroundImage groundImage) {
+        groundImage.setOrd(this.imageList.size());
+        imageList.add(groundImage);
+    }
+
+    public void registerImageName(String fileName) {
+        GroundImage groundImage = GroundImage.builder().fileDirectory(fileName).build();
+        registerImage(groundImage);
+    }
+
+    public void clearList() {
+        this.imageList.clear();
+    }
 
 }

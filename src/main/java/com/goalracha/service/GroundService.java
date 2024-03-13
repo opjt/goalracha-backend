@@ -6,6 +6,8 @@ import com.goalracha.dto.PageResponseDTO;
 
 public interface GroundService {
 
+    PageResponseDTO<GroundDTO> listWithImage(PageRequestDTO pageRequestDTO);
+
     // 구장 등록
     Long register(GroundDTO groundDTO);
 
@@ -16,10 +18,7 @@ public interface GroundService {
     void modify(GroundDTO groundDTO);
 
     // 구장 삭제
-    void delete(Long gNo);
-
-    // 구장관리 페이지 처리
-    PageResponseDTO<GroundDTO> list(PageRequestDTO pageRequestDTO);
+    void delete(Long gNo);;
 
 
     void changeState(Long gNo, Long newState);
