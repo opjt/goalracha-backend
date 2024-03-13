@@ -1,11 +1,8 @@
 package com.goalracha.service;
 
-import com.goalracha.dto.MemberModifyDTO;
+import com.goalracha.dto.*;
 import com.goalracha.entity.Member;
 import com.goalracha.entity.MemberRole;
-import com.goalracha.dto.MemberDTO;
-import com.goalracha.dto.MemberJoinDTO;
-import com.goalracha.dto.OwnerJoinDTO;
 import com.goalracha.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -63,9 +60,52 @@ public class MemberServiceImpl implements MemberService {
         return memberDTO;
     }
 
+    @Override   // 사업자 담당자 이름, 연락처 변경
+    public void ownerNameModify(OwnerNameModifyDTO ownerNameModifyDTO) {
+        // 회원 번호로 회원 조회
+        Optional<Member> result = memberRepository.findById(ownerNameModifyDTO.getUNo());
 
-    @Override
+        // 조회된 회원이 존재하지 않으면 null을 반환합니다.
+        Member member = result.orElse(null);
+
+        // 조회된 회원이 없으면 메서드를 종료합니다.
+        if (member == null) {
+            return;
+        }
+
+        // 회원 정보를 수정합니다.
+        member.ownerNameModify(ownerNameModifyDTO.getUNo(), ownerNameModifyDTO.getName(), ownerNameModifyDTO.getTel());
+
+        // 수정된 회원 정보를 저장합니다.
+        memberRepository.save(member);
+    }
+
+
+    @Override   // 사업자 비밀번호 변경
+    public void ownerPwModify(OwnerPwModifyDTO ownerPwModifyDTO) {
+
+        // 회원 번호로 회원 조회
+        Optional<Member> result = memberRepository.findById(ownerPwModifyDTO.getUNo());
+
+        // 조회된 회원이 존재하지 않으면 null을 반환합니다.
+        Member member = result.orElse(null);
+
+        // 조회된 회원이 없으면 메서드를 종료합니다.
+        if (member == null) {
+            return;
+        }
+
+        // 회원 정보를 수정합니다.
+        member.ownerPwModify(ownerPwModifyDTO.getUNo(), ownerPwModifyDTO.getPw());
+
+        // 수정된 회원 정보를 저장합니다.
+        memberRepository.save(member);
+    }
+
+
+    @Override   // 개인회원 닉네임, 연락처 변경
     public void userModify(MemberModifyDTO memberModifyDTO) {
+
         // 회원 번호로 회원을 조회합니다.
         Optional<Member> result = memberRepository.findById(memberModifyDTO.getUNo());
 
@@ -83,6 +123,7 @@ public class MemberServiceImpl implements MemberService {
         // 수정된 회원 정보를 저장합니다.
         memberRepository.save(member);
     }
+
 
     @Override
     public void modifyMember(MemberJoinDTO memberJoinDTO) {

@@ -2,6 +2,8 @@ package com.goalracha.controller;
 
 import com.goalracha.dto.MemberModifyDTO;
 import com.goalracha.dto.OwnerJoinDTO;
+import com.goalracha.dto.OwnerNameModifyDTO;
+import com.goalracha.dto.OwnerPwModifyDTO;
 import com.goalracha.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -34,6 +36,26 @@ public class memberController {
         memberModifyDTO.setUNo(uNo);
         log.info("Modify." + memberModifyDTO);
         memberService.userModify(memberModifyDTO);
+
+        return Map.of("RESULT", "SUCCESS");
+    }
+
+    @PutMapping("/api/member/owner/pwmodify/{uNo}")
+    public Map<String, String> ownerPwModify(@PathVariable(name = "uNo") Long uNo,
+                                             @RequestBody OwnerPwModifyDTO ownerPwModifyDTO) {
+        ownerPwModifyDTO.setUNo(uNo);
+        log.info("Modify : " + ownerPwModifyDTO);
+        memberService.ownerPwModify(ownerPwModifyDTO);
+
+        return Map.of("RESULT", "SUCCESS");
+    }
+
+    @PutMapping("/api/member/owner/modify/{uNo}")
+    public Map<String, String> ownerNameModify(@PathVariable(name = "uNo") Long uNo,
+                                               @RequestBody OwnerNameModifyDTO ownerNameModifyDTO) {
+        ownerNameModifyDTO.setUNo(uNo);
+        log.info("Modify : " + ownerNameModifyDTO);
+        memberService.ownerNameModify(ownerNameModifyDTO);
 
         return Map.of("RESULT", "SUCCESS");
     }

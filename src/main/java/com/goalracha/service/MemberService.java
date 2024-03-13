@@ -1,9 +1,6 @@
 package com.goalracha.service;
 
-import com.goalracha.dto.MemberDTO;
-import com.goalracha.dto.MemberJoinDTO;
-import com.goalracha.dto.MemberModifyDTO;
-import com.goalracha.dto.OwnerJoinDTO;
+import com.goalracha.dto.*;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -18,4 +15,8 @@ public interface MemberService {
     Long ownerJoin(OwnerJoinDTO joinDto);
 
     void userModify(MemberModifyDTO memberModifyDTO);
+
+    void ownerPwModify(OwnerPwModifyDTO ownerPwModifyDTO);
+
+    void ownerNameModify(OwnerNameModifyDTO ownerNameModifyDTO);
 }

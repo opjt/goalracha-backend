@@ -76,7 +76,16 @@ public class Member {
         this.nickname = nickname;
         this.tel = tel;
 
-
     }
 
+    public void ownerPwModify(Long uNo, String pw) {
+        this.uNo = uNo;
+        this.pw = pw;
+    }
+
+    public void ownerNameModify(Long uNo, String name, String tel){
+        this.uNo = uNo;
+        this.name = name;
+        this.tel = tel;
+    }
 }
