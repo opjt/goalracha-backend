@@ -1,10 +1,8 @@
 package com.goalracha.service;
 
+import com.goalracha.dto.*;
 import com.goalracha.entity.Member;
 import com.goalracha.entity.MemberRole;
-import com.goalracha.dto.MemberDTO;
-import com.goalracha.dto.MemberJoinDTO;
-import com.goalracha.dto.OwnerJoinDTO;
 import com.goalracha.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
