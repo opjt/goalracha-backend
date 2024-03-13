@@ -40,7 +40,7 @@ public class GroundDTO {
     private boolean parkareaIsYn;
     private boolean roopIsYn;
     private Long state;
-    private Long member;
+    private Long uNo;
 
     @Builder.Default
     private List<MultipartFile> files = new ArrayList<>();

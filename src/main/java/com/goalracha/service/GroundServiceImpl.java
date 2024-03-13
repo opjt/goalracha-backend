@@ -41,6 +41,9 @@ public class GroundServiceImpl implements GroundService {
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize(), Sort.by(Sort.Direction.DESC, "gNo"));
         Page<Object[]> result = groundRepository.selectList(pageable);
 
+        int offset = pageable.getPageNumber() * pageable.getPageSize() + 1; // offset 계산에서 +1
+        int limit = offset + pageable.getPageSize() - 1;
+
         List<GroundDTO> dtoList = result.get().map(arr -> {
             Ground ground = (Ground) arr[0];
             GroundImage groundImage = (GroundImage) arr[1];
@@ -79,6 +82,7 @@ public Long register(GroundDTO groundDTO) {
         GroundDTO groundDTO = GroundDTO.entityToDTO(ground);
 
         return groundDTO;
+
     }
 
     @Override
