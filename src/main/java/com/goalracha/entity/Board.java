@@ -1,5 +1,6 @@
 package com.goalracha.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +28,7 @@ public class Board {
     @Column(name = "content", length = 4000, nullable = false)
     private String content; //내용
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone = "Asia/Seoul")
     @Column(name = "createdate", nullable = false)
     private Date createdate; //작성일시
 
