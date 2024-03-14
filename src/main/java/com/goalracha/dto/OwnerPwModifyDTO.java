@@ -6,6 +6,7 @@ import lombok.Data;
 public class OwnerPwModifyDTO {
 
     private Long uNo;
-    private String pw;
+    private String newpw;
+    private String oldpw;
 
 }
