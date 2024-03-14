@@ -163,6 +163,18 @@ public class MemberServiceImpl implements MemberService {
         return true;
     }
 
+    // 닉네임 중복 검사
+    /*@Override
+    public boolean checkNickname(String nickname) {
+        Member member = memberRepository.findByNickname(nickname);
+        return member != null;
+    }*/
+    @Override
+    public boolean checkNickname(String nickname) {
+        Member member = memberRepository.findByNickname(nickname);
+        return member != null;
+    }
+
     @Override
     public Long ownerJoin(OwnerJoinDTO joinDto) {
         Member member = Member.builder()
