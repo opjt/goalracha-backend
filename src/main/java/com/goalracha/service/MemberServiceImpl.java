@@ -7,6 +7,7 @@ import com.goalracha.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -20,16 +21,19 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Log4j2
 public class MemberServiceImpl implements MemberService {
+
+
     private final MemberRepository memberRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
+
     @Override
     public MemberDTO getKakaoMember(String accessToken) {
         String email = getEmailFromKakaoAccessToken(accessToken);
@@ -82,9 +86,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
 
-    @Override   // 사업자 비밀번호 변경
+    @Override
     public void ownerPwModify(OwnerPwModifyDTO ownerPwModifyDTO) {
-
         // 회원 번호로 회원 조회
         Optional<Member> result = memberRepository.findById(ownerPwModifyDTO.getUNo());
 
@@ -96,11 +99,19 @@ public class MemberServiceImpl implements MemberService {
             return;
         }
 
-        // 회원 정보를 수정합니다.
-        member.ownerPwModify(ownerPwModifyDTO.getUNo(), ownerPwModifyDTO.getPw());
+        // 기존 비밀번호와 수정하려는 비밀번호를 비교하여 동일한지 검사합니다.
+        if (passwordEncoder.matches(ownerPwModifyDTO.getOldpw(), member.getPw())) {
+            // 동일하다면 새로운 비밀번호로 회원 정보를 수정합니다.
+            String encodedNewPassword = passwordEncoder.encode(ownerPwModifyDTO.getNewpw());
+            member.setPw(encodedNewPassword);
 
-        // 수정된 회원 정보를 저장합니다.
-        memberRepository.save(member);
+            // 수정된 회원 정보를 저장합니다.
+            memberRepository.save(member);
+        } else {
+            // 비밀번호가 일치하지 않는 경우에 대한 처리를 수행할 수 있습니다.
+            // 예를 들어, 예외를 던지거나 메시지를 반환하여 클라이언트에게 알릴 수 있습니다.
+            throw new IllegalArgumentException("기존 비밀번호가 일치하지 않습니다.");
+        }
     }
 
 
@@ -198,6 +209,7 @@ public class MemberServiceImpl implements MemberService {
         log.info("kakaoAccount: " + kakaoAccount);
         return kakaoAccount.get("email");
     }
+
     @Override
     public List<MemberDTO> findMembersByType(MemberRole type) {
         List<Member> members = memberRepository.findByType(type);
