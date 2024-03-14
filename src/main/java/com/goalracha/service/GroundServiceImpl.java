@@ -65,15 +65,13 @@ public class GroundServiceImpl implements GroundService {
 
         return PageResponseDTO.<GroundDTO>withAll().dtoList(dtoList).totalCount(totalCount).pageRequestDTO(pageRequestDTO).build();
     }
-@Override
-public Long register(GroundDTO groundDTO) {
-    Ground ground = GroundDTO.dtoToEntity(groundDTO);
-    Ground result = groundRepository.save(ground);
-    return result.getGNo();
-}
 
-
-
+    @Override
+        public Long register(GroundDTO groundDTO) {
+        Ground ground = GroundDTO.dtoToEntity(groundDTO);
+        Ground result = groundRepository.save(ground);
+        return result.getGNo();
+    }
 
     @Override
     public GroundDTO get(Long gNo) {
