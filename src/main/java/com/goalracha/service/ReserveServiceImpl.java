@@ -37,8 +37,10 @@ public class ReserveServiceImpl implements ReserveService{
     public Map<String, Object> getAllList(String reqDate, String reqTime, List<String> reqInout, String search) {
         Map<String, Object> result = new HashMap<>(); //최종리턴맵
 
-        List<GroundDTO> groundList= groundRepository.findAllGroundsWithoutMember();
-        Map<Long, GroundDTO> groundMap = groundList.stream()
+        List<Ground> groundList2 = groundRepository.findByState(1L);
+        List<GroundDTO> dtoList = groundList2.stream().map(GroundDTO::entityToDTO).toList();
+//        List<GroundDTO> groundList= groundRepository.findAllGroundsWithoutMember();
+        Map<Long, GroundDTO> groundMap = dtoList.stream()
                 .collect(Collectors.toMap(GroundDTO::getGNo, Function.identity()));
 
         List<String> reqTimeList = Arrays.asList(reqTime.split(","));
@@ -119,8 +121,8 @@ public class ReserveServiceImpl implements ReserveService{
         if(groundE == null ) {
             return null;
         }
-        GroundDTO ground = modelMapper.map(groundE, GroundDTO.class);
-        result.put("groundInfo", ground);
+        GroundDTO grounddto = GroundDTO.entityToDTO(groundE);
+        result.put("groundInfo", grounddto);
         log.info(date);
         List<ReservDTO> reservList = reserveRepository.listGroundReserveDTO(gno, date);
         result.put("reservList", reservList);

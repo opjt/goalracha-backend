@@ -39,6 +39,7 @@ public class BoardServiceImpl implements BoardService {
         BoardDTO boardDTO = new BoardDTO();
         boardDTO.setBno(board.getBno());
         boardDTO.setTitle(board.getTitle());
+        boardDTO.setContent(board.getContent());
         // 필요한 다른 필드들을 복사합니다.
         return boardDTO;
     }

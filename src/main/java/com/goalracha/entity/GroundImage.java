@@ -21,6 +21,4 @@ public class GroundImage {
         this.ord = ord;
     }
 
-
-
 }

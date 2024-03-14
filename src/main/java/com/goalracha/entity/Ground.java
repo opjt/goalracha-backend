@@ -64,7 +64,6 @@ public class Ground {
     @Column(nullable = false, length = 4000)
     private String refundRules;
 
-
     @Column(name = "vest_isYN", nullable = false)
     private boolean vestIsYn;
 

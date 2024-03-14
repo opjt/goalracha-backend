@@ -36,7 +36,7 @@ public class GroundController {
     }
 
     @PostMapping("/register")
-    public Map<String, Long> register(GroundDTO groundDTO) {
+    public Map<String, Long> register(@RequestBody GroundDTO groundDTO) {
         log.info("register: " + groundDTO);
         // 파일 저장
         List<MultipartFile> files = groundDTO.getFiles();
