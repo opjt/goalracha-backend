@@ -32,6 +32,20 @@ public class memberController {
         return Map.of("result", check);
     }
 
+    // 닉네임 중복검사
+    /*@PostMapping("/api/member/checknickname")
+    public Map<String, Object> checkNickname(@RequestBody String nickname) {
+        boolean isDuplicate = memberService.checkNickname(nickname);
+        return Map.of("isDuplicate", isDuplicate);
+    }*/
+
+    // 회원 닉네임 중복 확인 API
+    @GetMapping("/api/member/checkNickname")
+    public ResponseEntity<Map<String, Boolean>> checkNickname(@RequestParam String nickname) {
+        boolean isNicknameAvailable = memberService.checkNickname(nickname);
+        return ResponseEntity.ok(Map.of("available", isNicknameAvailable));
+    }
+
     @PostMapping("/api/member/owner")
     public Map<String, Object> joinOwner(@RequestBody OwnerJoinDTO joinDto) {
 
