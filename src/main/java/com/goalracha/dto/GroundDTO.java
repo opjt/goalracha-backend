@@ -3,6 +3,7 @@ package com.goalracha.dto;
 
 import com.goalracha.entity.Ground;
 import com.goalracha.entity.GroundImage;
+import com.goalracha.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -54,7 +55,9 @@ public class GroundDTO {
                 .closeTime(ground.getCloseTime()).fare(ground.getFare()).userGuide(ground.getUserGuide())
                 .userRules(ground.getUserRules()).refundRules(ground.getRefundRules()).vestIsYn(ground.isVestIsYn())
                 .footwearIsYn(ground.isFootwearIsYn()).showerIsYn(ground.isShowerIsYn()).roopIsYn(ground.isRoopIsYn())
-                .airconIsYn(ground.isAirconIsYn()).parkareaIsYn(ground.isParkareaIsYn()).build();
+                .airconIsYn(ground.isAirconIsYn()).parkareaIsYn(ground.isParkareaIsYn()).state(ground.getState())
+                //.uNo(ground.getMember().getUNo())
+                .build();
         List<GroundImage> imageList = ground.getImageList();
         if (imageList == null || imageList.size() == 0) {
 
@@ -74,7 +77,7 @@ public class GroundDTO {
                 .closeTime(groundDTO.getCloseTime()).fare(groundDTO.getFare()).userGuide(groundDTO.getUserGuide())
                 .userRules(groundDTO.getUserRules()).refundRules(groundDTO.getRefundRules()).vestIsYn(groundDTO.isVestIsYn())
                 .footwearIsYn(groundDTO.isFootwearIsYn()).showerIsYn(groundDTO.isShowerIsYn()).roopIsYn(groundDTO.isRoopIsYn())
-                .airconIsYn(groundDTO.isAirconIsYn()).parkareaIsYn(groundDTO.isParkareaIsYn())
+                .airconIsYn(groundDTO.isAirconIsYn()).parkareaIsYn(groundDTO.isParkareaIsYn()).state(groundDTO.getState())
                 .build();
 
         List<String> uploadFileNames = groundDTO.getUploadFileNames();
