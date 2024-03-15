@@ -2,13 +2,10 @@ package com.goalracha.service;
 
 
 import com.goalracha.dto.GroundDTO;
-import com.goalracha.dto.MemberDTO;
 import com.goalracha.dto.PageRequestDTO;
 import com.goalracha.dto.PageResponseDTO;
 import com.goalracha.entity.Ground;
-import com.goalracha.entity.Member;
 import com.goalracha.entity.GroundImage;
-import com.goalracha.entity.Member;
 import com.goalracha.repository.GroundRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -126,8 +122,6 @@ public class GroundServiceImpl implements GroundService {
     public void delete(Long gno) {
         groundRepository.deleteById(gno);
     }
-
-
     @Override
     public void changeState(Long gNo, Long newState) {
         Ground ground = groundRepository.findById(gNo)
