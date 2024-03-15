@@ -22,4 +22,6 @@ public interface ReserveService {
     Map<String, Object> showGroundInfo(Long gno, String date);
 
     Map<String, Object> newReserve(Long gNo, Long uNo, Date date, String time);
+
+    List<UserReserveListDTO>  getUserReserve(Long uNo);
 }

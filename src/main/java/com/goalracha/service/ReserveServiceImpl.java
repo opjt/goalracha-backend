@@ -129,8 +129,6 @@ public class ReserveServiceImpl implements ReserveService{
         return result;
     }
 
-
-
     @Override
     public List<ReserveListDTO> getList() {
 
@@ -142,6 +140,12 @@ public class ReserveServiceImpl implements ReserveService{
         Reserve result = reserveRepository.findById(gno).orElse(null);
         return result;
     }
+
+    // uNo로 예약목록
+    public List<UserReserveListDTO> getUserReserve(Long uNo) {
+        return reserveRepository.findReservationsByUserNo(uNo);
+    }
+
 
     @Override
     public ReserveListDTO getGroundReserve(Long gno) {
@@ -227,7 +231,6 @@ public class ReserveServiceImpl implements ReserveService{
                 .createDate(new Date())
                 .member(member)
                 .ground(ground)
-                .price(ground.getFare())
                 .state(1)
                 .build();
         Reserve result = reserveRepository.save(newreserv);
