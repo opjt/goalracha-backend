@@ -13,8 +13,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,7 +64,7 @@ public class ReserveController {
     @PostMapping("/v/p/")
     public ResponseEntity<?> addReserve(@RequestBody ReserveAddsDTO reserveAddsdto) {
 
-        Map<String, Object> response = reservService.newReserve(reserveAddsdto.getGNo(),reserveAddsdto.getUNo(),reserveAddsdto.getDate(),reserveAddsdto.getTime());
+        Map<String, Object> response = reserveService.newReserve(reserveAddsdto.getGNo(),reserveAddsdto.getUNo(),reserveAddsdto.getDate(),reserveAddsdto.getTime());
         if(response == null) {
             return ResponseEntity.badRequest().body("error");
         }
