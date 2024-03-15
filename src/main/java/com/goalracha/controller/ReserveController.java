@@ -2,6 +2,7 @@ package com.goalracha.controller;
 
 import com.goalracha.dto.reserve.ReservDTO;
 import com.goalracha.dto.reserve.ReserveListDTO;
+import com.goalracha.dto.reserve.UserReserveListDTO;
 import com.goalracha.entity.Reserve;
 import com.goalracha.repository.GroundRepository;
 import com.goalracha.repository.ReserveRepository;
@@ -20,28 +21,30 @@ import java.util.Map;
 @Log4j2
 @RequestMapping("/api/reserve")
 public class ReserveController {
-    private final ReserveService reservService;
+
+    private final ReserveService reserveService;
     private final ReserveRepository reserveRepository;
     private final GroundRepository groundRepository;
 
     //예약 전체목록(테스트)
     @GetMapping("/v/")
-    public ResponseEntity<?> getList(){
-        List<ReserveListDTO> list = reservService.getList();
+    public ResponseEntity<?> getList() {
+        List<ReserveListDTO> list = reserveService.getList();
         return ResponseEntity.ok("list");
     }
 
     @PostMapping("/v/date/")
-    public ResponseEntity<?> getListondate(@RequestBody Map<String, Object> request){
+    public ResponseEntity<?> getListondate(@RequestBody Map<String, Object> request) {
 
-        Map<String, Object> response = reservService.getAllList((String)request.get("date"), (String)request.get("time"), (List<String>) request.get("inout"), (String)request.get("search"));
+        Map<String, Object> response = reserveService.getAllList((String) request.get("date"), (String) request.get("time"), (List<String>) request.get("inout"), (String) request.get("search"));
 
         return ResponseEntity.ok().body(response);
     }
+
     @GetMapping("/v/ground/{gno}/{date}")
-    public ResponseEntity<?> showGroundInfo(@PathVariable Long gno, @PathVariable String date){
+    public ResponseEntity<?> showGroundInfo(@PathVariable Long gno, @PathVariable String date) {
         log.info(date);
-        Map<String, Object> response = reservService.showGroundInfo(gno, date);
+        Map<String, Object> response = reserveService.showGroundInfo(gno, date);
 
         return ResponseEntity.ok().body(response);
     }
@@ -51,8 +54,8 @@ public class ReserveController {
     public ResponseEntity<?> newReserve(@RequestBody ReservDTO reservDTO) {
         log.info("reserveDTO :: " + reservDTO);
 
-        Reserve reserve = reservService.newReserve(reservDTO);
-        if(reserve == null) {
+        Reserve reserve = reserveService.newReserve(reservDTO);
+        if (reserve == null) {
             return ResponseEntity.badRequest().body("error");
         }
         log.info(reserve.getRNO());
@@ -62,7 +65,7 @@ public class ReserveController {
     //예약번호로 그정보 가져오기
     @GetMapping("/v/{rno}")
     public ResponseEntity<?> getOne(@PathVariable Long rno) {
-        Reserve reserve = reservService.getOne(rno);
+        Reserve reserve = reserveService.getOne(rno);
         log.info(rno);
         return ResponseEntity.ok(reserve.getRNO());
     }
@@ -71,9 +74,17 @@ public class ReserveController {
     @GetMapping("/v/ground/{gno}")
     public ResponseEntity<?> getGroundReserve(@PathVariable Long gno) {
 
-        ReserveListDTO dto = reservService.getGroundReserve(gno);
+        ReserveListDTO dto = reserveService.getGroundReserve(gno);
 
         return ResponseEntity.ok(dto);
+    }
+
+
+    // 유저 번호로 예약목록 가져오기
+    @GetMapping("/v/list/{uNo}")
+    public ResponseEntity<List<UserReserveListDTO>> getUserReservationList(@PathVariable Long uNo) {
+        List<UserReserveListDTO> userReservations = reserveService.getUserReserve(uNo);
+        return ResponseEntity.ok(userReservations);
     }
 
 }
