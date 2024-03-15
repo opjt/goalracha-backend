@@ -18,15 +18,14 @@ public class MemberRepositoryTests {
     private PasswordEncoder passwordEncoder;
 
     @Test
-    public void testInsertMember() {
-        Member member = Member.builder().email("user2@naver.com").pw(passwordEncoder.encode("1234")).type(MemberRole.USER).
-                userId("user2").
-                nickname("user2").build();
+    public void testInsertAdmin() {
+        Member member = Member.builder().email("admin@naver.com").pw(passwordEncoder.encode("1234")).type(MemberRole.ADMIN).
+                userId("admin").
+                nickname("admin").build();
         Member save = memberRepository.save(member);
         log.info(save);
 
     }
-
     @Test
     public void testRead() {
         String id = "admin";
