@@ -161,7 +161,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public boolean checkNickname(String nickname) {
         Member member = memberRepository.findByNickname(nickname);
-        return member != null;
+        return memberRepository.existsByNickname(nickname);
     }
 
     @Override
