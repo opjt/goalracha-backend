@@ -36,7 +36,10 @@ public class Reserve {
     private Date createDate; //예약 생성날짜
 
     @Column(name = "payment_type")
-    private Integer payType; //결제방식
+    private String payType; //결제방식
+
+    @Column(name = "price")
+    private Long price; // 가격
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="g_no")

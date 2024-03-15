@@ -129,6 +129,8 @@ public class ReserveServiceImpl implements ReserveService{
         return result;
     }
 
+
+
     @Override
     public List<ReserveListDTO> getList() {
 
@@ -149,6 +151,51 @@ public class ReserveServiceImpl implements ReserveService{
         log.info("listdto :: " + listdto);
 
         return listdto;
+    }
+
+    @Override
+    public Map<String, Object> newReserve(Long gNo, Long uNo, Date reqDate, String time) {
+        Map<String, Object> result = new HashMap<>(); //최종리턴맵
+
+        Member member = memberRepository.findById(uNo).orElse(null);
+        Ground ground = groundRepository.findById(gNo).orElse(null);
+        List<Integer> resTimeList = new ArrayList<>();
+        if(member == null || ground == null) { //구장이나 맴버정보가 맞지 않으면 리턴널
+            return null;
+        }
+        result.put("ground", GroundDTO.entityToDTO(ground));
+        result.put("memberName", member.getName());
+        List<Integer> timeList = Arrays.stream(time.split(",")).map(Integer::parseInt).collect(Collectors.toList());
+        for(int oftime : timeList) {
+            if(!checkReserveTime(ground.getOpenTime(), ground.getCloseTime(), oftime ,ground.getUsageTime())) { //예약가능 시간대인지 확인
+                log.error("불가능한 시간 " + ground.getOpenTime() + " " +  ground.getCloseTime()+ " "+  oftime+ " " +ground.getUsageTime());
+                return null;
+            }
+
+            List<Integer> getTimeList = reserveRepository.findReservationTimesByDate(ground.getGNo(),reqDate); //중복시간 있는지 확인
+            if(getTimeList.contains(oftime)) {
+                log.error("중복시간 검출" + oftime + " " + getTimeList.toString());
+                return null;
+            }
+
+            Reserve newreserv = Reserve.builder()
+                    .reserveDate(reqDate)
+                    .time(oftime)
+                    .payType("1")
+                    .createDate(new Date())
+                    .member(member)
+                    .ground(ground)
+                    .price(ground.getFare())
+                    .state(1)
+                    .build();
+            Reserve reserve = reserveRepository.save(newreserv);
+            resTimeList.add(reserve.getTime());
+        }
+        result.put("resTimeList", resTimeList);
+        result.put("date", reqDate);
+
+
+        return result;
     }
 
     @Override
@@ -180,6 +227,7 @@ public class ReserveServiceImpl implements ReserveService{
                 .createDate(new Date())
                 .member(member)
                 .ground(ground)
+                .price(ground.getFare())
                 .state(1)
                 .build();
         Reserve result = reserveRepository.save(newreserv);

@@ -1,6 +1,7 @@
 package com.goalracha.controller;
 
 import com.goalracha.dto.reserve.ReservDTO;
+import com.goalracha.dto.reserve.ReserveAddsDTO;
 import com.goalracha.dto.reserve.ReserveListDTO;
 import com.goalracha.entity.Reserve;
 import com.goalracha.repository.GroundRepository;
@@ -11,6 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +59,15 @@ public class ReserveController {
         }
         log.info(reserve.getRNO());
         return ResponseEntity.ok(reserve.getRNO());
+    }
+    @PostMapping("/v/p/")
+    public ResponseEntity<?> addReserve(@RequestBody ReserveAddsDTO reserveAddsdto) {
+
+        Map<String, Object> response = reservService.newReserve(reserveAddsdto.getGNo(),reserveAddsdto.getUNo(),reserveAddsdto.getDate(),reserveAddsdto.getTime());
+        if(response == null) {
+            return ResponseEntity.badRequest().body("error");
+        }
+        return ResponseEntity.ok(response);
     }
 
     //예약번호로 그정보 가져오기
