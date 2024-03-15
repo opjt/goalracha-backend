@@ -8,6 +8,8 @@ import com.goalracha.service.GroundService;
 import com.goalracha.util.CustomFileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -94,6 +96,11 @@ public class GroundController {
         Long newState = stateMap.get("newState");
         service.changeState(gno, newState);
         return Map.of("RESULT", "SUCCESS", "gNo", gno.toString(), "newState", newState.toString());
+    }
+
+    @GetMapping("/view/{fileName}")
+    public ResponseEntity<Resource> viewFileGET(@PathVariable String fileName) {
+        return fileUtil.getFile(fileName);
     }
 }
 
