@@ -101,5 +101,11 @@ public class GroundController {
     public ResponseEntity<Resource> viewFileGET(@PathVariable String fileName) {
         return fileUtil.getFile(fileName);
     }
+
+    @GetMapping("/images/{gno}")
+    public ResponseEntity<List<String>> getAllImagesByGNo(@PathVariable("gno") Long gno) {
+        List<String> fileNames = service.findAllImageFileNamesByGNo(gno);
+        return ResponseEntity.ok(fileNames);
+    }
 }
 

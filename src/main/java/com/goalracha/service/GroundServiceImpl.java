@@ -129,4 +129,9 @@ public class GroundServiceImpl implements GroundService {
         ground.changeState(newState);
         groundRepository.save(ground);
     }
+
+    @Override
+    public List<String> findAllImageFileNamesByGNo(Long gNo) {
+        return groundRepository.findAllImageFileNamesByGNo(gNo);
+    }
 }

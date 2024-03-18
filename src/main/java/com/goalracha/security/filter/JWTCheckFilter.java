@@ -60,7 +60,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         log.info("check uri.............." + path);
         // api/member/ 경로의 호출은 체크하지 않음
-        if (path.startsWith("/api/member/") || path.startsWith("/api/member/owner/") || path.startsWith("/reserve/") || path.equals("/favicon.ico")) {
+        if (path.startsWith("/api/member/") || path.startsWith("/api/member/owner/") || path.startsWith("/api/images/") || path.startsWith("/reserve/") || path.equals("/favicon.ico")) {
             return true;
         }
         // 이미지 조회 경로는 체크하지 않는다면
@@ -69,6 +69,10 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         }
         // 구장관리 경로는 체크 안함
         if (path.startsWith("/goalracha/ground")) {
+            return true;
+        }
+        // 관리자 상세페이지 구장사진 여러장
+        if (path.startsWith("/goalracha/read") || path.startsWith("/goalracha/ground/view")) {
             return true;
         }
         return false;
