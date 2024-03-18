@@ -8,6 +8,7 @@ import com.goalracha.dto.OwnerPwModifyDTO;
 import com.goalracha.entity.Member;
 import com.goalracha.entity.MemberRole;
 import com.goalracha.service.MemberService;
+import com.goalracha.service.ReserveService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class memberController {
     private final MemberService memberService;
+    private final ReserveService reserveService;
 
     @PostMapping("/api/member/checkid")
     public Map<String, Object> modify(@RequestBody String userid) {
@@ -45,7 +47,6 @@ public class memberController {
         boolean isNicknameAvailable = memberService.checkNickname(nickname);
         return ResponseEntity.ok(Map.of("available", isNicknameAvailable));
     }
-
 
     @PostMapping("/api/member/owner")
     public Map<String, Object> joinOwner(@RequestBody OwnerJoinDTO joinDto) {
@@ -93,5 +94,24 @@ public class memberController {
         memberService.ownerNameModify(ownerNameModifyDTO);
 
         return Map.of("RESULT", "SUCCESS");
+    }
+
+    // 회원 탈퇴 요청 처리
+    @DeleteMapping("/api/member/{uNo}")
+    public Map<String, String> withdrawMember(@PathVariable Long uNo) {
+        // 해당 유저가 예약 내역을 가지고 있는지 확인
+        boolean hasReservations = reserveService.hasReservations(uNo);
+
+        if (hasReservations) {
+            return Map.of("result", "failure", "message", "예약 내역이 존재하여 탈퇴할 수 없습니다.");
+        } else {
+            // 예약 내역이 없으면 회원 탈퇴 처리
+            boolean withdrawalSuccess = memberService.withdrawMember(uNo);
+            if (withdrawalSuccess) {
+                return Map.of("result", "success", "message", "회원 탈퇴가 완료되었습니다.");
+            } else {
+                return Map.of("result", "failure", "message", "회원 탈퇴에 실패하였습니다.");
+            }
+        }
     }
 }
