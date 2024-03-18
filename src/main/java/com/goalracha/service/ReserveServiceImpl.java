@@ -146,6 +146,12 @@ public class ReserveServiceImpl implements ReserveService{
         return reserveRepository.findReservationsByUserNo(uNo);
     }
 
+    // 회원 탈퇴
+    @Override
+    public boolean hasReservations(Long uNo) {
+        return false;
+    }
+
 
     @Override
     public ReserveListDTO getGroundReserve(Long gno) {

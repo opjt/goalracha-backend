@@ -18,18 +18,18 @@ import java.util.Map;
 @ToString
 public class MemberDTO extends User {
 
-    private Long uNo;
-    private String userId;
-    private String pw;
-    private String nickname;
-    private String name; //유저이름
-    private String tel;
-    private Date createDate;
-    private String email;
-    private String businessName;
-    private String businessId;
-    private Integer state;
-    private MemberRole type;
+    private Long uNo; // 유저 일련번호
+    private String userId; // 유저 아이디
+    private String pw; // 비밀번호
+    private String nickname; // 닉네임
+    private String name; //유저 이름
+    private String tel; // 전화번호
+    private Date createDate; // 등록 날짜
+    private String email; // 이메일
+    private String businessName; // 사업자명
+    private String businessId; // 사업자 번호
+    private Integer state; // 유저 상태 (정상회원, 탈퇴회원)
+    private MemberRole type; // 유저 타입 (개인회원, 사업자 회원, 관리자)
     public MemberDTO(Long uNo, String userId, String pw, String nickname, String name, String tel, Date createDate, String email, String businessName,
                      String businessId, Integer state, MemberRole type) {
         super(userId, pw, Collections.singleton(new SimpleGrantedAuthority("ROLE_" + type)));

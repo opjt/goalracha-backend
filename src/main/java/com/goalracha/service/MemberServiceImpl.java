@@ -85,6 +85,12 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
+    // 회원 탈퇴
+    @Override
+    public boolean withdrawMember(Long uNo) {
+        return false;
+    }
+
 
     @Override
     public void ownerPwModify(OwnerPwModifyDTO ownerPwModifyDTO) {
@@ -163,12 +169,6 @@ public class MemberServiceImpl implements MemberService {
         return true;
     }
 
-    // 닉네임 중복 검사
-    /*@Override
-    public boolean checkNickname(String nickname) {
-        Member member = memberRepository.findByNickname(nickname);
-        return member != null;
-    }*/
     @Override
     public boolean checkNickname(String nickname) {
         Member member = memberRepository.findByNickname(nickname);
