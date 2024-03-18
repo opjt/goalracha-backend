@@ -2,6 +2,7 @@ package com.goalracha.repository;
 
 import com.goalracha.dto.GroundDTO;
 import com.goalracha.entity.Ground;
+import com.goalracha.entity.GroundImage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -38,9 +39,11 @@ public interface GroundRepository extends JpaRepository<Ground, Long> {
     void groundState(@Param("gno") Long gno, @Param("state") Long state);
 
     @Query("SELECT g, gi FROM Ground g LEFT JOIN fetch g.imageList gi WHERE gi.ord = 0")
+    // @Query("SELECT g, gi FROM Ground g LEFT JOIN fetch g.imageList gi")
     Page<Object[]> selectList(Pageable pageable);
 
-
+    @Query("SELECT gi.fileDirectory FROM Ground g JOIN g.imageList gi WHERE g.gNo = :gno")
+    List<String> findAllImageFileNamesByGNo(@Param("gno") Long gno);
 }
 
 //    @Query("SELECT new com.goalracha.dto.GroundDTO(g.gNo, g.name, g.addr, g.inAndOut, g.width, " +

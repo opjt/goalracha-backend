@@ -21,9 +21,11 @@ public interface GroundService {
     void modify(GroundDTO groundDTO);
 
     // 구장 삭제
-    void delete(Long gNo);;
+    void delete(Long gNo);
 
-
+    // 관리자페이지 상태변경
     void changeState(Long gNo, Long newState);
+
+    List<String> findAllImageFileNamesByGNo(Long gNo);
 
 }
