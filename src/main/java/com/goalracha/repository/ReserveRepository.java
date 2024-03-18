@@ -1,5 +1,6 @@
 package com.goalracha.repository;
 
+import com.goalracha.dto.reserve.AdminReserveListDTO;
 import com.goalracha.dto.reserve.ReservDTO;
 import com.goalracha.dto.reserve.UserReserveListDTO;
 import com.goalracha.entity.Member;
@@ -7,6 +8,8 @@ import com.goalracha.entity.Reserve;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,19 +32,34 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
             "GROUP BY g.gNo")
     List<Object[]> findGroundsWithReservationsOnDate(@Param("date") String date);
 
+    // user 이전 예약 리스트
     @Query("SELECT new com.goalracha.dto.reserve.UserReserveListDTO(g.name, g.addr, r.reserveDate, r.time, r.createDate, r.price) " +
             "FROM Reserve r " +
             "JOIN r.ground g " +
-            "WHERE r.member.uNo = :uNo")
-    List<UserReserveListDTO> findReservationsByUserNo(@Param("uNo") Long uNo);
-}
+            "WHERE r.member.uNo = :uNo AND TO_DATE(TO_CHAR(r.reserveDate, 'YYYY-MM-DD'), 'YYYY-MM-DD') < TO_DATE(TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD'), 'YYYY-MM-DD')")
+    Page<UserReserveListDTO> userPreviousReservations(@Param("uNo") Long uNo, Pageable pageable);
 
-// 수정중
-/*
-@Query("SELECT new com.goalracha.dto.reserve.UserReserveListDTO(g.name, g.addr, r.reserveDate, r.time, r.createDate, r.price) " +
+
+    // user 예약현황 리스트
+    @Query("SELECT new com.goalracha.dto.reserve.UserReserveListDTO(g.name, g.addr, r.reserveDate, r.time, r.createDate, r.price) " +
             "FROM Reserve r " +
             "JOIN r.ground g " +
-            "WHERE r.member.uNo = :uNo " +
-            "AND r.reserveDate >= TRUNC(CURRENT_DATE)")
-    List<UserReserveListDTO> findReservationsByUserNo(@Param("uNo") Long uNo);
-    */
+            "WHERE r.member.uNo = :uNo AND TO_DATE(TO_CHAR(r.reserveDate, 'YYYY-MM-DD'), 'YYYY-MM-DD') >= TO_DATE(TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD'), 'YYYY-MM-DD')")
+    Page<UserReserveListDTO> userReservationStatus(@Param("uNo") Long uNo, Pageable pageable);
+
+    @Query("SELECT new com.goalracha.dto.reserve.AdminReserveListDTO(g.name, g.addr, r.reserveDate, r.time, r.createDate, r.price, m.name, m.email) " +
+            "FROM Reserve r " +
+            "JOIN r.member m " +
+            "JOIN r.ground g " +
+            "WHERE g.member.uNo = :uNo")
+        // member 엔티티의 uNo로 필터링
+    Page<AdminReserveListDTO> ownerReserveList(@Param("uNo") Long uNo, Pageable pageable);
+
+    //Admin 예약 전체 리스트
+    @Query("SELECT new com.goalracha.dto.reserve.AdminReserveListDTO(g.name, g.addr, r.reserveDate, r.time, r.createDate, r.price, m.name, m.email) " +
+            "FROM Reserve r " +
+            "JOIN r.ground g " +
+            "JOIN r.member m")
+    Page<AdminReserveListDTO> findAllReserveList(Pageable pageable);
+
+}
