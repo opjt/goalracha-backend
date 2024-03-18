@@ -6,13 +6,13 @@ import java.util.Date;
 
 @Data
 @Builder
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor
 @NoArgsConstructor
 public class UserReserveListDTO {
 
     private String name;
     private String addr;
-    private Date reservationDate;
+    private Date reserveDate;
     private Integer time;
     private Date createDate;
     private Long price;

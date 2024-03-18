@@ -1,6 +1,9 @@
 package com.goalracha.service;
 
 import com.goalracha.dto.GroundDTO;
+import com.goalracha.dto.PageRequestDTO;
+import com.goalracha.dto.PageResponseDTO;
+import com.goalracha.dto.reserve.AdminReserveListDTO;
 import com.goalracha.dto.reserve.ReservDTO;
 import com.goalracha.dto.reserve.ReserveListDTO;
 import com.goalracha.dto.reserve.UserReserveListDTO;
@@ -16,6 +19,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -93,7 +98,6 @@ public class ReserveServiceImpl implements ReserveService{
             }
             List<String> timesplit = Arrays.asList(times.split(","));
             int i = 0;
-            log.info(groundMap.get(gNo).toString());
             for(String sf1: reqTimeList) { //시간필터의 값들로 올바른 예약시간인지 확인
                 log.info("timesplit:" + sf1 + "contain : " + timesplit.contains(sf1) + "check : " + checkReserveTime(groundMap.get(gNo).getOpenTime(),groundMap.get(gNo).getCloseTime(),Integer.parseInt(sf1),
                         groundMap.get(gNo).getUsageTime()) );
@@ -142,9 +146,72 @@ public class ReserveServiceImpl implements ReserveService{
         return result;
     }
 
-    // uNo로 예약목록
-    public List<UserReserveListDTO> getUserReserve(Long uNo) {
-        return reserveRepository.findReservationsByUserNo(uNo);
+    // user 이전 예약
+    @Override
+    public PageResponseDTO<UserReserveListDTO> getUserPreviousReservations(Long uNo, Pageable pageable) {
+        // 사용자의 이전 예약을 가져옵니다.
+        Page<UserReserveListDTO> page = reserveRepository.userPreviousReservations(uNo, pageable);
+
+        // 가져온 이전 예약을 PageResponseDTO 형식으로 변환하여 반환합니다.
+        return PageResponseDTO.<UserReserveListDTO>withAll()
+                .dtoList(page.getContent())
+                .pageRequestDTO(PageRequestDTO.builder()
+                        .page(page.getNumber() + 1)
+                        .size(page.getSize())
+                        .build())
+                .totalCount(page.getTotalElements())
+                .build();
+    }
+
+    // user 예약 현황
+    @Override
+    public PageResponseDTO<UserReserveListDTO> getUserReservationStatus(Long uNo, Pageable pageable) {
+        // 사용자의 예약 현황을 가져옵니다.
+        Page<UserReserveListDTO> page = reserveRepository.userReservationStatus(uNo, pageable);
+
+        // 가져온 예약 현황을 PageResponseDTO 형식으로 변환하여 반환합니다.
+        return PageResponseDTO.<UserReserveListDTO>withAll()
+                .dtoList(page.getContent())
+                .pageRequestDTO(PageRequestDTO.builder()
+                        .page(page.getNumber() + 1)
+                        .size(page.getSize())
+                        .build())
+                .totalCount(page.getTotalElements())
+                .build();
+    }
+
+    // owner 예약 목록
+    @Override // owner 예약 리스트
+    public PageResponseDTO<AdminReserveListDTO> getOwnerReserveList(Long uNo, Pageable pageable) {
+        // 해당 사용자의 예약 리스트를 가져옵니다.
+        Page<AdminReserveListDTO> page = reserveRepository.ownerReserveList(uNo, pageable);
+
+        // 가져온 예약 리스트를 PageResponseDTO 형식으로 변환하여 반환합니다.
+        return PageResponseDTO.<AdminReserveListDTO>withAll()
+                .dtoList(page.getContent())
+                .pageRequestDTO(PageRequestDTO.builder()
+                        .page(page.getNumber() + 1)
+                        .size(page.getSize())
+                        .build())
+                .totalCount(page.getTotalElements())
+                .build();
+    }
+
+    // admin 전체 예약 목록
+    @Override // 예약 전체 리스트(관리자)
+    public PageResponseDTO<AdminReserveListDTO> getAllReserveList(Pageable pageable) {
+        // 모든 예약 리스트를 가져옵니다.
+        Page<AdminReserveListDTO> page = reserveRepository.findAllReserveList(pageable);
+
+        // 가져온 예약 리스트를 PageResponseDTO 형식으로 변환하여 반환합니다.
+        return PageResponseDTO.<AdminReserveListDTO>withAll()
+                .dtoList(page.getContent())
+                .pageRequestDTO(PageRequestDTO.builder()
+                        .page(page.getNumber() + 1)
+                        .size(page.getSize())
+                        .build())
+                .totalCount(page.getTotalElements())
+                .build();
     }
 
     // 회원 탈퇴

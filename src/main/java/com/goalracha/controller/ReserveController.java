@@ -1,15 +1,17 @@
 package com.goalracha.controller;
 
-import com.goalracha.dto.reserve.ReservDTO;
-import com.goalracha.dto.reserve.ReserveAddsDTO;
-import com.goalracha.dto.reserve.ReserveListDTO;
-import com.goalracha.dto.reserve.UserReserveListDTO;
+import com.goalracha.dto.PageRequestDTO;
+import com.goalracha.dto.PageResponseDTO;
+import com.goalracha.dto.reserve.*;
 import com.goalracha.entity.Reserve;
 import com.goalracha.repository.GroundRepository;
 import com.goalracha.repository.ReserveRepository;
 import com.goalracha.service.ReserveService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,11 +63,12 @@ public class ReserveController {
         log.info(reserve.getRNO());
         return ResponseEntity.ok(reserve.getRNO());
     }
+
     @PostMapping("/v/p/")
     public ResponseEntity<?> addReserve(@RequestBody ReserveAddsDTO reserveAddsdto) {
 
-        Map<String, Object> response = reserveService.newReserve(reserveAddsdto.getGNo(),reserveAddsdto.getUNo(),reserveAddsdto.getDate(),reserveAddsdto.getTime());
-        if(response == null) {
+        Map<String, Object> response = reserveService.newReserve(reserveAddsdto.getGNo(), reserveAddsdto.getUNo(), reserveAddsdto.getDate(), reserveAddsdto.getTime());
+        if (response == null) {
             return ResponseEntity.badRequest().body("error");
         }
         return ResponseEntity.ok(response);
@@ -89,11 +92,49 @@ public class ReserveController {
     }
 
 
-    // 유저 번호로 예약목록 가져오기
-    @GetMapping("/v/list/{uNo}")
-    public ResponseEntity<List<UserReserveListDTO>> getUserReservationList(@PathVariable Long uNo) {
-        List<UserReserveListDTO> userReservations = reserveService.getUserReserve(uNo);
-        return ResponseEntity.ok(userReservations);
+    // user 이전 예약 목록 조회
+    @GetMapping("/v/previous-reservations/{uNo}")
+    public ResponseEntity<PageResponseDTO<UserReserveListDTO>> getUserPreviousReservations(
+            @PathVariable Long uNo, @PageableDefault(size = 10) Pageable pageable) {
+
+        // 사용자의 이전 예약을 가져옵니다.
+        PageResponseDTO<UserReserveListDTO> responseDTO = reserveService.getUserPreviousReservations(uNo, pageable);
+
+        // ResponseEntity에 담아 반환합니다.
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    // 유저 번호로 예약현황 목록 조회
+    @GetMapping("/v/reservation-status/{uNo}")
+    public ResponseEntity<PageResponseDTO<UserReserveListDTO>> getUserReservationStatus(
+            @PathVariable Long uNo,
+            @PageableDefault(size = 10) Pageable pageable) {
+        // 사용자의 예약 현황을 가져옵니다.
+        PageResponseDTO<UserReserveListDTO> responseDTO = reserveService.getUserReservationStatus(uNo, pageable);
+        // ResponseEntity에 담아 반환합니다.
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    // 구장 유저 번호로 예약 목록 조회
+    @GetMapping("/v/owner-list/{uNo}")
+    public ResponseEntity<PageResponseDTO<AdminReserveListDTO>> getOwnerReserveList(
+            @PathVariable Long uNo,
+            @PageableDefault(size = 10) Pageable pageable) {
+        // 해당 사용자의 예약 리스트를 가져옵니다.
+        PageResponseDTO<AdminReserveListDTO> responseDTO = reserveService.getOwnerReserveList(uNo, pageable);
+        // ResponseEntity에 담아 반환합니다.
+        return ResponseEntity.ok(responseDTO);
+    }
+
+
+    // 예약 전체 리스트(관리자)
+    @GetMapping("/v/list")
+    public ResponseEntity<PageResponseDTO<AdminReserveListDTO>> getAllReserveList(
+            @PageableDefault(size = 10) Pageable pageable) {
+        // 모든 예약 리스트를 가져옵니다.
+        PageResponseDTO<AdminReserveListDTO> responseDTO = reserveService.getAllReserveList(pageable);
+        // ResponseEntity에 담아 반환합니다.
+        return ResponseEntity.ok(responseDTO);
     }
 
 }
