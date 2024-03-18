@@ -1,10 +1,11 @@
 package com.goalracha.service;
 
+import com.goalracha.dto.PageResponseDTO;
+import com.goalracha.dto.reserve.AdminReserveListDTO;
 import com.goalracha.dto.reserve.ReservDTO;
 import com.goalracha.dto.reserve.ReserveListDTO;
 import com.goalracha.dto.reserve.UserReserveListDTO;
 import com.goalracha.entity.Reserve;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Date;
@@ -38,7 +39,6 @@ public interface ReserveService {
     // 전체 예약 리스트(관리자)
     PageResponseDTO<AdminReserveListDTO> getAllReserveList(Pageable pageable);
 
-    List<UserReserveListDTO>  getUserReserve(Long uNo);
 
     boolean hasReservations(Long uNo); // 회원 탈퇴 (주어진 사용자번호 uno에 대해 예약내역이 있는지 여부를 확인)
 }
