@@ -37,7 +37,7 @@ public class ReserveServiceImpl implements ReserveService{
     public Map<String, Object> getAllList(String reqDate, String reqTime, List<String> reqInout, String search) {
         Map<String, Object> result = new HashMap<>(); //최종리턴맵
 
-        List<Ground> groundList2 = groundRepository.findByState(1L);
+        List<Ground> groundList2 = groundRepository.findAll(); //수정필요
         List<GroundDTO> dtoList = groundList2.stream().map(GroundDTO::entityToDTO).toList();
 //        List<GroundDTO> groundList= groundRepository.findAllGroundsWithoutMember();
         Map<Long, GroundDTO> groundMap = dtoList.stream()
@@ -93,6 +93,7 @@ public class ReserveServiceImpl implements ReserveService{
             }
             List<String> timesplit = Arrays.asList(times.split(","));
             int i = 0;
+            log.info(groundMap.get(gNo).toString());
             for(String sf1: reqTimeList) { //시간필터의 값들로 올바른 예약시간인지 확인
                 log.info("timesplit:" + sf1 + "contain : " + timesplit.contains(sf1) + "check : " + checkReserveTime(groundMap.get(gNo).getOpenTime(),groundMap.get(gNo).getCloseTime(),Integer.parseInt(sf1),
                         groundMap.get(gNo).getUsageTime()) );
