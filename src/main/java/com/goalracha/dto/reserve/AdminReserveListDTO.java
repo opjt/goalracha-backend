@@ -13,11 +13,14 @@ import java.util.Date;
 @NoArgsConstructor
 public class AdminReserveListDTO {
     private String groundName;
-    private String addr;
-    private Date reservationDate;
+    private Date reserveDate;
     private Integer time;
     private Date createDate;
     private Long price;
+    private String addr;
     private String userName;
-    private String userEmail;
+    private String businessId;
+    private String businessName;
+    private String email;
+
 }

@@ -51,20 +51,19 @@ public class ReserveController {
         return ResponseEntity.ok().body(response);
     }
 
-    //예약등록
-    @PostMapping("/v/")
-    public ResponseEntity<?> newReserve(@RequestBody ReservDTO reservDTO) {
-        log.info("reserveDTO :: " + reservDTO);
+//    @PostMapping("/v/")
+//    public ResponseEntity<?> newReserve(@RequestBody ReservDTO reservDTO) {
+//        log.info("reserveDTO :: " + reservDTO);
+//
+//        Reserve reserve = reserveService.newReserve(reservDTO);
+//        if (reserve == null) {
+//            return ResponseEntity.badRequest().body("error");
+//        }
+//        log.info(reserve.getRNO());
+//        return ResponseEntity.ok(reserve.getRNO());
+//    }
 
-        Reserve reserve = reserveService.newReserve(reservDTO);
-        if (reserve == null) {
-            return ResponseEntity.badRequest().body("error");
-        }
-        log.info(reserve.getRNO());
-        return ResponseEntity.ok(reserve.getRNO());
-    }
-
-    @PostMapping("/v/p/")
+    @PostMapping("/") //예약등록
     public ResponseEntity<?> addReserve(@RequestBody ReserveAddsDTO reserveAddsdto) {
 
         Map<String, Object> response = reserveService.newReserve(reserveAddsdto.getGNo(), reserveAddsdto.getUNo(), reserveAddsdto.getDate(), reserveAddsdto.getTime());
@@ -128,11 +127,27 @@ public class ReserveController {
 
 
     // 예약 전체 리스트(관리자)
+//    @GetMapping("/v/list")
+//    public ResponseEntity<PageResponseDTO<AdminReserveListDTO>> getAllReserveList(
+//            @PageableDefault(size = 10) Pageable pageable) {
+//        // 모든 예약 리스트를 가져옵니다.
+//        PageResponseDTO<AdminReserveListDTO> responseDTO = reserveService.getAllReserveList(pageable);
+//        // ResponseEntity에 담아 반환합니다.
+//        return ResponseEntity.ok(responseDTO);
+//    }
+
     @GetMapping("/v/list")
-    public ResponseEntity<PageResponseDTO<AdminReserveListDTO>> getAllReserveList(
-            @PageableDefault(size = 10) Pageable pageable) {
+    public ResponseEntity<PageResponseDTO<AdminReserveListDTO>> getAllList(PageRequestDTO pageRequestDTO) {
         // 모든 예약 리스트를 가져옵니다.
-        PageResponseDTO<AdminReserveListDTO> responseDTO = reserveService.getAllReserveList(pageable);
+        PageResponseDTO<AdminReserveListDTO> responseDTO = reserveService.getAllReserveList(pageRequestDTO);
+        // ResponseEntity에 담아 반환합니다.
+        return ResponseEntity.ok(responseDTO);
+    }
+    @GetMapping("/v/list2")
+    public ResponseEntity<?> getAllList2() {
+        // 모든 예약 리스트를 가져옵니다.
+        List<AdminReserveListDTO> responseDTO = reserveRepository.findallList();
+        log.info(responseDTO.toString());
         // ResponseEntity에 담아 반환합니다.
         return ResponseEntity.ok(responseDTO);
     }

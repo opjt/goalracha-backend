@@ -79,7 +79,8 @@ public class MemberDTO extends User {
         String nickname = (String) claims.get("nickname");
         String name = (String) claims.get("name");
         String tel = (String) claims.get("tel");
-        Date createDate = (Date) claims.get("createDate");
+//        Date createDate = (Date) claims.get("createDate");
+        Date createDate = new Date();
         String email = (String) claims.get("email");
         String businessName = (String) claims.get("businessName");
         String businessId = (String) claims.get("businessId");

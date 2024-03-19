@@ -20,7 +20,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -199,9 +201,18 @@ public class ReserveServiceImpl implements ReserveService{
 
     // admin 전체 예약 목록
     @Override // 예약 전체 리스트(관리자)
-    public PageResponseDTO<AdminReserveListDTO> getAllReserveList(Pageable pageable) {
+    public PageResponseDTO<AdminReserveListDTO> getAllReserveList(PageRequestDTO pageRequestDTO) {
+        // 모든 예약 리스트를 가져옵니다.
+
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPage() - 1, // 1페이지가 0이므로 주의
+                pageRequestDTO.getSize(),
+                Sort.by("rNO").descending()
+        );
+
         // 모든 예약 리스트를 가져옵니다.
         Page<AdminReserveListDTO> page = reserveRepository.findAllReserveList(pageable);
+
 
         // 가져온 예약 리스트를 PageResponseDTO 형식으로 변환하여 반환합니다.
         return PageResponseDTO.<AdminReserveListDTO>withAll()
