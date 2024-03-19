@@ -3,6 +3,9 @@ package com.goalracha.repository;
 import com.goalracha.entity.Member;
 import com.goalracha.entity.MemberRole;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 import java.util.List;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
@@ -19,4 +22,12 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByNickname(String nickname); // 닉네임 중복 여부 확인
 
     Member findByNickname(String nickname); // 닉네임으로 유저 찾기
+
+    // 오늘 이후의 예약 내역이 있는지 확인하기 위한 쿼리를 수행
+    @Query("SELECT COUNT(r) FROM Reserve r WHERE r.member.uNo = :uNo AND r.reserveDate >= TRUNC(CURRENT_DATE)")
+    int countReservationsAfterToday(@Param("uNo") Long uNo);
+
+    // 회원의 상태를 탈퇴로 변경하는 쿼리를 수행
+    @Query("UPDATE Member m SET m.state = 2 WHERE m.uNo = :uNo")
+    void updateMemberStateToWithdraw(@Param("uNo") Long uNo);
 }

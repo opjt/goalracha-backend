@@ -23,6 +23,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -213,13 +215,6 @@ public class ReserveServiceImpl implements ReserveService{
                 .totalCount(page.getTotalElements())
                 .build();
     }
-
-    // 회원 탈퇴
-    @Override
-    public boolean hasReservations(Long uNo) {
-        return false;
-    }
-
 
     @Override
     public ReserveListDTO getGroundReserve(Long gno) {
