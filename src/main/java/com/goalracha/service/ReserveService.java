@@ -39,5 +39,4 @@ public interface ReserveService {
 
 
     boolean hasReservations(Long uNo); // 회원 탈퇴 (주어진 사용자번호 uno에 대해 예약내역이 있는지 여부를 확인)
-
 }

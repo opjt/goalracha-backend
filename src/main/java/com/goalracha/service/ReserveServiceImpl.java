@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Log4j2
 @Transactional
-public class ReserveServiceImpl implements ReserveService{
+public class ReserveServiceImpl implements ReserveService {
     private final ReserveRepository reserveRepository;
     private final MemberRepository memberRepository;
     private final GroundRepository groundRepository;
@@ -59,9 +59,9 @@ public class ReserveServiceImpl implements ReserveService{
                 "AND g.gNo NOT IN (" +
                 "    SELECT r2.ground.gNo " +
                 "    FROM Reserve r2" +
-                "    WHERE r2.time IN ("+reqTime +") " +
+                "    WHERE r2.time IN (" + reqTime + ") " +
                 "    GROUP BY r2.ground.gNo " +
-                "    HAVING COUNT(DISTINCT time) =  " + timeCount+
+                "    HAVING COUNT(DISTINCT time) =  " + timeCount +
                 ") " +
                 "AND g.inAndOut IN :inout ";
         if (search != null) {
@@ -76,7 +76,7 @@ public class ReserveServiceImpl implements ReserveService{
             query.setParameter("searchParam", "%" + search + "%"); // searchParam 변수에 값을 설정
         }
         List<Object[]> result2 = query.getResultList();
-        result.put("result2" , result2);
+        result.put("result2", result2);
 //        List<Long> gnoArrayList = new ArrayList<>(); //구장의번호목록
 //        for (Object[] objArray : result2) {
 //            gnoArrayList.add((Long)objArray[0]);
@@ -87,27 +87,27 @@ public class ReserveServiceImpl implements ReserveService{
             Long gNo = (Long) row[0];
             String times;
 
-            if(row[1] == null) { //예약이 없으면 물음표값넣어서 for문돌릴때 무조건 포함안되어있지만 올바른 시간인지는 확인
-                times =  "?,?";
+            if (row[1] == null) { //예약이 없으면 물음표값넣어서 for문돌릴때 무조건 포함안되어있지만 올바른 시간인지는 확인
+                times = "?,?";
             } else {
                 times = (String) row[1];
             }
-            if(times.equals(reqTime)) { //시간이 똑같으면 넘어감
+            if (times.equals(reqTime)) { //시간이 똑같으면 넘어감
                 continue;
             }
             List<String> timesplit = Arrays.asList(times.split(","));
             int i = 0;
-            for(String sf1: reqTimeList) { //시간필터의 값들로 올바른 예약시간인지 확인
-                log.info("timesplit:" + sf1 + "contain : " + timesplit.contains(sf1) + "check : " + checkReserveTime(groundMap.get(gNo).getOpenTime(),groundMap.get(gNo).getCloseTime(),Integer.parseInt(sf1),
-                        groundMap.get(gNo).getUsageTime()) );
-                if(checkReserveTime(groundMap.get(gNo).getOpenTime(),groundMap.get(gNo).getCloseTime(),Integer.parseInt(sf1),
+            for (String sf1 : reqTimeList) { //시간필터의 값들로 올바른 예약시간인지 확인
+                log.info("timesplit:" + sf1 + "contain : " + timesplit.contains(sf1) + "check : " + checkReserveTime(groundMap.get(gNo).getOpenTime(), groundMap.get(gNo).getCloseTime(), Integer.parseInt(sf1),
+                        groundMap.get(gNo).getUsageTime()));
+                if (checkReserveTime(groundMap.get(gNo).getOpenTime(), groundMap.get(gNo).getCloseTime(), Integer.parseInt(sf1),
                         groundMap.get(gNo).getUsageTime()) && !timesplit.contains(sf1)) {
                     i++;
                     break;
                 }
             }
-            if(i > 0) { //한개라도 있으면 추가
-                reservList.add(new Object[]{gNo, (String)row[1]});
+            if (i > 0) { //한개라도 있으면 추가
+                reservList.add(new Object[]{gNo, (String) row[1]});
             }
         }
         result.put("groundreservList", reservList);
@@ -122,7 +122,7 @@ public class ReserveServiceImpl implements ReserveService{
 
         Map<String, Object> result = new HashMap<>(); //최종리턴맵
         Ground groundE = groundRepository.findById(gno).orElse(null);
-        if(groundE == null ) {
+        if (groundE == null) {
             return null;
         }
         GroundDTO grounddto = GroundDTO.entityToDTO(groundE);
@@ -227,6 +227,7 @@ public class ReserveServiceImpl implements ReserveService{
 
         // 모든 예약 리스트를 가져옵니다.
         Page<AdminReserveListDTO> page = reserveRepository.findAllReserveList(pageable);
+        log.info(page.toString());
 
         // 가져온 예약 리스트를 PageResponseDTO 형식으로 변환하여 반환합니다.
         return PageResponseDTO.<AdminReserveListDTO>withAll()
@@ -238,6 +239,7 @@ public class ReserveServiceImpl implements ReserveService{
                 .totalCount(page.getTotalElements())
                 .build();
     }
+
 
     // 회원 탈퇴
     @Override
@@ -263,20 +265,20 @@ public class ReserveServiceImpl implements ReserveService{
         Member member = memberRepository.findById(uNo).orElse(null);
         Ground ground = groundRepository.findById(gNo).orElse(null);
         List<Integer> resTimeList = new ArrayList<>();
-        if(member == null || ground == null) { //구장이나 맴버정보가 맞지 않으면 리턴널
+        if (member == null || ground == null) { //구장이나 맴버정보가 맞지 않으면 리턴널
             return null;
         }
         result.put("ground", GroundDTO.entityToDTO(ground));
         result.put("memberName", member.getName());
         List<Integer> timeList = Arrays.stream(time.split(",")).map(Integer::parseInt).collect(Collectors.toList());
-        for(int oftime : timeList) {
-            if(!checkReserveTime(ground.getOpenTime(), ground.getCloseTime(), oftime ,ground.getUsageTime())) { //예약가능 시간대인지 확인
-                log.error("불가능한 시간 " + ground.getOpenTime() + " " +  ground.getCloseTime()+ " "+  oftime+ " " +ground.getUsageTime());
+        for (int oftime : timeList) {
+            if (!checkReserveTime(ground.getOpenTime(), ground.getCloseTime(), oftime, ground.getUsageTime())) { //예약가능 시간대인지 확인
+                log.error("불가능한 시간 " + ground.getOpenTime() + " " + ground.getCloseTime() + " " + oftime + " " + ground.getUsageTime());
                 return null;
             }
 
-            List<Integer> getTimeList = reserveRepository.findReservationTimesByDate(ground.getGNo(),reqDate); //중복시간 있는지 확인
-            if(getTimeList.contains(oftime)) {
+            List<Integer> getTimeList = reserveRepository.findReservationTimesByDate(ground.getGNo(), reqDate); //중복시간 있는지 확인
+            if (getTimeList.contains(oftime)) {
                 log.error("중복시간 검출" + oftime + " " + getTimeList.toString());
                 return null;
             }
@@ -307,17 +309,17 @@ public class ReserveServiceImpl implements ReserveService{
         Member member = memberRepository.findById(reservDTO.getUNo()).orElse(null);
         Ground ground = groundRepository.findById(reservDTO.getGNo()).orElse(null);
 
-        if(member == null || ground == null) { //구장이나 맴버정보가 맞지 않으면 리턴널
+        if (member == null || ground == null) { //구장이나 맴버정보가 맞지 않으면 리턴널
             return null;
         }
 
-        if(!checkReserveTime(ground.getOpenTime(), ground.getCloseTime(), reservDTO.getTime(),ground.getUsageTime())) { //예약가능 시간대인지 확인
-            log.error("불가능한 시간 " + ground.getOpenTime() + " " +  ground.getCloseTime()+ " "+  reservDTO.getTime()+ " " +ground.getUsageTime());
+        if (!checkReserveTime(ground.getOpenTime(), ground.getCloseTime(), reservDTO.getTime(), ground.getUsageTime())) { //예약가능 시간대인지 확인
+            log.error("불가능한 시간 " + ground.getOpenTime() + " " + ground.getCloseTime() + " " + reservDTO.getTime() + " " + ground.getUsageTime());
             return null;
         }
 
-        List<Integer> timeList = reserveRepository.findReservationTimesByDate(ground.getGNo(),reservDTO.getReserveDate()); //중복시간 있는지 확인
-        if(timeList.contains(reservDTO.getTime())) {
+        List<Integer> timeList = reserveRepository.findReservationTimesByDate(ground.getGNo(), reservDTO.getReserveDate()); //중복시간 있는지 확인
+        if (timeList.contains(reservDTO.getTime())) {
             log.error("중복시간 검출" + reservDTO.getTime() + " " + timeList.toString());
             return null;
         }
@@ -338,7 +340,6 @@ public class ReserveServiceImpl implements ReserveService{
     }
 
 
-
     private boolean checkReserveTime(Integer openTime, Integer closeTime, Integer useTime, Integer unit) {
         //가능시간대인지 확인하는 메소드
         if (closeTime <= openTime) {
@@ -348,13 +349,13 @@ public class ReserveServiceImpl implements ReserveService{
             return false;
         } else {
 
-            if(unit == 0) { //1시간 단위면 모든시간 다 가능
+            if (unit == 0) { //1시간 단위면 모든시간 다 가능
                 return true;
             }
-            if(useTime+ unit > closeTime) {
+            if (useTime + unit > closeTime) {
                 return false; //이용시간이 마감시간을 초과하는 경우
             }
-            if((useTime - openTime) % unit == 0) { //시간단위를 벗어나는 경우
+            if ((useTime - openTime) % unit == 0) { //시간단위를 벗어나는 경우
                 return true;
             }
 

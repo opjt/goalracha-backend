@@ -120,12 +120,11 @@ public class ReserveRepositoryTests {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
         // 서비스 메서드 호출
-//        PageResponseDTO<AdminReserveListDTO> result = reserveService.getAllReserveList(pageable);
-//
-//
-//        // 결과 출력
-//        log.info(result);
+        PageResponseDTO<AdminReserveListDTO> result = reserveService.getAllReserveList(pageable);
+
+
+        // 결과 출력
+        log.info(result);
     }
-    */
 
 }
