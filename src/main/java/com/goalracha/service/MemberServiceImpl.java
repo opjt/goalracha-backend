@@ -7,14 +7,12 @@ import com.goalracha.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -226,12 +224,12 @@ public class MemberServiceImpl implements MemberService {
     }
 
     // 회원 탈퇴 쿼리 트랜잭션
-    @Transactional
-    public void countReservationsAndUpdateState(Long uNo) {
-        int reservationCount = memberRepository.countReservationsAfterToday(uNo);
-        if (reservationCount == 0) {
-            memberRepository.updateMemberStateToWithdraw(uNo);
-        }
-    }
+//    @Transactional
+//    public void countReservationsAndUpdateState(Long uNo) {
+//        int reservationCount = memberRepository.countReservationsAfterToday(uNo);
+//        if (reservationCount == 0) {
+//            memberRepository.updateMemberStateToWithdraw(uNo);
+//        }
+//    }
 
 }

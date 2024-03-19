@@ -24,8 +24,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Member findByNickname(String nickname); // 닉네임으로 유저 찾기
 
     // 오늘 이후의 예약 내역이 있는지 확인하기 위한 쿼리를 수행
-    @Query("SELECT COUNT(r) FROM Reserve r WHERE r.member.uNo = :uNo AND r.reserveDate >= TRUNC(CURRENT_DATE)")
-    int countReservationsAfterToday(@Param("uNo") Long uNo);
+//    @Query("SELECT COUNT(r) FROM Reserve r WHERE r.member.uNo = :uNo AND r.reserveDate >= TRUNC(CURRENT_DATE)")
+//    int countReservationsAfterToday(@Param("uNo") Long uNo);
 
     // 회원의 상태를 탈퇴로 변경하는 쿼리를 수행
     @Query("UPDATE Member m SET m.state = 2 WHERE m.uNo = :uNo")
