@@ -1,13 +1,10 @@
 package com.goalracha.repository;
 
 import com.goalracha.dto.reserve.AdminReserveListDTO;
+import com.goalracha.dto.reserve.OwnerReserveListDTO;
 import com.goalracha.dto.reserve.ReservDTO;
 import com.goalracha.dto.reserve.UserReserveListDTO;
-import com.goalracha.entity.Member;
 import com.goalracha.entity.Reserve;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
