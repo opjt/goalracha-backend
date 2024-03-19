@@ -130,11 +130,12 @@ public class ReserveController {
     // 예약 전체 리스트(관리자)
     @GetMapping("/v/list")
     public ResponseEntity<PageResponseDTO<AdminReserveListDTO>> getAllReserveList(
-            @PageableDefault(size = 10) Pageable pageable) {
+            @PageableDefault(size = 10) PageRequestDTO pageRequestDTO) {
         // 모든 예약 리스트를 가져옵니다.
-        PageResponseDTO<AdminReserveListDTO> responseDTO = reserveService.getAllReserveList(pageable);
+        PageResponseDTO<AdminReserveListDTO> responseDTO = reserveService.getAllReserveList(pageRequestDTO);
         // ResponseEntity에 담아 반환합니다.
         return ResponseEntity.ok(responseDTO);
     }
+
 
 }

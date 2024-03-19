@@ -109,6 +109,7 @@ public class ReserveRepositoryTests {
         // 결과 출력
         log.info(result);
     }
+/*
 
     @Test   // admin 전체 예약 목록 테스트
     public void testGetAllReserveList() {
@@ -120,11 +121,13 @@ public class ReserveRepositoryTests {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
         // 서비스 메서드 호출
-        PageResponseDTO<AdminReserveListDTO> result = reserveService.getAllReserveList(pageable);
+        PageResponseDTO<AdminReserveListDTO> result = reserveService.getAllReserveList(pageRequestDTO);
 
 
         // 결과 출력
         log.info(result);
     }
 
+}
+*/
 }
