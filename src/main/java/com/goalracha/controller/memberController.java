@@ -34,13 +34,6 @@ public class memberController {
         return Map.of("result", check);
     }
 
-    // 닉네임 중복검사
-    /*@PostMapping("/api/member/checknickname")
-    public Map<String, Object> checkNickname(@RequestBody String nickname) {
-        boolean isDuplicate = memberService.checkNickname(nickname);
-        return Map.of("isDuplicate", isDuplicate);
-    }*/
-
     // 회원 닉네임 중복 확인 API
     @GetMapping("/api/member/checkNickname/{nickname}")
     public ResponseEntity<Map<String, Boolean>> checkNickname(@PathVariable String nickname) {
@@ -96,22 +89,4 @@ public class memberController {
         return Map.of("RESULT", "SUCCESS");
     }
 
-    // 회원 탈퇴 요청 처리
-    @DeleteMapping("/api/member/{uNo}")
-    public Map<String, String> withdrawMember(@PathVariable Long uNo) {
-        // 해당 유저가 예약 내역을 가지고 있는지 확인
-        boolean hasReservations = reserveService.hasReservations(uNo);
-
-        if (hasReservations) {
-            return Map.of("result", "failure", "message", "예약 내역이 존재하여 탈퇴할 수 없습니다.");
-        } else {
-            // 예약 내역이 없으면 회원 탈퇴 처리
-            boolean withdrawalSuccess = memberService.withdrawMember(uNo);
-            if (withdrawalSuccess) {
-                return Map.of("result", "success", "message", "회원 탈퇴가 완료되었습니다.");
-            } else {
-                return Map.of("result", "failure", "message", "회원 탈퇴에 실패하였습니다.");
-            }
-        }
-    }
 }

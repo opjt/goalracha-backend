@@ -88,4 +88,5 @@ public class Member {
         this.name = name;
         this.tel = tel;
     }
+
 }

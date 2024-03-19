@@ -241,11 +241,6 @@ public class ReserveServiceImpl implements ReserveService {
     }
 
 
-    // 회원 탈퇴
-    @Override
-    public boolean hasReservations(Long uNo) {
-        return false;
-    }
 
 
     @Override

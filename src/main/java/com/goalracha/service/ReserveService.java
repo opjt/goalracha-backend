@@ -37,6 +37,4 @@ public interface ReserveService {
     // 전체 예약 리스트(관리자)
     PageResponseDTO<AdminReserveListDTO> getAllReserveList(PageRequestDTO pageRequestDTO);
 
-
-    boolean hasReservations(Long uNo); // 회원 탈퇴 (주어진 사용자번호 uno에 대해 예약내역이 있는지 여부를 확인)
 }

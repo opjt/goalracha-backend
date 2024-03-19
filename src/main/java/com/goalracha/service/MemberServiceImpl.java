@@ -14,6 +14,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -84,13 +85,6 @@ public class MemberServiceImpl implements MemberService {
         // 수정된 회원 정보를 저장합니다.
         memberRepository.save(member);
     }
-
-    // 회원 탈퇴
-    @Override
-    public boolean withdrawMember(Long uNo) {
-        return false;
-    }
-
 
     @Override
     public void ownerPwModify(OwnerPwModifyDTO ownerPwModifyDTO) {
@@ -169,6 +163,7 @@ public class MemberServiceImpl implements MemberService {
         return true;
     }
 
+    // 닉네임 중복검사
     @Override
     public boolean checkNickname(String nickname) {
         Member member = memberRepository.findByNickname(nickname);
@@ -228,6 +223,15 @@ public class MemberServiceImpl implements MemberService {
         return members.stream()
                 .map(member -> MemberDTO.entityToDTO(member)) // ModelMapper 대신 사용
                 .collect(Collectors.toList());
+    }
+
+    // 회원 탈퇴 쿼리 트랜잭션
+    @Transactional
+    public void countReservationsAndUpdateState(Long uNo) {
+        int reservationCount = memberRepository.countReservationsAfterToday(uNo);
+        if (reservationCount == 0) {
+            memberRepository.updateMemberStateToWithdraw(uNo);
+        }
     }
 
 }

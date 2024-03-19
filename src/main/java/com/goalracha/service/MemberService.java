@@ -31,5 +31,4 @@ public interface MemberService {
 
     void ownerNameModify(OwnerNameModifyDTO ownerNameModifyDTO);
 
-    boolean withdrawMember(Long uNo); // 회원 탈퇴 (회원의 일련번호 uno를 받아서 회원을 탈퇴시킴)
 }
