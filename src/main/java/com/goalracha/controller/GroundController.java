@@ -51,33 +51,14 @@ public class GroundController {
     }
 
     @PutMapping("/modify/{gno}")
-    public Map<String, String> modify(@PathVariable(name = "gno") Long gno, @RequestBody GroundDTO groundDTO) {
-
-        log.info("Modify: " + groundDTO);
-
+    public Map<String, String> modify(@PathVariable(name = "gno") Long gno, GroundDTO groundDTO) {
         groundDTO.setGNo(gno);
-        GroundDTO oldGroundDTO = service.get(gno);
-
-        List<String> oldFileNames = oldGroundDTO.getUploadFileNames();
-        List<MultipartFile> files = groundDTO.getFiles();
-        List<String> currentUploadFileNames = fileUtil.saveFiles(files);
-        List<String> uploadedFileNames = groundDTO.getUploadFileNames();
-
-        if (currentUploadFileNames != null && currentUploadFileNames.size() > 0) {
-            uploadedFileNames.addAll(currentUploadFileNames);
-        }
+        log.info("Modify: " + groundDTO);
         service.modify(groundDTO);
-
-
-        if (oldFileNames != null && oldFileNames.size() > 0) {
-            List<String> removeFiles = oldFileNames.stream().filter(fileName ->
-                    uploadedFileNames.indexOf(fileName) == -1).collect(Collectors.toList());
-
-            fileUtil.deleteFiles(removeFiles);
-        }
 
         return Map.of("RESULT", "SUCCESS");
     }
+
     @DeleteMapping("/delete/{gno}")
     public Map<String, String> delete(@PathVariable(name="gno") Long gno) {
 

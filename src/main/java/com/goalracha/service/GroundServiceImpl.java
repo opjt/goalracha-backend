@@ -84,28 +84,29 @@ public class GroundServiceImpl implements GroundService {
         Optional<Ground> result = groundRepository.findById(groundDTO.getGNo());
 
         Ground ground = result.orElseThrow();
+        log.info(result);
 
-        ground.changeName(ground.getName());
-        ground.changeAddr(ground.getAddr());
-        ground.changeInAndOut(ground.getInAndOut());
-        ground.changeWidth(ground.getWidth());
-        ground.changeGrassInfo(ground.getGrassInfo());
-        ground.changeRecommdMan(ground.getRecommdMan());
-        ground.changeUsageTime(ground.getUsageTime());
-        ground.changeOpentime(ground.getOpenTime());
-        ground.changeCloseTime(ground.getCloseTime());
-        ground.changeFare(ground.getFare());
-        ground.changeUserGuide(ground.getUserGuide());
-        ground.changeUserRules(ground.getUserRules());
-        ground.changeRefundRules(ground.getRefundRules());
-        ground.changeVestIsYn(ground.isVestIsYn());
-        ground.changeFootwearIsYn(ground.isFootwearIsYn());
-        ground.changeShowerIsYn(ground.isShowerIsYn());
-        ground.changeBallIsYn(ground.isBallIsYn());
-        ground.changeAirconIsYn(ground.isAirconIsYn());
-        ground.changeParkareaIsYn(ground.isParkareaIsYn());
-        ground.changeRoopIsYn(ground.isRoopIsYn());
-        ground.changeState(ground.getState());
+        ground.changeName(groundDTO.getName());
+        ground.changeAddr(groundDTO.getAddr());
+        ground.changeInAndOut(groundDTO.getInAndOut());
+        ground.changeWidth(groundDTO.getWidth());
+        ground.changeGrassInfo(groundDTO.getGrassInfo());
+        ground.changeRecommdMan(groundDTO.getRecommdMan());
+        ground.changeUsageTime(groundDTO.getUsageTime());
+        ground.changeOpentime(groundDTO.getOpenTime());
+        ground.changeCloseTime(groundDTO.getCloseTime());
+        ground.changeFare(groundDTO.getFare());
+        ground.changeUserGuide(groundDTO.getUserGuide());
+        ground.changeUserRules(groundDTO.getUserRules());
+        ground.changeRefundRules(groundDTO.getRefundRules());
+        ground.changeVestIsYn(groundDTO.isVestIsYn());
+        ground.changeFootwearIsYn(groundDTO.isFootwearIsYn());
+        ground.changeShowerIsYn(groundDTO.isShowerIsYn());
+        ground.changeBallIsYn(groundDTO.isBallIsYn());
+        ground.changeAirconIsYn(groundDTO.isAirconIsYn());
+        ground.changeParkareaIsYn(groundDTO.isParkareaIsYn());
+        ground.changeRoopIsYn(groundDTO.isRoopIsYn());
+        ground.changeState(groundDTO.getState());
 
         ground.clearList();
         List<String> uploadFileNames = groundDTO.getUploadFileNames();
@@ -122,6 +123,7 @@ public class GroundServiceImpl implements GroundService {
     public void delete(Long gno) {
         groundRepository.deleteById(gno);
     }
+
     @Override
     public void changeState(Long gNo, Long newState) {
         Ground ground = groundRepository.findById(gNo)
