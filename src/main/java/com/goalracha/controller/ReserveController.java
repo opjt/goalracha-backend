@@ -95,10 +95,10 @@ public class ReserveController {
     // user 이전 예약 목록 조회
     @GetMapping("/v/previous-reservations/{uNo}")
     public ResponseEntity<PageResponseDTO<UserReserveListDTO>> getUserPreviousReservations(
-            @PathVariable Long uNo, @PageableDefault(size = 10) Pageable pageable) {
+            @PathVariable Long uNo, @PageableDefault(size = 10) PageRequestDTO pageRequestDTO) {
 
         // 사용자의 이전 예약을 가져옵니다.
-        PageResponseDTO<UserReserveListDTO> responseDTO = reserveService.getUserPreviousReservations(uNo, pageable);
+        PageResponseDTO<UserReserveListDTO> responseDTO = reserveService.getUserPreviousReservations(uNo, pageRequestDTO);
 
         // ResponseEntity에 담아 반환합니다.
         return ResponseEntity.ok(responseDTO);
@@ -108,20 +108,20 @@ public class ReserveController {
     @GetMapping("/v/reservation-status/{uNo}")
     public ResponseEntity<PageResponseDTO<UserReserveListDTO>> getUserReservationStatus(
             @PathVariable Long uNo,
-            @PageableDefault(size = 10) Pageable pageable) {
+            @PageableDefault(size = 10) PageRequestDTO pageRequestDTO) {
         // 사용자의 예약 현황을 가져옵니다.
-        PageResponseDTO<UserReserveListDTO> responseDTO = reserveService.getUserReservationStatus(uNo, pageable);
+        PageResponseDTO<UserReserveListDTO> responseDTO = reserveService.getUserReservationStatus(uNo, pageRequestDTO);
         // ResponseEntity에 담아 반환합니다.
         return ResponseEntity.ok(responseDTO);
     }
 
     // 구장 유저 번호로 예약 목록 조회
     @GetMapping("/v/owner-list/{uNo}")
-    public ResponseEntity<PageResponseDTO<AdminReserveListDTO>> getOwnerReserveList(
+    public ResponseEntity<PageResponseDTO<OwnerReserveListDTO>> getOwnerReserveList(
             @PathVariable Long uNo,
-            @PageableDefault(size = 10) Pageable pageable) {
+            @PageableDefault(size = 10) PageRequestDTO pageRequestDTO) {
         // 해당 사용자의 예약 리스트를 가져옵니다.
-        PageResponseDTO<AdminReserveListDTO> responseDTO = reserveService.getOwnerReserveList(uNo, pageable);
+        PageResponseDTO<OwnerReserveListDTO> responseDTO = reserveService.getOwnerReserveList(uNo, pageRequestDTO);
         // ResponseEntity에 담아 반환합니다.
         return ResponseEntity.ok(responseDTO);
     }
@@ -129,10 +129,9 @@ public class ReserveController {
 
     // 예약 전체 리스트(관리자)
     @GetMapping("/v/list")
-    public ResponseEntity<PageResponseDTO<AdminReserveListDTO>> getAllReserveList(
-            @PageableDefault(size = 10) Pageable pageable) {
+    public ResponseEntity<PageResponseDTO<AdminReserveListDTO>> getAllReserveList(PageRequestDTO pageRequestDTO) {
         // 모든 예약 리스트를 가져옵니다.
-        PageResponseDTO<AdminReserveListDTO> responseDTO = reserveService.getAllReserveList(pageable);
+        PageResponseDTO<AdminReserveListDTO> responseDTO = reserveService.getAllReserveList(pageRequestDTO);
         // ResponseEntity에 담아 반환합니다.
         return ResponseEntity.ok(responseDTO);
     }

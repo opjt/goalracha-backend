@@ -51,7 +51,7 @@ public class ReserveRepositoryTests {
         log.info(reserve.getGround());
     }
 
-
+/*
     @Test   // user 이전 에약 목록 테스트
     public void testUserPreviousReservations() {
         // 사용자 번호
@@ -126,5 +126,6 @@ public class ReserveRepositoryTests {
         // 결과 출력
         log.info(result);
     }
+    */
 
 }

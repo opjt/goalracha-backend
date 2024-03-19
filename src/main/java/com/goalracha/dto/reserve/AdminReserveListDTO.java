@@ -12,12 +12,15 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AdminReserveListDTO {
+
     private String groundName;
     private String addr;
-    private Date reservationDate;
+    private String businessId;
+    private String businessName;
+    private Date reserveDate;
     private Integer time;
     private Date createDate;
     private Long price;
     private String userName;
-    private String userEmail;
+    private String email;
 }
