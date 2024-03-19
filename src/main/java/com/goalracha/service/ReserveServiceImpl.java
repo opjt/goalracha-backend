@@ -3,10 +3,7 @@ package com.goalracha.service;
 import com.goalracha.dto.GroundDTO;
 import com.goalracha.dto.PageRequestDTO;
 import com.goalracha.dto.PageResponseDTO;
-import com.goalracha.dto.reserve.AdminReserveListDTO;
-import com.goalracha.dto.reserve.ReservDTO;
-import com.goalracha.dto.reserve.ReserveListDTO;
-import com.goalracha.dto.reserve.UserReserveListDTO;
+import com.goalracha.dto.reserve.*;
 import com.goalracha.entity.Ground;
 import com.goalracha.entity.Member;
 import com.goalracha.entity.Reserve;
@@ -150,7 +147,14 @@ public class ReserveServiceImpl implements ReserveService{
 
     // user 이전 예약
     @Override
-    public PageResponseDTO<UserReserveListDTO> getUserPreviousReservations(Long uNo, Pageable pageable) {
+    public PageResponseDTO<UserReserveListDTO> getUserPreviousReservations(Long uNo, PageRequestDTO pageRequestDTO) {
+
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPage() - 1, // 1페이지가 0이므로 주의
+                pageRequestDTO.getSize(),
+                Sort.by("rNO").descending()
+        );
+
         // 사용자의 이전 예약을 가져옵니다.
         Page<UserReserveListDTO> page = reserveRepository.userPreviousReservations(uNo, pageable);
 
@@ -167,7 +171,13 @@ public class ReserveServiceImpl implements ReserveService{
 
     // user 예약 현황
     @Override
-    public PageResponseDTO<UserReserveListDTO> getUserReservationStatus(Long uNo, Pageable pageable) {
+    public PageResponseDTO<UserReserveListDTO> getUserReservationStatus(Long uNo, PageRequestDTO pageRequestDTO) {
+
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPage() - 1, // 1페이지가 0이므로 주의
+                pageRequestDTO.getSize(),
+                Sort.by("rNO").descending()
+        );
         // 사용자의 예약 현황을 가져옵니다.
         Page<UserReserveListDTO> page = reserveRepository.userReservationStatus(uNo, pageable);
 
@@ -184,12 +194,18 @@ public class ReserveServiceImpl implements ReserveService{
 
     // owner 예약 목록
     @Override // owner 예약 리스트
-    public PageResponseDTO<AdminReserveListDTO> getOwnerReserveList(Long uNo, Pageable pageable) {
+    public PageResponseDTO<OwnerReserveListDTO> getOwnerReserveList(Long uNo, PageRequestDTO pageRequestDTO) {
+
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPage() - 1, // 1페이지가 0이므로 주의
+                pageRequestDTO.getSize(),
+                Sort.by("rNO").descending()
+        );
         // 해당 사용자의 예약 리스트를 가져옵니다.
-        Page<AdminReserveListDTO> page = reserveRepository.ownerReserveList(uNo, pageable);
+        Page<OwnerReserveListDTO> page = reserveRepository.ownerReserveList(uNo, pageable);
 
         // 가져온 예약 리스트를 PageResponseDTO 형식으로 변환하여 반환합니다.
-        return PageResponseDTO.<AdminReserveListDTO>withAll()
+        return PageResponseDTO.<OwnerReserveListDTO>withAll()
                 .dtoList(page.getContent())
                 .pageRequestDTO(PageRequestDTO.builder()
                         .page(page.getNumber() + 1)
@@ -202,7 +218,6 @@ public class ReserveServiceImpl implements ReserveService{
     // admin 전체 예약 목록
     @Override // 예약 전체 리스트(관리자)
     public PageResponseDTO<AdminReserveListDTO> getAllReserveList(PageRequestDTO pageRequestDTO) {
-        // 모든 예약 리스트를 가져옵니다.
 
         Pageable pageable = PageRequest.of(
                 pageRequestDTO.getPage() - 1, // 1페이지가 0이므로 주의
@@ -212,7 +227,6 @@ public class ReserveServiceImpl implements ReserveService{
 
         // 모든 예약 리스트를 가져옵니다.
         Page<AdminReserveListDTO> page = reserveRepository.findAllReserveList(pageable);
-
 
         // 가져온 예약 리스트를 PageResponseDTO 형식으로 변환하여 반환합니다.
         return PageResponseDTO.<AdminReserveListDTO>withAll()

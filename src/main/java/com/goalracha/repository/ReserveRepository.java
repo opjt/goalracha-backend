@@ -47,21 +47,19 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
             "WHERE r.member.uNo = :uNo AND TO_DATE(TO_CHAR(r.reserveDate, 'YYYY-MM-DD'), 'YYYY-MM-DD') >= TO_DATE(TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD'), 'YYYY-MM-DD')")
     Page<UserReserveListDTO> userReservationStatus(@Param("uNo") Long uNo, Pageable pageable);
 
-    @Query("SELECT new com.goalracha.dto.reserve.AdminReserveListDTO(g.name, g.addr, r.reserveDate, r.time, r.createDate, r.price, m.name, m.email) " +
+    @Query("SELECT new com.goalracha.dto.reserve.OwnerReserveListDTO(g.name, g.addr , r.reserveDate, r.time, r.createDate, r.price, m.name, m.email) " +
             "FROM Reserve r " +
             "JOIN r.member m " +
             "JOIN r.ground g " +
             "WHERE g.member.uNo = :uNo")
-        // member 엔티티의 uNo로 필터링
-    Page<AdminReserveListDTO> ownerReserveList(@Param("uNo") Long uNo, Pageable pageable);
+    Page<OwnerReserveListDTO> ownerReserveList(@Param("uNo") Long uNo, Pageable pageable);
 
     //Admin 예약 전체 리스트
+
     @Query("SELECT new com.goalracha.dto.reserve.AdminReserveListDTO(r.ground.name, r.reserveDate, r.time, r.createDate, r.price, r.ground.addr, r.member.name," +
             " r.ground.member.businessId, r.ground.member.businessName, r.member.email) FROM Reserve r")
     Page<AdminReserveListDTO> findAllReserveList(Pageable pageable);
 
-    @Query("SELECT new com.goalracha.dto.reserve.AdminReserveListDTO(r.ground.name, r.reserveDate, r.time, r.createDate, r.price, r.ground.addr, r.member.name," +
-            " r.ground.member.businessId, r.ground.member.businessName, r.member.email) FROM Reserve r")
-    List<AdminReserveListDTO> findallList();
+
 
 }

@@ -1,6 +1,9 @@
 package com.goalracha.dto.reserve;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -8,13 +11,14 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserReserveListDTO {
+public class OwnerReserveListDTO {
 
     private String groundName;
-    private String groundAddr;
+    private String addr;
     private Date reserveDate;
     private Integer time;
     private Date createDate;
     private Long price;
-
+    private String userName;
+    private String email;
 }

@@ -2,10 +2,7 @@ package com.goalracha.service;
 
 import com.goalracha.dto.PageRequestDTO;
 import com.goalracha.dto.PageResponseDTO;
-import com.goalracha.dto.reserve.AdminReserveListDTO;
-import com.goalracha.dto.reserve.ReservDTO;
-import com.goalracha.dto.reserve.ReserveListDTO;
-import com.goalracha.dto.reserve.UserReserveListDTO;
+import com.goalracha.dto.reserve.*;
 import com.goalracha.entity.Reserve;
 import org.springframework.data.domain.Pageable;
 
@@ -29,13 +26,13 @@ public interface ReserveService {
     Map<String, Object> newReserve(Long gNo, Long uNo, Date date, String time);
 
     // 유저 이전 예약 리스트 페이지네이션 처리
-    PageResponseDTO<UserReserveListDTO> getUserPreviousReservations(Long uNo, Pageable pageable);
+    PageResponseDTO<UserReserveListDTO> getUserPreviousReservations(Long uNo, PageRequestDTO pageRequestDTO);
 
     // 유저 예약 현황 리스트
-    PageResponseDTO<UserReserveListDTO> getUserReservationStatus(Long uNo, Pageable pageable);
+    PageResponseDTO<UserReserveListDTO> getUserReservationStatus(Long uNo, PageRequestDTO pageRequestDTO);
 
     // 사업자 예약 리스트
-     PageResponseDTO<AdminReserveListDTO>getOwnerReserveList(Long uNo, Pageable pageable);
+    PageResponseDTO<OwnerReserveListDTO>getOwnerReserveList(Long uNo, PageRequestDTO pageRequestDTO);
 
     // 전체 예약 리스트(관리자)
     PageResponseDTO<AdminReserveListDTO> getAllReserveList(PageRequestDTO pageRequestDTO);
