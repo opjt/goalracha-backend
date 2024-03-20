@@ -89,4 +89,7 @@ public class Member {
         this.tel = tel;
     }
 
+    public void delete() {
+        this.state = 2;
+    }
 }

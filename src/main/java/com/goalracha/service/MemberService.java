@@ -31,4 +31,6 @@ public interface MemberService {
 
     void ownerNameModify(OwnerNameModifyDTO ownerNameModifyDTO);
 
+    void withdrawMember(Long uNo); // 회원 탈퇴 메서드
+
 }
