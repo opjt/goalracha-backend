@@ -38,6 +38,9 @@ public class Reserve {
     @Column(name = "payment_type")
     private String payType; //결제방식
 
+    @Column(name = "payment_key")
+    private String payKey; //결제키(환불할 때 필요)
+
     @Column(name = "price")
     private Long price; // 가격
 
@@ -48,5 +51,10 @@ public class Reserve {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="u_no")
     private Member member;
+
+    public void delete() {
+        this.state = 0;
+    }
+
 
 }

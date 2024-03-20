@@ -54,7 +54,29 @@ public class GroundController {
     public Map<String, String> modify(@PathVariable(name = "gno") Long gno, GroundDTO groundDTO) {
         groundDTO.setGNo(gno);
         log.info("Modify: " + groundDTO);
+        GroundDTO oldProductDTO = service.get(gno);
+        // 기존의 파일
+        List<String> oldFileNames = oldProductDTO.getUploadFileNames();
+        // 새로운 파일
+        List<MultipartFile> files = groundDTO.getFiles();
+        // 새로운 파일 이름
+        List<String> currentUploadFileNames = fileUtil.saveFiles(files);
+        // 화면에서 변화 없이 계속 유지된 파일들
+        List<String> uploadedFileNames = groundDTO.getUploadFileNames();
+        // 저장해야 하는 파일 목록
+        if (currentUploadFileNames != null && currentUploadFileNames.size() > 0) {
+            uploadedFileNames.addAll(currentUploadFileNames);
+        }
+        // 수정 작업
         service.modify(groundDTO);
+        if (oldFileNames != null && oldFileNames.size() > 0) {
+            // 지워야 하는 파일 목록 찾기
+            // 예전 파일들 중에서 지워져야 하는 파일이름
+            List<String> removeFiles = oldFileNames.stream().filter(fileName ->
+                    uploadedFileNames.indexOf(fileName) == -1).collect(Collectors.toList());
+
+            fileUtil.deleteFiles(removeFiles);
+        }
 
         return Map.of("RESULT", "SUCCESS");
     }

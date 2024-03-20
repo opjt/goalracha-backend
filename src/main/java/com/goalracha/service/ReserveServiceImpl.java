@@ -20,8 +20,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -240,7 +252,33 @@ public class ReserveServiceImpl implements ReserveService {
                 .build();
     }
 
+    @Override
+    public Map<String, Object> cancel(String header, String payKey, Long uNo) {
+        Map<String,Object> result = new HashMap<>();
 
+        List<Reserve> reservList = reserveRepository.findAllByPayKey(payKey);
+
+        if(reservList == null) { //잘못된 paykey일경우
+            log.error("pay키 찾을 수 없음");
+            return null;
+        }
+        if(reservList.get(0).getMember().getUNo() != uNo) {
+            log.error(reservList.get(0).getMember().getUNo() + " " + uNo + "다름");
+            return null;
+        }
+        Map<String,Object> tossResult = tossPostCancel(header,payKey);
+
+        if(tossResult == null) {
+            return null;
+        }
+        for (Reserve reserve : reservList) {
+            reserve.delete();
+            reserveRepository.save(reserve);
+        }
+        result.put("res", "good");
+        return result;
+
+    }
 
 
     @Override
@@ -254,9 +292,14 @@ public class ReserveServiceImpl implements ReserveService {
     }
 
     @Override
-    public Map<String, Object> newReserve(Long gNo, Long uNo, Date reqDate, String time) {
-        Map<String, Object> result = new HashMap<>(); //최종리턴맵
+    public Map<String, Object> newReserve(ReserveAddsDTO requestDTO) {
 
+        Long gNo = requestDTO.getGNo();
+        Long uNo = requestDTO.getUNo();
+        Date reqDate = requestDTO.getDate();
+        String time = requestDTO.getTime();
+
+        Map<String, Object> result = new HashMap<>(); //최종리턴맵
         Member member = memberRepository.findById(uNo).orElse(null);
         Ground ground = groundRepository.findById(gNo).orElse(null);
         List<Integer> resTimeList = new ArrayList<>();
@@ -281,7 +324,8 @@ public class ReserveServiceImpl implements ReserveService {
             Reserve newreserv = Reserve.builder()
                     .reserveDate(reqDate)
                     .time(oftime)
-                    .payType("1")
+                    .payType(requestDTO.getPayType())
+                    .payKey(requestDTO.getPayKey())
                     .createDate(new Date())
                     .member(member)
                     .ground(ground)
@@ -297,43 +341,6 @@ public class ReserveServiceImpl implements ReserveService {
 
         return result;
     }
-
-    @Override
-    public Reserve newReserve(ReservDTO reservDTO) {
-
-        Member member = memberRepository.findById(reservDTO.getUNo()).orElse(null);
-        Ground ground = groundRepository.findById(reservDTO.getGNo()).orElse(null);
-
-        if (member == null || ground == null) { //구장이나 맴버정보가 맞지 않으면 리턴널
-            return null;
-        }
-
-        if (!checkReserveTime(ground.getOpenTime(), ground.getCloseTime(), reservDTO.getTime(), ground.getUsageTime())) { //예약가능 시간대인지 확인
-            log.error("불가능한 시간 " + ground.getOpenTime() + " " + ground.getCloseTime() + " " + reservDTO.getTime() + " " + ground.getUsageTime());
-            return null;
-        }
-
-        List<Integer> timeList = reserveRepository.findReservationTimesByDate(ground.getGNo(), reservDTO.getReserveDate()); //중복시간 있는지 확인
-        if (timeList.contains(reservDTO.getTime())) {
-            log.error("중복시간 검출" + reservDTO.getTime() + " " + timeList.toString());
-            return null;
-        }
-
-
-        Reserve newreserv = Reserve.builder()
-                .reserveDate(reservDTO.getReserveDate())
-                .time(reservDTO.getTime())
-                .payType(reservDTO.getPayType())
-                .createDate(new Date())
-                .member(member)
-                .ground(ground)
-                .state(1)
-                .build();
-        Reserve result = reserveRepository.save(newreserv);
-
-        return result;
-    }
-
 
     private boolean checkReserveTime(Integer openTime, Integer closeTime, Integer useTime, Integer unit) {
         //가능시간대인지 확인하는 메소드
@@ -357,4 +364,70 @@ public class ReserveServiceImpl implements ReserveService {
         }
         return false;
     }
+
+    private Map<String, Object> tossPostCancel(String header, String payKey) {
+
+        String tossCancelUrl = "https://api.tosspayments.com/v1/payments/" + payKey + "/cancel";
+
+        // RestTemplate 객체 생성
+        RestTemplate restTemplate = new RestTemplate();
+
+        // HTTP 요청 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Basic " + header);
+        headers.add("Content-Type", "application/json");
+
+        // HTTP 요청 본문 설정
+        HttpEntity<String> entity = new HttpEntity<>("{\"cancelReason\":\"고객이 취소를 원함\"}", headers);
+
+        try {
+            // HTTP POST 요청 보내기
+            ResponseEntity<Map> response = restTemplate.exchange(tossCancelUrl, HttpMethod.POST, entity, Map.class);
+
+            // 응답 처리
+            HttpStatusCode statusCode = response.getStatusCode();
+            Map<String, Object> responseBody = response.getBody();
+            System.out.println("Status code: " + statusCode);
+            System.out.println("Response body: " + responseBody);
+            return responseBody;
+
+        } catch (HttpClientErrorException e) {
+            // 클라이언트 에러 (예: 400 Bad Request) 처리
+            HttpStatusCode statusCode = e.getStatusCode();
+            String responseBody = e.getResponseBodyAsString();
+            System.err.println("Client error occurred. Status code: " + statusCode);
+            System.err.println("Response body: " + responseBody);
+            // 예외를 더 처리하거나 반환할 수 있습니다.
+            return null;
+        }
+    }
+    //    @Override //예약 추가 최초버전
+//    public Reserve newReserve(ReservDTO reservDTO) {
+//        Member member = memberRepository.findById(reservDTO.getUNo()).orElse(null);
+//        Ground ground = groundRepository.findById(reservDTO.getGNo()).orElse(null);
+//        if (member == null || ground == null) { //구장이나 맴버정보가 맞지 않으면 리턴널
+//            return null;
+//        }
+//        if (!checkReserveTime(ground.getOpenTime(), ground.getCloseTime(), reservDTO.getTime(), ground.getUsageTime())) { //예약가능 시간대인지 확인
+//            log.error("불가능한 시간 " + ground.getOpenTime() + " " + ground.getCloseTime() + " " + reservDTO.getTime() + " " + ground.getUsageTime());
+//            return null;
+//        }
+//        List<Integer> timeList = reserveRepository.findReservationTimesByDate(ground.getGNo(), reservDTO.getReserveDate()); //중복시간 있는지 확인
+//        if (timeList.contains(reservDTO.getTime())) {
+//            log.error("중복시간 검출" + reservDTO.getTime() + " " + timeList.toString());
+//            return null;
+//        }
+//        Reserve newreserv = Reserve.builder()
+//                .reserveDate(reservDTO.getReserveDate())
+//                .time(reservDTO.getTime())
+//                .payType(reservDTO.getPayType())
+//                .createDate(new Date())
+//                .member(member)
+//                .ground(ground)
+//                .state(1)
+//                .build();
+//        Reserve result = reserveRepository.save(newreserv);
+//
+//        return result;
+//    }
 }

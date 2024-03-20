@@ -12,6 +12,7 @@ import java.util.Date;
 public class ReservDTO {
     private Long rNo; //예약일련번호
     private String payType; //결제방식
+    private String payKey; //결제키
     private Date reserveDate; //예약날짜
     private Date createDate; //예약생성날짜
     private Integer time; //예약시간 ex)13

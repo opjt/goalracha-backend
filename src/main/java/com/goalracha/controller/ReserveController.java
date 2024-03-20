@@ -1,5 +1,6 @@
 package com.goalracha.controller;
 
+import com.goalracha.dto.MemberDTO;
 import com.goalracha.dto.PageRequestDTO;
 import com.goalracha.dto.PageResponseDTO;
 import com.goalracha.dto.reserve.*;
@@ -13,6 +14,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -66,7 +70,26 @@ public class ReserveController {
     @PostMapping("/") //예약등록
     public ResponseEntity<?> addReserve(@RequestBody ReserveAddsDTO reserveAddsdto) {
 
-        Map<String, Object> response = reserveService.newReserve(reserveAddsdto.getGNo(), reserveAddsdto.getUNo(), reserveAddsdto.getDate(), reserveAddsdto.getTime());
+        Map<String, Object> response = reserveService.newReserve(reserveAddsdto);
+        if (response == null) {
+            return ResponseEntity.badRequest().body("error");
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/cancel")
+    public ResponseEntity<?> addReserve(@RequestBody Map<String, Object> request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info(authentication.getPrincipal());
+        log.info(authentication.getPrincipal().toString());
+
+        if (authentication.isAuthenticated() && authentication instanceof AnonymousAuthenticationToken) {
+            return ResponseEntity.badRequest().body("잘못된 권한의 요청");
+        }
+        MemberDTO mdto = (MemberDTO) authentication.getPrincipal();
+        log.info(mdto.toString());
+
+        Map<String, Object> response = reserveService.cancel((String) request.get("header"), (String) request.get("payKey"),mdto.getUNo());
         if (response == null) {
             return ResponseEntity.badRequest().body("error");
         }

@@ -17,15 +17,12 @@ public interface ReserveService {
 
     ReserveListDTO getGroundReserve(Long gno);
 
-    Reserve newReserve(ReservDTO reservDTO);
+    Map<String, Object> newReserve(ReserveAddsDTO reserveAddsDTO);
 
     Map<String, Object> getAllList(String date, String time, List<String> inout, String search);
 
     Map<String, Object> showGroundInfo(Long gno, String date);
 
-    Map<String, Object> newReserve(Long gNo, Long uNo, Date date, String time);
-
-    // 유저 이전 예약 리스트 페이지네이션 처리
     PageResponseDTO<UserReserveListDTO> getUserPreviousReservations(Long uNo, PageRequestDTO pageRequestDTO);
 
     // 유저 예약 현황 리스트
@@ -37,4 +34,5 @@ public interface ReserveService {
     // 전체 예약 리스트(관리자)
     PageResponseDTO<AdminReserveListDTO> getAllReserveList(PageRequestDTO pageRequestDTO);
 
+    Map<String, Object> cancel(String header, String payKey, Long uNo);
 }
