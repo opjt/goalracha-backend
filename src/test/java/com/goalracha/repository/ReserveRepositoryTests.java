@@ -1,36 +1,45 @@
-//package com.goalracha.repository;
-//
-//import com.goalracha.dto.PageResponseDTO;
-//import com.goalracha.dto.reserve.AdminReserveListDTO;
-//import com.goalracha.dto.reserve.UserReserveListDTO;
-//import com.goalracha.entity.Ground;
-//import com.goalracha.entity.Member;
-//import com.goalracha.entity.Reserve;
-//import com.goalracha.service.ReserveService;
-//import jakarta.transaction.Transactional;
-//import lombok.extern.log4j.Log4j2;
-//import org.junit.jupiter.api.Test;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.data.domain.Page;
-//import org.springframework.data.domain.PageRequest;
-//import org.springframework.data.domain.Pageable;
-//
-//import java.util.ArrayList;
-//import java.util.Date;
-//import java.util.List;
-//
-//@SpringBootTest
-//@Transactional
-//@Log4j2
-//public class ReserveRepositoryTests {
-//
-//
-//    @Autowired
-//    private ReserveRepository reserveRepository;
-//
-//    @Autowired
-//    private ReserveService reserveService;
+package com.goalracha.repository;
+
+import com.goalracha.dto.PageRequestDTO;
+import com.goalracha.dto.PageResponseDTO;
+import com.goalracha.dto.reserve.AdminReserveListDTO;
+import com.goalracha.dto.reserve.OwnerReserveListDTO;
+import com.goalracha.service.ReserveService;
+import jakarta.transaction.Transactional;
+import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+@Transactional
+@Log4j2
+public class ReserveRepositoryTests {
+
+
+    @Autowired
+    private ReserveRepository reserveRepository;
+
+    @Autowired
+    private ReserveService reserveService;
+
+    @Test
+    public void OwnerReserveListSearchTest() {
+        Long uNo = 3L;
+        String searchName = "골라";
+        PageRequestDTO pageRequestDTO = new PageRequestDTO();
+        PageResponseDTO<OwnerReserveListDTO> result = reserveService.getOwnerReserveListSearch(uNo, searchName, pageRequestDTO);
+        log.info(result);
+    }
+
+    @Test
+    public void AdminReserveListSearchTest() {
+        String searchName = "럭키";
+        PageRequestDTO pageRequestDTO = new PageRequestDTO();
+        PageResponseDTO<AdminReserveListDTO> result = reserveService.getAllReserveListSearch(searchName, pageRequestDTO);
+        log.info(result);
+    }
+
 //
 //    @Test
 //    public void InsertData() {
@@ -128,4 +137,4 @@
 //        log.info(result);
 //    }
 //
-//}
+}

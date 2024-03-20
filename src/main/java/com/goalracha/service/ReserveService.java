@@ -29,10 +29,16 @@ public interface ReserveService {
     PageResponseDTO<UserReserveListDTO> getUserReservationStatus(Long uNo, PageRequestDTO pageRequestDTO);
 
     // 사업자 예약 리스트
-    PageResponseDTO<OwnerReserveListDTO>getOwnerReserveList(Long uNo, PageRequestDTO pageRequestDTO);
+    PageResponseDTO<OwnerReserveListDTO> getOwnerReserveList(Long uNo, PageRequestDTO pageRequestDTO);
 
     // 전체 예약 리스트(관리자)
     PageResponseDTO<AdminReserveListDTO> getAllReserveList(PageRequestDTO pageRequestDTO);
 
     Map<String, Object> cancel(String header, String payKey, Long uNo);
+    // 사업자 예약 리스트 조회 (구장명, 고객명)
+    PageResponseDTO<OwnerReserveListDTO> getOwnerReserveListSearch(Long uNo, String searchName, PageRequestDTO pageRequestDTO);
+
+    // 관리자 예약 리스트 조회 (구장명, 고객명)
+    PageResponseDTO<AdminReserveListDTO> getAllReserveListSearch(String searchName, PageRequestDTO pageRequestDTO);
+
 }

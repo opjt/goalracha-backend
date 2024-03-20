@@ -151,10 +151,40 @@ public class ReserveController {
 
     // 예약 전체 리스트(관리자)
     @GetMapping("/v/list")
-    public ResponseEntity<PageResponseDTO<AdminReserveListDTO>> getAllReserveList(PageRequestDTO pageRequestDTO) {
+    public ResponseEntity<PageResponseDTO<AdminReserveListDTO>> getAllReserveList(
+            @PageableDefault(size = 10) PageRequestDTO pageRequestDTO) {
         // 모든 예약 리스트를 가져옵니다.
         PageResponseDTO<AdminReserveListDTO> responseDTO = reserveService.getAllReserveList(pageRequestDTO);
         // ResponseEntity에 담아 반환합니다.
         return ResponseEntity.ok(responseDTO);
     }
+
+    // 사업자 예약 리스트 검색 (구장명, 고객명)
+    @GetMapping("/v/owner-list/{uNo}/{searchName}")
+    public ResponseEntity<PageResponseDTO<OwnerReserveListDTO>> getOwnerReserveListSearch(
+            @PathVariable Long uNo,
+            @PathVariable String searchName,
+            @PageableDefault(size = 10) PageRequestDTO pageRequestDTO) {
+
+        // 검색된 예약 리스트를 가져옵니다.
+        PageResponseDTO<OwnerReserveListDTO> responseDTO = reserveService.getOwnerReserveListSearch(uNo, searchName, pageRequestDTO);
+
+        // ResponseEntity에 담아 반환합니다.
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    // 관리자 예약 리스트 검색 (구장명, 고객명, 사업자명)
+    @GetMapping("/v/list/{searchName}")
+    public ResponseEntity<PageResponseDTO<AdminReserveListDTO>> getAllReserveListSearch(
+            @PathVariable String searchName,
+            @PageableDefault(size = 10) PageRequestDTO pageRequestDTO) {
+
+        // 검색된 예약 리스트를 가져옵니다.
+        PageResponseDTO<AdminReserveListDTO> responseDTO = reserveService.getAllReserveListSearch(searchName, pageRequestDTO);
+
+        // ResponseEntity에 담아 반환합니다.
+        return ResponseEntity.ok(responseDTO);
+    }
+
+
 }

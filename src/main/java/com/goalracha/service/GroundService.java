@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface GroundService {
 
-    PageResponseDTO<GroundDTO> listWithImage(PageRequestDTO pageRequestDTO);
+    PageResponseDTO<GroundDTO> listWithImage(Long uNo, PageRequestDTO pageRequestDTO);
 
     // 구장 등록
     Long register(GroundDTO groundDTO);

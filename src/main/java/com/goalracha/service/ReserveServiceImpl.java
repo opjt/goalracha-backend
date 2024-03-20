@@ -279,6 +279,55 @@ public class ReserveServiceImpl implements ReserveService {
         return result;
 
     }
+    // 사업자 예약 리스트 검색 (구장명, 고객명)
+    @Override
+    public PageResponseDTO<OwnerReserveListDTO> getOwnerReserveListSearch(Long uNo, String searchName, PageRequestDTO pageRequestDTO) {
+
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPage() - 1, // 1페이지가 0이므로 주의
+                pageRequestDTO.getSize(),
+                Sort.by("rNO").descending()
+        );
+
+        // 예약 리스트 가져오기
+        Page<OwnerReserveListDTO> page = reserveRepository.ownerRserveListSearch(uNo, searchName, pageable);
+
+        // 가져온 예약 리스트를 PageResponseDTO 형식으로 변환하여 반환합니다.
+        return PageResponseDTO.<OwnerReserveListDTO>withAll()
+                .dtoList(page.getContent())
+                .pageRequestDTO(PageRequestDTO.builder()
+                        .page(page.getNumber() + 1)
+                        .size(page.getSize())
+                        .build())
+                .totalCount(page.getTotalElements())
+                .build();
+
+    }
+
+    // 사업자 예약 리스트 검색 (구장명, 고객명)
+    @Override
+    public PageResponseDTO<AdminReserveListDTO> getAllReserveListSearch(String searchName, PageRequestDTO pageRequestDTO) {
+
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPage() - 1, // 1페이지가 0이므로 주의
+                pageRequestDTO.getSize(),
+                Sort.by("rNO").descending()
+        );
+
+        // 예약 리스트 가져오기
+        Page<AdminReserveListDTO> page = reserveRepository.findAllReserveListSearch(searchName, pageable);
+
+        // 가져온 예약 리스트를 PageResponseDTO 형식으로 변환하여 반환합니다.
+        return PageResponseDTO.<AdminReserveListDTO>withAll()
+                .dtoList(page.getContent())
+                .pageRequestDTO(PageRequestDTO.builder()
+                        .page(page.getNumber() + 1)
+                        .size(page.getSize())
+                        .build())
+                .totalCount(page.getTotalElements())
+                .build();
+
+    }
 
 
     @Override
@@ -300,6 +349,7 @@ public class ReserveServiceImpl implements ReserveService {
         String time = requestDTO.getTime();
 
         Map<String, Object> result = new HashMap<>(); //최종리턴맵
+
         Member member = memberRepository.findById(uNo).orElse(null);
         Ground ground = groundRepository.findById(gNo).orElse(null);
         List<Integer> resTimeList = new ArrayList<>();

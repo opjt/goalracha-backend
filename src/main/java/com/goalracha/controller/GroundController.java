@@ -30,11 +30,11 @@ public class GroundController {
         return service.get(gno);
     }
 
-    @GetMapping("/")
-    public PageResponseDTO<GroundDTO> listWithImage(PageRequestDTO pageRequestDTO) {
+    @GetMapping("/{uNo}")
+    public PageResponseDTO<GroundDTO> listWithImage( @PathVariable Long uNo, PageRequestDTO pageRequestDTO) {
         log.info(pageRequestDTO);
 
-        return service.listWithImage(pageRequestDTO);
+        return service.listWithImage(uNo,pageRequestDTO);
     }
 
     @PostMapping("/register")
