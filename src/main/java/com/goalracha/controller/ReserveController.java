@@ -134,5 +134,4 @@ public class ReserveController {
         // ResponseEntity에 담아 반환합니다.
         return ResponseEntity.ok(responseDTO);
     }
-
 }

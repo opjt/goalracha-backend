@@ -57,6 +57,4 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
             " r.ground.member.businessId, r.ground.member.businessName, r.member.email) FROM Reserve r")
     Page<AdminReserveListDTO> findAllReserveList(Pageable pageable);
 
-
-
 }
