@@ -11,6 +11,7 @@ import com.goalracha.service.MemberService;
 import com.goalracha.service.ReserveService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.http.ResponseEntity;
@@ -89,4 +90,14 @@ public class memberController {
         return Map.of("RESULT", "SUCCESS");
     }
 
+    // 회원 탈퇴 API
+    @DeleteMapping("/api/member/{uNo}")
+    public ResponseEntity<Map<String, String>> withdrawMember(@PathVariable Long uNo) {
+        try {
+            memberService.withdrawMember(uNo); // 회원 탈퇴 서비스 메서드 호출
+            return ResponseEntity.ok(Map.of("message", "회원 탈퇴가 성공적으로 처리되었습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", "회원 탈퇴에 실패하였습니다."));
+        }
+    }
 }

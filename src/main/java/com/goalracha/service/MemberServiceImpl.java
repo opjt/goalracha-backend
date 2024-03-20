@@ -13,6 +13,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -223,13 +224,27 @@ public class MemberServiceImpl implements MemberService {
                 .collect(Collectors.toList());
     }
 
-    // 회원 탈퇴 쿼리 트랜잭션
-//    @Transactional
-//    public void countReservationsAndUpdateState(Long uNo) {
-//        int reservationCount = memberRepository.countReservationsAfterToday(uNo);
-//        if (reservationCount == 0) {
-//            memberRepository.updateMemberStateToWithdraw(uNo);
-//        }
-//    }
+    // 회원 탈퇴
+    @Override
+    public void withdrawMember(Long uNo) {
+        // 회원의 예약 내역 수를 조회합니다.
+        int reservationCount = memberRepository.countReservationsAfterToday(uNo);
+        log.info(reservationCount);
+        // 예약 내역이 없는 경우 회원의 상태를 탈퇴로 변경합니다.
+        if (reservationCount == 0) {
+            log.info(reservationCount);
+            log.info(uNo);
+            Member member = memberRepository.findById(uNo).orElse(null);
 
+            member.delete();
+            memberRepository.save(member);
+//            memberRepository.updateMemberStateToWithdraw(uNo);
+
+            log.info("회원 탈퇴가 성공적으로 수행되었습니다.");
+        } else {
+            // 예약 내역이 있는 경우 처리할 내용을 기록합니다.
+            log.info("회원은 아직 예약 내역이 남아 있어 탈퇴가 불가능합니다.");
+            // 예약 내역이 있을 경우에 대한 예외 처리 또는 메시지 출력 등을 수행할 수 있습니다.
+        }
+    }
 }
