@@ -70,7 +70,7 @@ public class GroundController {
         // 수정 작업
         service.modify(groundDTO);
         if (oldFileNames != null && oldFileNames.size() > 0) {
-            // 지워야 하는 파일 목록 찾기
+        // 지워야 하는 파일 목록 찾기
             // 예전 파일들 중에서 지워져야 하는 파일이름
             List<String> removeFiles = oldFileNames.stream().filter(fileName ->
                     uploadedFileNames.indexOf(fileName) == -1).collect(Collectors.toList());
