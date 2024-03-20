@@ -24,7 +24,9 @@ public interface GroundRepository extends JpaRepository<Ground, Long> {
 //            "g.footwearIsYn, g.showerIsYn, g.ballIsYn, g.airconIsYn, g.parkareaIsYn, " +
 //            "g.roopIsYn, g.state, g.member.uNo) FROM Ground g WHERE g.state != 0")
 //    List<GroundDTO> findAllGroundsWithoutMember();
+
     List<Ground> findByState(Long State);
+
     @Modifying
     @Query("update Ground g set g.state = :state where g.gNo = :gno")
     void updateGroundState(@Param("gno") Long gno, @Param("state") Long state);
@@ -38,9 +40,9 @@ public interface GroundRepository extends JpaRepository<Ground, Long> {
     @Query("update Ground g set g.state = :state where g.gNo = :gno")
     void groundState(@Param("gno") Long gno, @Param("state") Long state);
 
-    @Query("SELECT g, gi FROM Ground g LEFT JOIN fetch g.imageList gi WHERE gi.ord = 0")
-    // @Query("SELECT g, gi FROM Ground g LEFT JOIN fetch g.imageList gi")
-    Page<Object[]> selectList(Pageable pageable);
+    @Query("SELECT g, gi FROM Ground g LEFT JOIN fetch g.imageList gi WHERE gi.ord = 0 AND g.member.uNo = :uNo")
+        // @Query("SELECT g, gi FROM Ground g LEFT JOIN fetch g.imageList gi")
+    Page<Object[]> selectList(Long uNo, Pageable pageable);
 
     @Query("SELECT gi.fileDirectory FROM Ground g JOIN g.imageList gi WHERE g.gNo = :gno")
     List<String> findAllImageFileNamesByGNo(@Param("gno") Long gno);

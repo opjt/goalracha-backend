@@ -31,11 +31,11 @@ public class GroundServiceImpl implements GroundService {
     private final GroundRepository groundRepository;
 
     @Override
-    public PageResponseDTO<GroundDTO> listWithImage(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<GroundDTO> listWithImage(Long uNo, PageRequestDTO pageRequestDTO) {
         log.info("ground list");
 
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize(), Sort.by(Sort.Direction.DESC, "gNo"));
-        Page<Object[]> result = groundRepository.selectList(pageable);
+        Page<Object[]> result = groundRepository.selectList(uNo, pageable);
 
         int offset = pageable.getPageNumber() * pageable.getPageSize() + 1; // offset 계산에서 +1
         int limit = offset + pageable.getPageSize() - 1;
@@ -63,7 +63,7 @@ public class GroundServiceImpl implements GroundService {
     }
 
     @Override
-        public Long register(GroundDTO groundDTO) {
+    public Long register(GroundDTO groundDTO) {
         Ground ground = GroundDTO.dtoToEntity(groundDTO);
         Ground result = groundRepository.save(ground);
         return result.getGNo();

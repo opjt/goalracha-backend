@@ -36,14 +36,15 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
             "WHERE r.member.uNo = :uNo AND TO_DATE(TO_CHAR(r.reserveDate, 'YYYY-MM-DD'), 'YYYY-MM-DD') < TO_DATE(TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD'), 'YYYY-MM-DD')")
     Page<UserReserveListDTO> userPreviousReservations(@Param("uNo") Long uNo, Pageable pageable);
 
-
-    // user 예약현황 리스트
+    // 예약현황
     @Query("SELECT new com.goalracha.dto.reserve.UserReserveListDTO(g.name, g.addr, r.reserveDate, r.time, r.createDate, r.price) " +
             "FROM Reserve r " +
             "JOIN r.ground g " +
             "WHERE r.member.uNo = :uNo AND TO_DATE(TO_CHAR(r.reserveDate, 'YYYY-MM-DD'), 'YYYY-MM-DD') >= TO_DATE(TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD'), 'YYYY-MM-DD')")
     Page<UserReserveListDTO> userReservationStatus(@Param("uNo") Long uNo, Pageable pageable);
 
+
+    // owner 예약 리스트
     @Query("SELECT new com.goalracha.dto.reserve.OwnerReserveListDTO(g.name, g.addr , r.reserveDate, r.time, r.createDate, r.price, m.name, m.email) " +
             "FROM Reserve r " +
             "JOIN r.member m " +
@@ -52,11 +53,32 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
     Page<OwnerReserveListDTO> ownerReserveList(@Param("uNo") Long uNo, Pageable pageable);
 
     //Admin 예약 전체 리스트
-
-    @Query("SELECT new com.goalracha.dto.reserve.AdminReserveListDTO(r.ground.name, r.reserveDate, r.time, r.createDate, r.price, r.ground.addr, r.member.name," +
-            " r.ground.member.businessId, r.ground.member.businessName, r.member.email) FROM Reserve r")
+    @Query("SELECT new com.goalracha.dto.reserve.AdminReserveListDTO(g.name, r.reserveDate, r.time, r.createDate, r.price, g.addr, r.member.name," +
+            " r.ground.member.businessId, r.ground.member.businessName, r.member.email) " +
+            "FROM Reserve r " +
+            "JOIN r.member m " +
+            "JOIN r.ground g " +
+            "JOIN g.member gm ")
     Page<AdminReserveListDTO> findAllReserveList(Pageable pageable);
 
 
+    // owner 예약 리스트 검색 (구장명, 고객명)
+    @Query("SELECT new com.goalracha.dto.reserve.OwnerReserveListDTO(g.name, g.addr , r.reserveDate, r.time, r.createDate, r.price, m.name, m.email) " +
+            "FROM Reserve r " +
+            "JOIN r.member m " +
+            "JOIN r.ground g " +
+            "WHERE g.member.uNo = :uNo " +
+            "AND (LOWER(g.name) LIKE CONCAT('%', LOWER(:searchName), '%') OR LOWER(m.name) LIKE CONCAT('%', LOWER(:searchName), '%'))")
+    Page<OwnerReserveListDTO> ownerRserveListSearch(@Param("uNo") Long uNo, @Param("searchName") String searchName, Pageable pageable);
+
+    // admin 예약 전체 리스트 검색 (구장명, 고객명, 사업자명)
+    @Query("SELECT new com.goalracha.dto.reserve.AdminReserveListDTO(g.name, r.reserveDate, r.time, r.createDate, r.price, g.addr, " +
+            "m.name, gm.businessId, gm.businessName,  m.email) " +
+            "FROM Reserve r " +
+            "JOIN r.ground g " +
+            "JOIN r.member m " +
+            "JOIN g.member gm " +
+            "WHERE  (LOWER(g.name) LIKE CONCAT('%', LOWER(:searchName), '%') OR LOWER(m.name) LIKE CONCAT('%', LOWER(:searchName), '%') OR LOWER(gm.businessName) LIKE CONCAT('%', LOWER(:searchName), '%')) ")
+    Page<AdminReserveListDTO> findAllReserveListSearch(@Param("searchName") String searchName, Pageable pageable);
 
 }
