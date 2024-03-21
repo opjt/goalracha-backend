@@ -33,19 +33,25 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
     List<Object[]> findGroundsWithReservationsOnDate(@Param("date") String date);
 
     // user 이전 예약 리스트
-    @Query("SELECT new com.goalracha.dto.reserve.UserReserveListDTO(g.name, g.addr, r.reserveDate, r.time, r.createDate, r.price) " +
+    @Query("SELECT new com.goalracha.dto.reserve.UserReserveListDTO(g.name, g.addr, r.reserveDate, TO_CHAR(r.time), r.createDate, r.price,r.payType,r.payKey) " +
             "FROM Reserve r " +
             "JOIN r.ground g " +
             "WHERE r.member.uNo = :uNo AND TO_DATE(TO_CHAR(r.reserveDate, 'YYYY-MM-DD'), 'YYYY-MM-DD') < TO_DATE(TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD'), 'YYYY-MM-DD')")
     Page<UserReserveListDTO> userPreviousReservations(@Param("uNo") Long uNo, Pageable pageable);
 
     // 예약현황
-    @Query("SELECT new com.goalracha.dto.reserve.UserReserveListDTO(g.name, g.addr, r.reserveDate, r.time, r.createDate, r.price) " +
+    @Query("SELECT new com.goalracha.dto.reserve.UserReserveListDTO(g.name, g.addr, r.reserveDate, TO_CHAR(r.time), r.createDate, r.price,r.payType,r.payKey) " +
             "FROM Reserve r " +
             "JOIN r.ground g " +
-            "WHERE r.member.uNo = :uNo AND TO_DATE(TO_CHAR(r.reserveDate, 'YYYY-MM-DD'), 'YYYY-MM-DD') >= TO_DATE(TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD'), 'YYYY-MM-DD')")
+            "WHERE r.member.uNo = :uNo AND TO_DATE(TO_CHAR(r.reserveDate, 'YYYY-MM-DD'), 'YYYY-MM-DD') >= TO_DATE(TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD'), 'YYYY-MM-DD') " +
+            "order by r.payKey, r.time")
     Page<UserReserveListDTO> userReservationStatus(@Param("uNo") Long uNo, Pageable pageable);
 
+    // 예약현황 paymentKey
+    @Query("SELECT r.payKey, LISTAGG(to_char(r.time), ',') WITHIN GROUP (ORDER BY r.rNO), r.reserveDate " +
+            "FROM Reserve r " +
+            "GROUP BY r.payKey, r.reserveDate")
+    Page<Object[]> userReserveList(@Param("uNo") Long uNo, Pageable pageable);
 
     // owner 예약 리스트
     @Query("SELECT new com.goalracha.dto.reserve.OwnerReserveListDTO(g.name, g.addr , r.reserveDate, r.time, r.createDate, r.price, m.name, m.email) " +

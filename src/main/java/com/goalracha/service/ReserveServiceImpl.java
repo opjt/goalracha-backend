@@ -110,8 +110,8 @@ public class ReserveServiceImpl implements ReserveService {
             List<String> timesplit = Arrays.asList(times.split(","));
             int i = 0;
             for (String sf1 : reqTimeList) { //시간필터의 값들로 올바른 예약시간인지 확인
-                log.info("timesplit:" + sf1 + "contain : " + timesplit.contains(sf1) + "check : " + checkReserveTime(groundMap.get(gNo).getOpenTime(), groundMap.get(gNo).getCloseTime(), Integer.parseInt(sf1),
-                        groundMap.get(gNo).getUsageTime()));
+//                log.info("timesplit:" + sf1 + "contain : " + timesplit.contains(sf1) + "check : " + checkReserveTime(groundMap.get(gNo).getOpenTime(), groundMap.get(gNo).getCloseTime(), Integer.parseInt(sf1),
+//                        groundMap.get(gNo).getUsageTime()));
                 if (checkReserveTime(groundMap.get(gNo).getOpenTime(), groundMap.get(gNo).getCloseTime(), Integer.parseInt(sf1),
                         groundMap.get(gNo).getUsageTime()) && !timesplit.contains(sf1)) {
                     i++;
@@ -343,6 +343,11 @@ public class ReserveServiceImpl implements ReserveService {
                 .collect(Collectors.joining(","));
 
         Reserve firstReserve = reservList.get(0);
+//        if(reservList.size() >= 2) {
+//            timeList = reservList.get(0).getTime() + ":00 ~ " + reservList.get(reservList.size()-1).getTime()+firstReserve.getGround().getUsageTime() + ":00";
+//        } else {
+//            timeList = firstReserve.getTime() + ":00 ~ " + firstReserve.getTime()+firstReserve.getGround().getUsageTime() +  ":00";
+//        }
 
         ReserveInfoDTO reserveResult = ReserveInfoDTO.builder()
                 .groundName(firstReserve.getGround().getName())
@@ -353,6 +358,9 @@ public class ReserveServiceImpl implements ReserveService {
                 .payType(firstReserve.getPayType())
                 .build();
         result.put("reserveInfo", reserveResult);
+
+        GroundDTO ground = GroundDTO.entityToDTO(firstReserve.getGround());
+        result.put("groundInfo", ground);
         return result;
     }
 
