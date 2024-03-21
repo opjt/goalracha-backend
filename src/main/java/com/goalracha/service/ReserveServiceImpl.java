@@ -486,33 +486,5 @@ public class ReserveServiceImpl implements ReserveService {
             return null;
         }
     }
-    //    @Override //예약 추가 최초버전
-//    public Reserve newReserve(ReservDTO reservDTO) {
-//        Member member = memberRepository.findById(reservDTO.getUNo()).orElse(null);
-//        Ground ground = groundRepository.findById(reservDTO.getGNo()).orElse(null);
-//        if (member == null || ground == null) { //구장이나 맴버정보가 맞지 않으면 리턴널
-//            return null;
-//        }
-//        if (!checkReserveTime(ground.getOpenTime(), ground.getCloseTime(), reservDTO.getTime(), ground.getUsageTime())) { //예약가능 시간대인지 확인
-//            log.error("불가능한 시간 " + ground.getOpenTime() + " " + ground.getCloseTime() + " " + reservDTO.getTime() + " " + ground.getUsageTime());
-//            return null;
-//        }
-//        List<Integer> timeList = reserveRepository.findReservationTimesByDate(ground.getGNo(), reservDTO.getReserveDate()); //중복시간 있는지 확인
-//        if (timeList.contains(reservDTO.getTime())) {
-//            log.error("중복시간 검출" + reservDTO.getTime() + " " + timeList.toString());
-//            return null;
-//        }
-//        Reserve newreserv = Reserve.builder()
-//                .reserveDate(reservDTO.getReserveDate())
-//                .time(reservDTO.getTime())
-//                .payType(reservDTO.getPayType())
-//                .createDate(new Date())
-//                .member(member)
-//                .ground(ground)
-//                .state(1)
-//                .build();
-//        Reserve result = reserveRepository.save(newreserv);
-//
-//        return result;
-//    }
+
 }

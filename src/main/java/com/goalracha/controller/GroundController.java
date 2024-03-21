@@ -31,11 +31,18 @@ public class GroundController {
     }
 
     @GetMapping("/{uNo}")
-    public PageResponseDTO<GroundDTO> listWithImage( @PathVariable Long uNo, PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<GroundDTO> listWithImage2( @PathVariable Long uNo, PageRequestDTO pageRequestDTO) {
         log.info(pageRequestDTO);
 
-        return service.listWithImage(uNo,pageRequestDTO);
+        return service.listWithImage2(uNo,pageRequestDTO);
     }
+    @GetMapping("/")
+    public PageResponseDTO<GroundDTO> listWithImage(PageRequestDTO pageRequestDTO) {
+        log.info(pageRequestDTO);
+
+        return service.listWithImage(pageRequestDTO);
+    }
+
 
     @PostMapping("/register")
     public Map<String, Long> register( GroundDTO groundDTO) {

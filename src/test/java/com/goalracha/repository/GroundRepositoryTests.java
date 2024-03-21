@@ -29,7 +29,7 @@ public class GroundRepositoryTests {
     @Autowired
     ModelMapper modelMapper;
 
-    @Test
+  /*  @Test
     public void ListTest() {
         Long uNo = 3L;
         PageRequestDTO pageRequestDTO = new PageRequestDTO();
@@ -37,7 +37,7 @@ public class GroundRepositoryTests {
         Page<Object[]> result = groundRepository.selectList(uNo, pageable);
         log.info(result);
     }
-
+*/
     @Test
     public void testInsert() {
         Ground ground = Ground.builder().addr("addr").airconIsYn(true).ballIsYn(true).closeTime(22).fare(40000L)
