@@ -29,6 +29,7 @@ public class GroundServiceImpl implements GroundService {
 
     private final ModelMapper modelMapper;
     private final GroundRepository groundRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public PageResponseDTO<GroundDTO> listWithImage2(Long uNo, PageRequestDTO pageRequestDTO) {

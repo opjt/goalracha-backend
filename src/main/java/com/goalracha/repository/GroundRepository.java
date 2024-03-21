@@ -42,7 +42,7 @@ public interface GroundRepository extends JpaRepository<Ground, Long> {
 
     @Query("SELECT g, gi FROM Ground g LEFT JOIN fetch g.imageList gi WHERE gi.ord = 0 AND g.member.uNo = :uNo")
         // @Query("SELECT g, gi FROM Ground g LEFT JOIN fetch g.imageList gi")
-    Page<Object[]> selectList2(Long uNo, Pageable pageable);
+    Page<Object[]> selectOnwerList(Long uNo, Pageable pageable);
 
     @Query("SELECT g, gi FROM Ground g LEFT JOIN fetch g.imageList gi WHERE gi.ord = 0")
         // @Query("SELECT g, gi FROM Ground g LEFT JOIN fetch g.imageList gi")
