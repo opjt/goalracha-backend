@@ -227,24 +227,26 @@ public class MemberServiceImpl implements MemberService {
     // 회원 탈퇴
     @Override
     public void withdrawMember(Long uNo) {
-        // 회원의 예약 내역 수를 조회합니다.
-        int reservationCount = memberRepository.countReservationsAfterToday(uNo);
-        log.info(reservationCount);
-        // 예약 내역이 없는 경우 회원의 상태를 탈퇴로 변경합니다.
-        if (reservationCount == 0) {
-            log.info(reservationCount);
-            log.info(uNo);
-            Member member = memberRepository.findById(uNo).orElse(null);
+        // 회원 조회
+        Optional<Member> memberOptional = memberRepository.findById(uNo);
 
-            member.delete();
-            memberRepository.save(member);
-//            memberRepository.updateMemberStateToWithdraw(uNo);
+        // 회원이 존재하면
+        memberOptional.ifPresent(member -> {
+            // 회원의 예약 내역 수를 조회합니다.
+            int reservationCount = memberRepository.countReservationsAfterToday(uNo);
 
-            log.info("회원 탈퇴가 성공적으로 수행되었습니다.");
-        } else {
-            // 예약 내역이 있는 경우 처리할 내용을 기록합니다.
-            log.info("회원은 아직 예약 내역이 남아 있어 탈퇴가 불가능합니다.");
-            // 예약 내역이 있을 경우에 대한 예외 처리 또는 메시지 출력 등을 수행할 수 있습니다.
-        }
+            // 예약 내역이 없는 경우 회원의 상태를 탈퇴로 변경합니다.
+            if (reservationCount == 0) {
+                // 회원 상태 변경 메서드 호출
+                member.delete();
+                memberRepository.save(member); // 변경된 상태를 저장
+                log.info("회원 탈퇴가 성공적으로 수행되었습니다.");
+            } else {
+                // 예약 내역이 있는 경우 처리할 내용을 기록합니다.
+                log.info("회원은 아직 예약 내역이 남아 있어 탈퇴가 불가능합니다.");
+                // 예약 내역이 있을 경우에 대한 예외 처리 또는 메시지 출력 등을 수행할 수 있습니다.
+            }
+        });
     }
+
 }
