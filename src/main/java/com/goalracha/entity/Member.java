@@ -89,7 +89,9 @@ public class Member {
         this.tel = tel;
     }
 
+    // 회원 탈퇴
     public void delete() {
-        this.state = 2;
+        this.setState(0); // 상태를 0으로 변경
     }
+
 }

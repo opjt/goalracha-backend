@@ -31,7 +31,17 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     int countReservationsAfterToday(@Param("uNo") Long uNo);
 
     // 회원의 상태를 탈퇴로 변경하는 쿼리를 수행
-    @Query("UPDATE Member m SET m.state = 2 WHERE m.uNo = :uNo")
+    @Query("UPDATE Member m SET m.state = 0 WHERE m.uNo = :uNo")
     void updateMemberStateToWithdraw(@Param("uNo") Long uNo);
+
+    /*@Modifying
+    @Query("UPDATE Member m SET m.state = 0 WHERE m.uNo = :uNo")
+    void withdrawMember(@Param("uNo") Long uNo);*/
+
+    /*@Modifying
+    @Query("UPDATE Member m SET m.state = 0 WHERE m.uNo = :uNo")
+    void updateMemberStateToWithdraw(@Param("uNo") Long uNo);*/
+
+
 
 }
