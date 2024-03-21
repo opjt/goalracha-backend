@@ -56,7 +56,6 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
     Page<OwnerReserveListDTO> ownerReserveList(@Param("uNo") Long uNo, Pageable pageable);
 
     //Admin 예약 전체 리스트
-
     @Query("SELECT new com.goalracha.dto.reserve.AdminReserveListDTO(r.ground.name, r.reserveDate, r.time, r.createDate, r.price, r.ground.addr, r.member.name," +
             " r.ground.member.businessId, r.ground.member.businessName, r.member.email) FROM Reserve r")
     Page<AdminReserveListDTO> findAllReserveList(Pageable pageable);
