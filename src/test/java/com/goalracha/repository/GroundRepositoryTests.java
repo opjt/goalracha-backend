@@ -34,7 +34,7 @@ public class GroundRepositoryTests {
         Long uNo = 3L;
         PageRequestDTO pageRequestDTO = new PageRequestDTO();
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize(), Sort.by(Sort.Direction.DESC, "gNo"));
-        Page<Object[]> result = groundRepository.selectList(uNo, pageable);
+        Page<Object[]> result = groundRepository.selectOnwerList(uNo, pageable);
         log.info(result);
     }
 

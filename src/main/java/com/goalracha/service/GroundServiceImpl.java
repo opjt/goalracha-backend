@@ -2,11 +2,14 @@ package com.goalracha.service;
 
 
 import com.goalracha.dto.GroundDTO;
+import com.goalracha.dto.MemberDTO;
 import com.goalracha.dto.PageRequestDTO;
 import com.goalracha.dto.PageResponseDTO;
 import com.goalracha.entity.Ground;
 import com.goalracha.entity.GroundImage;
+import com.goalracha.entity.Member;
 import com.goalracha.repository.GroundRepository;
+import com.goalracha.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -29,13 +32,14 @@ public class GroundServiceImpl implements GroundService {
 
     private final ModelMapper modelMapper;
     private final GroundRepository groundRepository;
+    private final MemberRepository memberRepository;
 
     @Override
-    public PageResponseDTO<GroundDTO> listWithImage(Long uNo, PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<GroundDTO> ownerListWithImage(Long uNo, PageRequestDTO pageRequestDTO) {
         log.info("ground list");
 
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize(), Sort.by(Sort.Direction.DESC, "gNo"));
-        Page<Object[]> result = groundRepository.selectList(uNo, pageable);
+        Page<Object[]> result = groundRepository.selectOnwerList(uNo, pageable);
 
         int offset = pageable.getPageNumber() * pageable.getPageSize() + 1; // offset 계산에서 +1
         int limit = offset + pageable.getPageSize() - 1;
@@ -63,8 +67,41 @@ public class GroundServiceImpl implements GroundService {
     }
 
     @Override
-    public Long register(GroundDTO groundDTO) {
-        Ground ground = GroundDTO.dtoToEntity(groundDTO);
+    public PageResponseDTO<GroundDTO> listWithImage(PageRequestDTO pageRequestDTO) {
+        log.info("ground list");
+
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize(), Sort.by(Sort.Direction.DESC, "gNo"));
+        Page<Object[]> result = groundRepository.selectList(pageable);
+
+        int offset = pageable.getPageNumber() * pageable.getPageSize() + 1; // offset 계산에서 +1
+        int limit = offset + pageable.getPageSize() - 1;
+
+        List<GroundDTO> dtoList = result.get().map(arr -> {
+            Ground ground = (Ground) arr[0];
+            GroundImage groundImage = (GroundImage) arr[1];
+
+            GroundDTO groundDTO = GroundDTO.builder().gNo(ground.getGNo()).name(ground.getName()).addr(ground.getAddr())
+                    .inAndOut(ground.getInAndOut()).width(ground.getWidth()).grassInfo(ground.getGrassInfo())
+                    .recommdMan(ground.getRecommdMan()).usageTime(ground.getUsageTime()).openTime(ground.getOpenTime())
+                    .closeTime(ground.getCloseTime()).fare(ground.getFare()).userGuide(ground.getUserGuide())
+                    .userRules(ground.getUserRules()).refundRules(ground.getRefundRules()).vestIsYn(ground.isVestIsYn())
+                    .footwearIsYn(ground.isFootwearIsYn()).showerIsYn(ground.isShowerIsYn()).roopIsYn(ground.isRoopIsYn())
+                    .airconIsYn(ground.isAirconIsYn()).parkareaIsYn(ground.isParkareaIsYn()).state(ground.getState()).build();
+            String imageStr = groundImage.getFileDirectory();
+            groundDTO.setUploadFileNames(List.of(imageStr));
+
+            return groundDTO;
+        }).collect(Collectors.toList());
+
+        long totalCount = result.getTotalElements();
+
+        return PageResponseDTO.<GroundDTO>withAll().dtoList(dtoList).totalCount(totalCount).pageRequestDTO(pageRequestDTO).build();
+    }
+
+    @Override
+    public Long register(GroundDTO groundDTO, Long uNo) {
+        Member member = memberRepository.findById(uNo).orElseThrow(() -> new IllegalArgumentException("해당 uNo의 회원이 존재하지 않습니다. uNo=" + uNo));
+        Ground ground = GroundDTO.dtoToEntity(groundDTO, member);
         Ground result = groundRepository.save(ground);
         return result.getGNo();
     }

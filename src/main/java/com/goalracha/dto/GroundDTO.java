@@ -56,7 +56,7 @@ public class GroundDTO {
                 .userRules(ground.getUserRules()).refundRules(ground.getRefundRules()).vestIsYn(ground.isVestIsYn())
                 .footwearIsYn(ground.isFootwearIsYn()).showerIsYn(ground.isShowerIsYn()).roopIsYn(ground.isRoopIsYn())
                 .airconIsYn(ground.isAirconIsYn()).parkareaIsYn(ground.isParkareaIsYn()).state(ground.getState())
-                //.uNo(ground.getMember().getUNo())
+                .uNo(ground.getMember().getUNo())
                 .build();
         List<GroundImage> imageList = ground.getImageList();
         if (imageList == null || imageList.size() == 0) {
@@ -70,7 +70,7 @@ public class GroundDTO {
         return groundDTO;
 
     }
-    static public Ground dtoToEntity(GroundDTO groundDTO) {
+    static public Ground dtoToEntity(GroundDTO groundDTO, Member member) {
         Ground ground = Ground.builder().gNo(groundDTO.getGNo()).name(groundDTO.getName()).addr(groundDTO.getAddr())
                 .inAndOut(groundDTO.getInAndOut()).width(groundDTO.getWidth()).grassInfo(groundDTO.getGrassInfo())
                 .recommdMan(groundDTO.getRecommdMan()).usageTime(groundDTO.getUsageTime()).openTime(groundDTO.getOpenTime())
@@ -78,6 +78,7 @@ public class GroundDTO {
                 .userRules(groundDTO.getUserRules()).refundRules(groundDTO.getRefundRules()).vestIsYn(groundDTO.isVestIsYn())
                 .footwearIsYn(groundDTO.isFootwearIsYn()).showerIsYn(groundDTO.isShowerIsYn()).roopIsYn(groundDTO.isRoopIsYn())
                 .airconIsYn(groundDTO.isAirconIsYn()).parkareaIsYn(groundDTO.isParkareaIsYn()).state(groundDTO.getState())
+                .member(member)
                 .build();
 
         List<String> uploadFileNames = groundDTO.getUploadFileNames();

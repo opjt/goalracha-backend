@@ -31,14 +31,21 @@ public class GroundController {
     }
 
     @GetMapping("/{uNo}")
-    public PageResponseDTO<GroundDTO> listWithImage( @PathVariable Long uNo, PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<GroundDTO> ownerListWithImage2( @PathVariable Long uNo, PageRequestDTO pageRequestDTO) {
         log.info(pageRequestDTO);
 
-        return service.listWithImage(uNo,pageRequestDTO);
+        return service.ownerListWithImage(uNo,pageRequestDTO);
+    }
+
+    @GetMapping("/")
+    public PageResponseDTO<GroundDTO> listWithImage(PageRequestDTO pageRequestDTO) {
+        log.info(pageRequestDTO);
+
+        return service.listWithImage(pageRequestDTO);
     }
 
     @PostMapping("/register")
-    public Map<String, Long> register( GroundDTO groundDTO) {
+    public Map<String, Long> register(GroundDTO groundDTO) {
         log.info("register: " + groundDTO);
         // 파일 저장
         List<MultipartFile> files = groundDTO.getFiles();
@@ -46,7 +53,7 @@ public class GroundController {
         groundDTO.setUploadFileNames(uploadFileNames);
         log.info(uploadFileNames);
         // 서비스
-        Long gNo = service.register(groundDTO);
+        Long gNo = service.register(groundDTO, groundDTO.getUNo());
         return Map.of("result", gNo);
     }
 

@@ -1,6 +1,7 @@
 package com.goalracha.service;
 
 import com.goalracha.dto.GroundDTO;
+import com.goalracha.dto.MemberDTO;
 import com.goalracha.dto.PageRequestDTO;
 import com.goalracha.dto.PageResponseDTO;
 import com.goalracha.entity.GroundImage;
@@ -9,10 +10,12 @@ import java.util.List;
 
 public interface GroundService {
 
-    PageResponseDTO<GroundDTO> listWithImage(Long uNo, PageRequestDTO pageRequestDTO);
+    PageResponseDTO<GroundDTO> ownerListWithImage(Long uNo, PageRequestDTO pageRequestDTO);
+
+    PageResponseDTO<GroundDTO> listWithImage(PageRequestDTO pageRequestDTO);
 
     // 구장 등록
-    Long register(GroundDTO groundDTO);
+    Long register(GroundDTO groundDTO, Long uNo);
 
     // 구장 조회
     GroundDTO get(Long gNo);
