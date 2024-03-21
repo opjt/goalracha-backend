@@ -329,6 +329,33 @@ public class ReserveServiceImpl implements ReserveService {
 
     }
 
+    @Override
+    public Map<String, Object> infoByPayKey(String payKey) {
+        Map<String,Object> result = new HashMap<>(); //최종결과맵
+
+        List<Reserve> reservList = reserveRepository.findAllByPayKey(payKey); //payKey가 동일한 예약목록 불러오기
+        if(reservList.isEmpty()) { //값이 없으면
+            result.put("error","payKey 찾을 수 없음");
+            return result;
+        }
+        String timeList = reservList.stream()
+                .map(reserve -> String.valueOf(reserve.getTime()))
+                .collect(Collectors.joining(","));
+
+        Reserve firstReserve = reservList.get(0);
+
+        ReserveInfoDTO reserveResult = ReserveInfoDTO.builder()
+                .groundName(firstReserve.getGround().getName())
+                .date(firstReserve.getReserveDate())
+                .time(timeList)
+                .createDate(firstReserve.getCreateDate())
+                .pay(firstReserve.getPrice())
+                .payType(firstReserve.getPayType())
+                .build();
+        result.put("reserveInfo", reserveResult);
+        return result;
+    }
+
 
     @Override
     public ReserveListDTO getGroundReserve(Long gno) {

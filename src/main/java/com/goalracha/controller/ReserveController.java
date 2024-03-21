@@ -95,6 +95,15 @@ public class ReserveController {
         }
         return ResponseEntity.ok(response);
     }
+    @PostMapping("/info")
+    public ResponseEntity<?> getbyPayKey(@RequestBody String payKey) {
+        Map<String, Object> response = reserveService.infoByPayKey(payKey);
+        if(response.containsKey("error")) {
+            return ResponseEntity.badRequest().body((String) response.get("error"));
+        }
+
+        return ResponseEntity.ok(response);
+    }
 
     //예약번호로 그정보 가져오기
     @GetMapping("/v/{rno}")

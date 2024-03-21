@@ -41,4 +41,5 @@ public interface ReserveService {
     // 관리자 예약 리스트 조회 (구장명, 고객명)
     PageResponseDTO<AdminReserveListDTO> getAllReserveListSearch(String searchName, PageRequestDTO pageRequestDTO);
 
+    Map<String, Object> infoByPayKey(String payKey);
 }
