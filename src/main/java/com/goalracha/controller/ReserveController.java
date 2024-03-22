@@ -91,16 +91,17 @@ public class ReserveController {
         MemberDTO mdto = (MemberDTO) authentication.getPrincipal();
         log.info(mdto.toString());
 
-        Map<String, Object> response = reserveService.cancel((String) request.get("header"), (String) request.get("payKey"),mdto.getUNo());
+        Map<String, Object> response = reserveService.cancel((String) request.get("header"), (String) request.get("payKey"), mdto.getUNo());
         if (response == null) {
             return ResponseEntity.badRequest().body("error");
         }
         return ResponseEntity.ok(response);
     }
+
     @PostMapping("/info")
     public ResponseEntity<?> getbyPayKey(@RequestBody String payKey) {
         Map<String, Object> response = reserveService.infoByPayKey(payKey);
-        if(response.containsKey("error")) {
+        if (response.containsKey("error")) {
             return ResponseEntity.badRequest().body((String) response.get("error"));
         }
 
@@ -198,4 +199,11 @@ public class ReserveController {
         // ResponseEntity에 담아 반환합니다.
         return ResponseEntity.ok(responseDTO);
     }
+
+    // 사업자 통계 리스트
+    @GetMapping("/v/owner/statistics/{uNo}")
+    public List<OwnerReserveListDTO> ownerStatistics(@PathVariable Long uNo) {
+        return reserveService.getOwnerStatistics(uNo);
+    }
 }
+

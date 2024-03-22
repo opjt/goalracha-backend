@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 @SpringBootTest
 @Transactional
 @Log4j2
@@ -22,6 +24,13 @@ public class ReserveRepositoryTests {
 
     @Autowired
     private ReserveService reserveService;
+
+    @Test
+    public void ownerStatisticsTest() {
+        Long uNo = 2L;
+        List<OwnerReserveListDTO> ownerReserveListDTO = reserveService.getOwnerStatistics(uNo);
+        log.info(ownerReserveListDTO);
+    }
 
     @Test
     public void OwnerReserveListSearchTest() {

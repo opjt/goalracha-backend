@@ -262,21 +262,21 @@ public class ReserveServiceImpl implements ReserveService {
 
     @Override
     public Map<String, Object> cancel(String header, String payKey, Long uNo) {
-        Map<String,Object> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
 
         List<Reserve> reservList = reserveRepository.findAllByPayKey(payKey);
 
-        if(reservList == null) { //잘못된 paykey일경우
+        if (reservList == null) { //잘못된 paykey일경우
             log.error("pay키 찾을 수 없음");
             return null;
         }
-        if(reservList.get(0).getMember().getUNo() != uNo) {
+        if (reservList.get(0).getMember().getUNo() != uNo) {
             log.error(reservList.get(0).getMember().getUNo() + " " + uNo + "다름");
             return null;
         }
-        Map<String,Object> tossResult = tossPostCancel(header,payKey);
+        Map<String, Object> tossResult = tossPostCancel(header, payKey);
 
-        if(tossResult == null) {
+        if (tossResult == null) {
             return null;
         }
         for (Reserve reserve : reservList) {
@@ -287,6 +287,7 @@ public class ReserveServiceImpl implements ReserveService {
         return result;
 
     }
+
     // 사업자 예약 리스트 검색 (구장명, 고객명)
     @Override
     public PageResponseDTO<OwnerReserveListDTO> getOwnerReserveListSearch(Long uNo, String searchName, PageRequestDTO pageRequestDTO) {
@@ -339,11 +340,11 @@ public class ReserveServiceImpl implements ReserveService {
 
     @Override
     public Map<String, Object> infoByPayKey(String payKey) {
-        Map<String,Object> result = new HashMap<>(); //최종결과맵
+        Map<String, Object> result = new HashMap<>(); //최종결과맵
 
         List<Reserve> reservList = reserveRepository.findAllByPayKey(payKey); //payKey가 동일한 예약목록 불러오기
-        if(reservList.isEmpty()) { //값이 없으면
-            result.put("error","payKey 찾을 수 없음");
+        if (reservList.isEmpty()) { //값이 없으면
+            result.put("error", "payKey 찾을 수 없음");
             return result;
         }
         String timeList = reservList.stream()
@@ -366,6 +367,11 @@ public class ReserveServiceImpl implements ReserveService {
         GroundDTO ground = GroundDTO.entityToDTO(firstReserve.getGround());
         result.put("groundInfo", ground);
         return result;
+    }
+
+    @Override
+    public List<OwnerReserveListDTO> getOwnerStatistics(Long uNo) {
+        return reserveRepository.ownerStatistics(uNo);
     }
 
 
