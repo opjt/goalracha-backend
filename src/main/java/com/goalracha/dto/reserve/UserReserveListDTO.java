@@ -9,13 +9,15 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserReserveListDTO {
-//    private String payKey;
+    private String payKey;
     private String groundName;
     private String groundAddr;
     private Date reserveDate;
     private String time;
     private Date createDate;
     private Long price;
+    private Integer state;
+    private Integer usageTime;
 //    private String payType;
 
 

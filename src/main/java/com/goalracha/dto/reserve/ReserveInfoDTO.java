@@ -18,5 +18,6 @@ public class ReserveInfoDTO {
     private Date createDate; //결제날짜
     private Long pay; //결제금액
     private String payType; //결제방식
+    private Integer state;
 
 }

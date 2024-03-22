@@ -126,7 +126,7 @@ public class ReserveController {
 
 
     // user 이전 예약 목록 조회
-    @GetMapping("/v/previous-reservations/{uNo}")
+    @GetMapping("/v/ulistprev/{uNo}")
     public ResponseEntity<PageResponseDTO<UserReserveListDTO>> getUserPreviousReservations(
             @PathVariable Long uNo, @PageableDefault(size = 10) PageRequestDTO pageRequestDTO) {
 
@@ -138,7 +138,7 @@ public class ReserveController {
     }
 
     // 유저 번호로 예약현황 목록 조회
-    @GetMapping("/v/reservation-status/{uNo}")
+    @GetMapping("/v/ulist/{uNo}")
     public ResponseEntity<PageResponseDTO<UserReserveListDTO>> getUserReservationStatus(
             @PathVariable Long uNo,
             @PageableDefault(size = 10) PageRequestDTO pageRequestDTO) {
@@ -148,33 +148,6 @@ public class ReserveController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    @GetMapping("/v/test/{uNo}")
-    public ResponseEntity<?> getUserReserveList(
-            @PathVariable Long uNo,
-            @PageableDefault(size = 10) PageRequestDTO pageRequestDTO) {
-        // 사용자의 예약 현황을 가져옵니다.
-
-        Pageable pageable = PageRequest.of(
-                pageRequestDTO.getPage() - 1, // 1페이지가 0이므로 주의
-                pageRequestDTO.getSize(),
-                Sort.by("reserveDate").descending()
-        );
-        // 사용자의 예약 현황을 가져옵니다.
-        Page<Object[]> page = reserveRepository.userReserveList(uNo, pageable);
-
-        // 가져온 예약 현황을 PageResponseDTO 형식으로 변환하여 반환합니다.
-        PageResponseDTO<Object[]> result = PageResponseDTO.<Object[]>withAll()
-                .dtoList(page.getContent())
-                .pageRequestDTO(PageRequestDTO.builder()
-                        .page(page.getNumber() + 1)
-                        .size(page.getSize())
-                        .build())
-                .totalCount(page.getTotalElements())
-                .build();
-
-        // ResponseEntity에 담아 반환합니다.
-        return ResponseEntity.ok(result);
-    }
 
 
     // 구장 유저 번호로 예약 목록 조회

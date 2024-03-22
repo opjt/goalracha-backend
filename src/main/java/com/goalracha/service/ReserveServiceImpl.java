@@ -54,7 +54,10 @@ public class ReserveServiceImpl implements ReserveService {
         Map<String, Object> result = new HashMap<>(); //최종리턴맵
 
         List<Ground> groundList2 = groundRepository.findAll(); //수정필요
-        List<GroundDTO> dtoList = groundList2.stream().map(GroundDTO::entityToDTO).toList();
+        List<GroundDTO> dtoList = groundList2.stream()
+                .filter(ground -> ground.getMember() != null) // member가 null이 아닌 경우만 필터링
+                .map(GroundDTO::entityToDTO)
+                .toList();
 //        List<GroundDTO> groundList= groundRepository.findAllGroundsWithoutMember();
         Map<Long, GroundDTO> groundMap = dtoList.stream()
                 .collect(Collectors.toMap(GroundDTO::getGNo, Function.identity()));
@@ -164,11 +167,11 @@ public class ReserveServiceImpl implements ReserveService {
         Pageable pageable = PageRequest.of(
                 pageRequestDTO.getPage() - 1, // 1페이지가 0이므로 주의
                 pageRequestDTO.getSize(),
-                Sort.by("rNO").descending()
+                Sort.by("reserveDate").descending()
         );
 
         // 사용자의 이전 예약을 가져옵니다.
-        Page<UserReserveListDTO> page = reserveRepository.userPreviousReservations(uNo, pageable);
+        Page<UserReserveListDTO> page = reserveRepository.userReserveListPrev(uNo, pageable);
 
         // 가져온 이전 예약을 PageResponseDTO 형식으로 변환하여 반환합니다.
         return PageResponseDTO.<UserReserveListDTO>withAll()
@@ -185,13 +188,18 @@ public class ReserveServiceImpl implements ReserveService {
     @Override
     public PageResponseDTO<UserReserveListDTO> getUserReservationStatus(Long uNo, PageRequestDTO pageRequestDTO) {
 
+        Sort sort = Sort.by(
+                Sort.Order.desc("reserveDate"), // 첫 번째 정렬 기준: reserveDate 내림차순
+                Sort.Order.desc("payKey") // 두 번째 정렬 기준: payKey 내림차순
+        );
+
         Pageable pageable = PageRequest.of(
                 pageRequestDTO.getPage() - 1, // 1페이지가 0이므로 주의
                 pageRequestDTO.getSize(),
-                Sort.by("rNO").descending()
+                sort
         );
         // 사용자의 예약 현황을 가져옵니다.
-        Page<UserReserveListDTO> page = reserveRepository.userReservationStatus(uNo, pageable);
+        Page<UserReserveListDTO> page = reserveRepository.userReserveList(uNo, pageable);
 
         // 가져온 예약 현황을 PageResponseDTO 형식으로 변환하여 반환합니다.
         return PageResponseDTO.<UserReserveListDTO>withAll()
@@ -343,11 +351,6 @@ public class ReserveServiceImpl implements ReserveService {
                 .collect(Collectors.joining(","));
 
         Reserve firstReserve = reservList.get(0);
-//        if(reservList.size() >= 2) {
-//            timeList = reservList.get(0).getTime() + ":00 ~ " + reservList.get(reservList.size()-1).getTime()+firstReserve.getGround().getUsageTime() + ":00";
-//        } else {
-//            timeList = firstReserve.getTime() + ":00 ~ " + firstReserve.getTime()+firstReserve.getGround().getUsageTime() +  ":00";
-//        }
 
         ReserveInfoDTO reserveResult = ReserveInfoDTO.builder()
                 .groundName(firstReserve.getGround().getName())
@@ -356,6 +359,7 @@ public class ReserveServiceImpl implements ReserveService {
                 .createDate(firstReserve.getCreateDate())
                 .pay(firstReserve.getPrice())
                 .payType(firstReserve.getPayType())
+                .state(firstReserve.getState())
                 .build();
         result.put("reserveInfo", reserveResult);
 
