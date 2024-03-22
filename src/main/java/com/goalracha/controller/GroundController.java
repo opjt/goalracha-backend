@@ -31,10 +31,10 @@ public class GroundController {
     }
 
     @GetMapping("/{uNo}")
-    public PageResponseDTO<GroundDTO> listWithImage2( @PathVariable Long uNo, PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<GroundDTO> listWithImageByUno( @PathVariable Long uNo, PageRequestDTO pageRequestDTO) {
         log.info(pageRequestDTO);
 
-        return service.listWithImage2(uNo,pageRequestDTO);
+        return service.listWithImageByUno(uNo,pageRequestDTO);
     }
 
     @GetMapping("/")

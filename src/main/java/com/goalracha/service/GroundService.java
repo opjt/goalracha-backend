@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface GroundService {
 
-    PageResponseDTO<GroundDTO> listWithImage2(Long uNo, PageRequestDTO pageRequestDTO);
+    PageResponseDTO<GroundDTO> listWithImageByUno(Long uNo, PageRequestDTO pageRequestDTO);
 
     PageResponseDTO<GroundDTO> listWithImage(PageRequestDTO pageRequestDTO);
 

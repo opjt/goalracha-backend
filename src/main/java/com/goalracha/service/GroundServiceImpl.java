@@ -6,7 +6,9 @@ import com.goalracha.dto.PageRequestDTO;
 import com.goalracha.dto.PageResponseDTO;
 import com.goalracha.entity.Ground;
 import com.goalracha.entity.GroundImage;
+import com.goalracha.entity.Member;
 import com.goalracha.repository.GroundRepository;
+import com.goalracha.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -32,11 +34,11 @@ public class GroundServiceImpl implements GroundService {
     private final MemberRepository memberRepository;
 
     @Override
-    public PageResponseDTO<GroundDTO> listWithImage2(Long uNo, PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<GroundDTO> listWithImageByUno(Long uNo, PageRequestDTO pageRequestDTO) {
         log.info("ground list");
 
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize(), Sort.by(Sort.Direction.DESC, "gNo"));
-        Page<Object[]> result = groundRepository.selectList2(uNo, pageable);
+        Page<Object[]> result = groundRepository.selectOnwerList(uNo, pageable);
 
         int offset = pageable.getPageNumber() * pageable.getPageSize() + 1; // offset 계산에서 +1
         int limit = offset + pageable.getPageSize() - 1;
@@ -96,8 +98,9 @@ public class GroundServiceImpl implements GroundService {
     }
 
     @Override
-    public Long register(GroundDTO groundDTO) {
-        Ground ground = GroundDTO.dtoToEntity(groundDTO);
+    public Long register(GroundDTO groundDTO, Long uNo) {
+        Member member = memberRepository.findById(uNo).orElseThrow(() -> new IllegalArgumentException("해당 uNo의 회원이 존재하지 않습니다. uNo=" + uNo));
+        Ground ground = GroundDTO.dtoToEntity(groundDTO, member);
         Ground result = groundRepository.save(ground);
         return result.getGNo();
     }

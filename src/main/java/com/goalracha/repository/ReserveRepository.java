@@ -48,9 +48,9 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
     Page<UserReserveListDTO> userReservationStatus(@Param("uNo") Long uNo, Pageable pageable);
 
     // 예약현황 paymentKey
-    @Query("SELECT r.payKey, LISTAGG(to_char(r.time), ',') WITHIN GROUP (ORDER BY r.rNO), r.reserveDate " +
+    @Query("SELECT r.payKey, LISTAGG(to_char(r.time), ',') WITHIN GROUP (ORDER BY r.rNO), r.reserveDate, r.ground " +
             "FROM Reserve r " +
-            "GROUP BY r.payKey, r.reserveDate")
+            "GROUP BY r.payKey, r.reserveDate, r.ground")
     Page<Object[]> userReserveList(@Param("uNo") Long uNo, Pageable pageable);
 
     // owner 예약 리스트
