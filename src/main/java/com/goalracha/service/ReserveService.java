@@ -42,4 +42,7 @@ public interface ReserveService {
     PageResponseDTO<AdminReserveListDTO> getAllReserveListSearch(String searchName, PageRequestDTO pageRequestDTO);
 
     Map<String, Object> infoByPayKey(String payKey);
+    
+    // 사업자 통계 리스트
+    List<OwnerReserveListDTO> getOwnerStatistics(Long uNo);
 }
