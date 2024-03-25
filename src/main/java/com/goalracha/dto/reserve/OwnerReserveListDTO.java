@@ -21,4 +21,5 @@ public class OwnerReserveListDTO {
     private Long price;
     private String userName;
     private String email;
+    private Integer usageTime;
 }

@@ -22,4 +22,5 @@ public class AdminReserveListDTO {
     private String businessId;
     private String businessName;
     private String email;
+    private Integer usageTime;
 }
