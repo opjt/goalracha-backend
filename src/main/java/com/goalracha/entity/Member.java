@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @Entity
-@Setter
 @Table(name = "member")
 @Builder
 @AllArgsConstructor
@@ -78,8 +80,7 @@ public class Member {
 
     }
 
-    public void ownerPwModify(Long uNo, String pw) {
-        this.uNo = uNo;
+    public void ownerPwModify(String pw) {
         this.pw = pw;
     }
 
@@ -90,8 +91,17 @@ public class Member {
     }
 
     // 회원 탈퇴
-    public void delete() {
-        this.setState(0); // 상태를 0으로 변경
+    public void userDelete() {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        // 형식화된 날짜와 시간 문자열 생성
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDateTime = currentDateTime.format(formatter);
+        // this.email에 현재 날짜와 시간 추가
+        this.email = this.email + "#" + formattedDateTime + "#deleted";
+        this.userId = this.userId + "#" + formattedDateTime + "#deleted";
+        this.state = 0; // 상태를 0으로 변경
+
     }
 
 }

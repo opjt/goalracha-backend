@@ -266,9 +266,8 @@ public class ReserveServiceImpl implements ReserveService {
 
         List<Reserve> reservList = reserveRepository.findAllByPayKey(payKey);
 
-        if (reservList == null) { //잘못된 paykey일경우
-            log.error("pay키 찾을 수 없음");
-            return null;
+        if (reservList.isEmpty()) { //잘못된 paykey일경우
+            throw new RuntimeException("pay키를 찾을 수 없습니다");
         }
         if (reservList.get(0).getMember().getUNo() != uNo) {
             log.error(reservList.get(0).getMember().getUNo() + " " + uNo + "다름");

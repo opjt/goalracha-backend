@@ -102,8 +102,7 @@ public class MemberServiceImpl implements MemberService {
         if (passwordEncoder.matches(ownerPwModifyDTO.getOldpw(), member.getPw())) {
             // 동일하다면 새로운 비밀번호로 회원 정보를 수정합니다.
             String encodedNewPassword = passwordEncoder.encode(ownerPwModifyDTO.getNewpw());
-            member.setPw(encodedNewPassword);
-
+            member.ownerPwModify(encodedNewPassword);
             // 수정된 회원 정보를 저장합니다.
             memberRepository.save(member);
         } else {
@@ -238,12 +237,14 @@ public class MemberServiceImpl implements MemberService {
             // 예약 내역이 없는 경우 회원의 상태를 탈퇴로 변경합니다.
             if (reservationCount == 0) {
                 // 회원 상태 변경 메서드 호출
-                member.delete();
+                member.userDelete();
                 memberRepository.save(member); // 변경된 상태를 저장
                 log.info("회원 탈퇴가 성공적으로 수행되었습니다.");
             } else {
+                log.error("회원은 아직 예약 내역이 남아 있어 탈퇴가 불가능합니다.");
+                throw new RuntimeException("error");
                 // 예약 내역이 있는 경우 처리할 내용을 기록합니다.
-                log.info("회원은 아직 예약 내역이 남아 있어 탈퇴가 불가능합니다.");
+
                 // 예약 내역이 있을 경우에 대한 예외 처리 또는 메시지 출력 등을 수행할 수 있습니다.
             }
         });
