@@ -18,6 +18,9 @@ public class UserReserveListDTO {
     private Long price;
     private Integer state;
     private Integer usageTime;
+    private String userName;
+    private String userEmail;
+    private String userTel;
 //    private String payType;
 
 

@@ -104,4 +104,12 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
             "ORDER by g.name ")
     List<OwnerReserveListDTO> ownerStatistics(@Param("uNo") Long uNo);
 
+    @Query("SELECT new com.goalracha.dto.reserve.UserReserveListDTO(" +
+            "r.payKey, r.ground.name, r.ground.addr, r.reserveDate, " +
+            "TO_CHAR(r.time), r.createDate, r.price, " +
+            "r.state, r.ground.usageTime, m.name, m.email, m.tel) " +
+            "FROM Reserve r JOIN r.member m " +
+            "WHERE r.member.uNo = :uNo")
+    Page<UserReserveListDTO> userReserveListWithUserInfo(@Param("uNo") Long uNo, Pageable pageable);
+
 }

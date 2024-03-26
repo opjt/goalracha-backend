@@ -175,5 +175,12 @@ public class ReserveController {
     public List<OwnerReserveListDTO> ownerStatistics(@PathVariable Long uNo) {
         return reserveService.getOwnerStatistics(uNo);
     }
+
+    @GetMapping("/v/user-reservations/{uNo}")
+    public ResponseEntity<PageResponseDTO<UserReserveListDTO>> getUserReservationsWithUserInfo(
+            @PathVariable Long uNo, PageRequestDTO pageRequestDTO) {
+        PageResponseDTO<UserReserveListDTO> responseDTO = reserveService.getUserReservationsWithUserInfo(uNo, pageRequestDTO);
+        return ResponseEntity.ok(responseDTO);
+    }
 }
 
