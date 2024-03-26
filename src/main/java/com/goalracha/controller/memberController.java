@@ -29,20 +29,20 @@ public class memberController {
     private final MemberService memberService;
     private final ReserveService reserveService;
 
-    @PostMapping("/api/member/checkid")
+    @PostMapping("/api/member/g/checkid")
     public Map<String, Object> modify(@RequestBody String userid) {
         boolean check = memberService.checkId(userid);
         return Map.of("result", check);
     }
 
     // 회원 닉네임 중복 확인 API
-    @GetMapping("/api/member/checkNickname/{nickname}")
+    @GetMapping("/api/member/g/checkNickname/{nickname}")
     public ResponseEntity<Map<String, Boolean>> checkNickname(@PathVariable String nickname) {
         boolean isNicknameAvailable = memberService.checkNickname(nickname);
         return ResponseEntity.ok(Map.of("available", isNicknameAvailable));
     }
 
-    @PostMapping("/api/member/owner")
+    @PostMapping("/api/member/g/owner")
     public Map<String, Object> joinOwner(@RequestBody OwnerJoinDTO joinDto) {
 
         Long memberId = memberService.ownerJoin(joinDto);

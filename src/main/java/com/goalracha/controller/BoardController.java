@@ -21,13 +21,13 @@ public class BoardController {
 
 
 
-    @GetMapping("/{bno}")
+    @GetMapping("/g/{bno}")
     public BoardDTO get(@PathVariable(name = "bno") Long bno) {
         return service.get(bno);
     }
 
     // 스카이홍 리스트
-    @GetMapping("/list")
+    @GetMapping("/g/list")
     public List<BoardDTO> boardList(Board board) {
         // someParam을 사용하여 필요한 로직 수행
         return service.boardList(board);

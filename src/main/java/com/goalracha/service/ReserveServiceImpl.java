@@ -53,15 +53,16 @@ public class ReserveServiceImpl implements ReserveService {
     public Map<String, Object> getAllList(String reqDate, String reqTime, List<String> reqInout, String search) {
         Map<String, Object> result = new HashMap<>(); //최종리턴맵
 
-        List<Ground> groundList2 = groundRepository.findAll(); //수정필요
+        List<Ground> groundList2 = groundRepository.findByState(2L); //수정필요
+        log.info(groundList2.toString());
         List<GroundDTO> dtoList = groundList2.stream()
                 .filter(ground -> ground.getMember() != null) // member가 null이 아닌 경우만 필터링
                 .map(GroundDTO::entityToDTO)
                 .toList();
-//        List<GroundDTO> groundList= groundRepository.findAllGroundsWithoutMember();
+        log.info(dtoList.toString());
         Map<Long, GroundDTO> groundMap = dtoList.stream()
                 .collect(Collectors.toMap(GroundDTO::getGNo, Function.identity()));
-
+        log.info(groundMap.toString());
         List<String> reqTimeList = Arrays.asList(reqTime.split(","));
         int timeCount = reqTimeList.size();
 
@@ -70,7 +71,7 @@ public class ReserveServiceImpl implements ReserveService {
         String jpql = "SELECT g.gNo, LISTAGG(TO_Char(r.time), ',') WITHIN GROUP (ORDER BY r.time) AS gg " +
                 "FROM Ground g " +
                 "LEFT OUTER JOIN Reserve r ON g.gNo = r.ground.gNo AND FUNCTION('to_char', r.reserveDate, 'yyyy-mm-dd') = :date and r.state != 0 " +
-                "WHERE g.state != 0 " +
+                "WHERE g.state = 2 " +
                 "AND g.gNo NOT IN (" +
                 "    SELECT r2.ground.gNo " +
                 "    FROM Reserve r2" +
@@ -90,15 +91,10 @@ public class ReserveServiceImpl implements ReserveService {
         if (search != null) {
             query.setParameter("searchParam", "%" + search + "%"); // searchParam 변수에 값을 설정
         }
-        List<Object[]> result2 = query.getResultList();
-        result.put("result2", result2);
-//        List<Long> gnoArrayList = new ArrayList<>(); //구장의번호목록
-//        for (Object[] objArray : result2) {
-//            gnoArrayList.add((Long)objArray[0]);
-//        }
-//        result.put("gnostring", gnoArrayList);
+        List<Object[]> queryResult = query.getResultList();
+
         List<Object[]> reservList = new ArrayList<>();
-        for (Object[] row : result2) {
+        for (Object[] row : queryResult) {
             Long gNo = (Long) row[0];
             String times;
 

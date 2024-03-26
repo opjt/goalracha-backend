@@ -16,7 +16,7 @@ import java.util.Map;
 public class KkoController {
     private final MemberService memberService;
 
-    @GetMapping("/api/member/kakao")
+    @GetMapping("/api/member/g/kakao")
     public Map<String, Object> getMemberFromKakao(String accessToken) {
         log.info("access Token ");
         log.info(accessToken);

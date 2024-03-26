@@ -20,31 +20,31 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @Log4j2
-@RequestMapping("/goalracha/ground")
+@RequestMapping("/api/ground")
 public class GroundController {
     private final GroundService service;
     private final CustomFileUtil fileUtil;
 
-    @GetMapping("/read/{gno}")
+    @GetMapping("/{gno}")
     public GroundDTO get(@PathVariable(name = "gno") Long gno) {
         return service.get(gno);
     }
 
-    @GetMapping("/{uNo}")
+    @GetMapping("/list/{uNo}")
     public PageResponseDTO<GroundDTO> listWithImageByUno( @PathVariable Long uNo, PageRequestDTO pageRequestDTO) {
         log.info(pageRequestDTO);
 
         return service.listWithImageByUno(uNo,pageRequestDTO);
     }
 
-    @GetMapping("/")
+    @GetMapping("/list")
     public PageResponseDTO<GroundDTO> listWithImage(PageRequestDTO pageRequestDTO) {
         log.info(pageRequestDTO);
 
         return service.listWithImage(pageRequestDTO);
     }
 
-    @PostMapping("/register")
+    @PostMapping("/")
     public Map<String, Long> register(GroundDTO groundDTO) {
         log.info("register: " + groundDTO);
         // 파일 저장
@@ -57,7 +57,7 @@ public class GroundController {
         return Map.of("result", gNo);
     }
 
-    @PutMapping("/modify/{gno}")
+    @PutMapping("/{gno}")
     public Map<String, String> modify(@PathVariable(name = "gno") Long gno, GroundDTO groundDTO) {
         groundDTO.setGNo(gno);
         log.info("Modify: " + groundDTO);
@@ -88,7 +88,7 @@ public class GroundController {
         return Map.of("RESULT", "SUCCESS");
     }
 
-    @DeleteMapping("/delete/{gno}")
+    @DeleteMapping("/{gno}")
     public Map<String, String> delete(@PathVariable(name="gno") Long gno) {
 
         log.info("Remove: " + gno);
@@ -101,13 +101,13 @@ public class GroundController {
         return Map.of("RESULT", "SUCCESS");
     }
 
-    @PutMapping("/changeState/{gno}")
+    @PutMapping("/state/{gno}")
     public Map<String, String> changeState(@PathVariable(name = "gno") Long gno, @RequestBody Map<String, Long> stateMap) {
         Long newState = stateMap.get("newState");
         service.changeState(gno, newState);
         return Map.of("RESULT", "SUCCESS", "gNo", gno.toString(), "newState", newState.toString());
     }
-    @GetMapping("/view/{fileName}")
+    @GetMapping("/g/view/{fileName}")
     public ResponseEntity<Resource> viewFileGET(@PathVariable String fileName) {
         return fileUtil.getFile(fileName);
     }

@@ -35,13 +35,7 @@ public class ReserveController {
     private final GroundRepository groundRepository;
 
     //예약 전체목록(테스트)
-    @GetMapping("/v/")
-    public ResponseEntity<?> getList() {
-        List<ReserveListDTO> list = reserveService.getList();
-        return ResponseEntity.ok("list");
-    }
-
-    @PostMapping("/v/date/")
+    @PostMapping("/g/list/")
     public ResponseEntity<?> getListondate(@RequestBody Map<String, Object> request) {
 
         Map<String, Object> response = reserveService.getAllList((String) request.get("date"), (String) request.get("time"), (List<String>) request.get("inout"), (String) request.get("search"));
@@ -49,25 +43,13 @@ public class ReserveController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/v/ground/{gno}/{date}")
+    @GetMapping("/g/ground/{gno}/{date}")
     public ResponseEntity<?> showGroundInfo(@PathVariable Long gno, @PathVariable String date) {
         log.info(date);
         Map<String, Object> response = reserveService.showGroundInfo(gno, date);
 
         return ResponseEntity.ok().body(response);
     }
-
-//    @PostMapping("/v/")
-//    public ResponseEntity<?> newReserve(@RequestBody ReservDTO reservDTO) {
-//        log.info("reserveDTO :: " + reservDTO);
-//
-//        Reserve reserve = reserveService.newReserve(reservDTO);
-//        if (reserve == null) {
-//            return ResponseEntity.badRequest().body("error");
-//        }
-//        log.info(reserve.getRNO());
-//        return ResponseEntity.ok(reserve.getRNO());
-//    }
 
     @PostMapping("/") //예약등록
     public ResponseEntity<?> addReserve(@RequestBody ReserveAddsDTO reserveAddsdto) {
@@ -126,20 +108,8 @@ public class ReserveController {
     }
 
 
-    // user 이전 예약 목록 조회
-    @GetMapping("/v/ulistprev/{uNo}")
-    public ResponseEntity<PageResponseDTO<UserReserveListDTO>> getUserPreviousReservations(
-            @PathVariable Long uNo, @PageableDefault(size = 10) PageRequestDTO pageRequestDTO) {
-
-        // 사용자의 이전 예약을 가져옵니다.
-        PageResponseDTO<UserReserveListDTO> responseDTO = reserveService.getUserPreviousReservations(uNo, pageRequestDTO);
-
-        // ResponseEntity에 담아 반환합니다.
-        return ResponseEntity.ok(responseDTO);
-    }
-
     // 유저 번호로 예약현황 목록 조회
-    @GetMapping("/v/ulist/{uNo}")
+    @GetMapping("/ulist/{uNo}")
     public ResponseEntity<PageResponseDTO<UserReserveListDTO>> getUserReservationStatus(
             @PathVariable Long uNo,
             @PageableDefault(size = 10) PageRequestDTO pageRequestDTO) {
@@ -152,7 +122,7 @@ public class ReserveController {
 
 
     // 구장 유저 번호로 예약 목록 조회
-    @GetMapping("/v/owner-list/{uNo}")
+    @GetMapping("/owner-list/{uNo}")
     public ResponseEntity<PageResponseDTO<OwnerReserveListDTO>> getOwnerReserveList(
             @PathVariable Long uNo,
             @PageableDefault(size = 10) PageRequestDTO pageRequestDTO) {
@@ -164,7 +134,7 @@ public class ReserveController {
 
 
     // 예약 전체 리스트(관리자)
-    @GetMapping("/v/list")
+    @GetMapping("/admin-list")
     public ResponseEntity<PageResponseDTO<AdminReserveListDTO>> getAllReserveList(
             @PageableDefault(size = 10) PageRequestDTO pageRequestDTO) {
         // 모든 예약 리스트를 가져옵니다.
@@ -174,7 +144,7 @@ public class ReserveController {
     }
 
     // 사업자 예약 리스트 검색 (구장명, 고객명)
-    @GetMapping("/v/owner-list/{uNo}/{searchName}")
+    @GetMapping("/owner-list/{uNo}/{searchName}")
     public ResponseEntity<PageResponseDTO<OwnerReserveListDTO>> getOwnerReserveListSearch(
             @PathVariable Long uNo,
             @PathVariable String searchName,
@@ -188,7 +158,7 @@ public class ReserveController {
     }
 
     // 관리자 예약 리스트 검색 (구장명, 고객명, 사업자명)
-    @GetMapping("/v/list/{searchName}")
+    @GetMapping("/admin-list/{searchName}")
     public ResponseEntity<PageResponseDTO<AdminReserveListDTO>> getAllReserveListSearch(
             @PathVariable String searchName,
             @PageableDefault(size = 10) PageRequestDTO pageRequestDTO) {
@@ -201,7 +171,7 @@ public class ReserveController {
     }
 
     // 사업자 통계 리스트
-    @GetMapping("/v/owner/statistics/{uNo}")
+    @GetMapping("/owner/statistics/{uNo}")
     public List<OwnerReserveListDTO> ownerStatistics(@PathVariable Long uNo) {
         return reserveService.getOwnerStatistics(uNo);
     }

@@ -38,7 +38,7 @@ public class MemberServiceImpl implements MemberService {
     public MemberDTO getKakaoMember(String accessToken) {
         String email = getEmailFromKakaoAccessToken(accessToken);
         log.info("email: " + email);
-        Member result = memberRepository.findByEmail(email);
+        Member result = memberRepository.findByUserId(email);
         // 기존의 회원
         if (result != null) {
             MemberDTO memberDTO = MemberDTO.entityToDTO(result);
