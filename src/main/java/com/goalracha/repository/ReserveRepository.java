@@ -63,26 +63,30 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
     Page<UserReserveListDTO> userReserveListPrev(@Param("uNo") Long uNo, Pageable pageable);
 
     // owner 예약 리스트
-    @Query("SELECT new com.goalracha.dto.reserve.OwnerReserveListDTO(g.name, g.addr , r.reserveDate, r.time, r.createDate, r.price, m.name, m.email,g.usageTime) " +
-            "FROM Reserve r " +
-            "JOIN r.member m " +
-            "JOIN r.ground g " +
-            "WHERE g.member.uNo = :uNo")
-    Page<OwnerReserveListDTO> ownerReserveList(@Param("uNo") Long uNo, Pageable pageable);
-
-    //Admin 예약 전체 리스트
-    @Query("SELECT new com.goalracha.dto.reserve.AdminReserveListDTO(r.ground.name, r.reserveDate, r.time, r.createDate, r.price, r.ground.addr, r.member.name," +
-            " r.ground.member.businessId, r.ground.member.businessName, r.member.email,r.ground.usageTime) FROM Reserve r")
-    Page<AdminReserveListDTO> findAllReserveList(Pageable pageable);
-
-
-    // owner 예약 리스트 검색 (구장명, 고객명)
-    @Query("SELECT new com.goalracha.dto.reserve.OwnerReserveListDTO(g.name, g.addr , r.reserveDate, r.time, r.createDate, r.price, m.name, m.email,g.usageTime) " +
+    @Query("SELECT new com.goalracha.dto.reserve.OwnerReserveListDTO(g.name, g.addr , r.reserveDate, r.time, r.createDate, r.price,r.state, m.name, m.email,m.tel,g.usageTime) " +
             "FROM Reserve r " +
             "JOIN r.member m " +
             "JOIN r.ground g " +
             "WHERE g.member.uNo = :uNo " +
-            "AND (LOWER(g.name) LIKE CONCAT('%', LOWER(:searchName), '%') OR LOWER(m.name) LIKE CONCAT('%', LOWER(:searchName), '%'))")
+            "ORDER BY r.reserveDate desc, r.time, g.name ")
+    Page<OwnerReserveListDTO> ownerReserveList(@Param("uNo") Long uNo, Pageable pageable);
+
+    //Admin 예약 전체 리스트
+    @Query("SELECT new com.goalracha.dto.reserve.AdminReserveListDTO(r.ground.name, r.reserveDate, r.time, r.createDate, r.price, r.ground.addr, r.member.name," +
+            " r.ground.member.businessId, r.ground.member.businessName, r.member.email,r.ground.usageTime) " +
+            "FROM Reserve r " +
+            "ORDER BY r.reserveDate desc, r.time, r.ground.name  ")
+    Page<AdminReserveListDTO> findAllReserveList(Pageable pageable);
+
+
+    // owner 예약 리스트 검색 (구장명, 고객명)
+    @Query("SELECT new com.goalracha.dto.reserve.OwnerReserveListDTO(g.name, g.addr , r.reserveDate, r.time, r.createDate, r.price,r.state ,m.name, m.email,m.tel,g.usageTime) " +
+            "FROM Reserve r " +
+            "JOIN r.member m " +
+            "JOIN r.ground g " +
+            "WHERE g.member.uNo = :uNo " +
+            "AND (LOWER(g.name) LIKE CONCAT('%', LOWER(:searchName), '%') OR LOWER(m.name) LIKE CONCAT('%', LOWER(:searchName), '%'))" +
+            "ORDER BY r.reserveDate desc, r.time, g.name ")
     Page<OwnerReserveListDTO> ownerRserveListSearch(@Param("uNo") Long uNo, @Param("searchName") String searchName, Pageable pageable);
 
     // admin 예약 전체 리스트 검색 (구장명, 고객명, 사업자명)
@@ -92,16 +96,17 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
             "JOIN r.ground g " +
             "JOIN r.member m " +
             "JOIN g.member gm " +
-            "WHERE  (LOWER(g.name) LIKE CONCAT('%', LOWER(:searchName), '%') OR LOWER(m.name) LIKE CONCAT('%', LOWER(:searchName), '%') OR LOWER(gm.businessName) LIKE CONCAT('%', LOWER(:searchName), '%')) ")
+            "WHERE  (LOWER(g.name) LIKE CONCAT('%', LOWER(:searchName), '%') OR LOWER(m.name) LIKE CONCAT('%', LOWER(:searchName), '%') OR LOWER(gm.businessName) LIKE CONCAT('%', LOWER(:searchName), '%')) " +
+            "ORDER BY r.reserveDate desc, r.time, g.name ")
     Page<AdminReserveListDTO> findAllReserveListSearch(@Param("searchName") String searchName, Pageable pageable);
 
-    // owner 예약 리스트
-    @Query("SELECT new com.goalracha.dto.reserve.OwnerReserveListDTO(g.name, g.addr , r.reserveDate, r.time, r.createDate, r.price, m.name, m.email,g.usageTime) " +
+    // owner 예약 리스트(통계용)
+    @Query("SELECT new com.goalracha.dto.reserve.OwnerReserveListDTO(g.name, g.addr , r.reserveDate, r.time, r.createDate, r.price,r.state, m.name, m.email,m.tel,g.usageTime) " +
             "FROM Reserve r " +
             "JOIN r.member m " +
             "JOIN r.ground g " +
             "WHERE g.member.uNo = :uNo " +
-            "ORDER by g.name ")
+            "AND r.state = 1 " )
     List<OwnerReserveListDTO> ownerStatistics(@Param("uNo") Long uNo);
 
     @Query("SELECT new com.goalracha.dto.reserve.UserReserveListDTO(" +

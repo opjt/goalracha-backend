@@ -19,7 +19,9 @@ public class OwnerReserveListDTO {
     private Integer time;
     private Date createDate;
     private Long price;
+    private Integer state;
     private String userName;
     private String email;
+    private String tel;
     private Integer usageTime;
 }
