@@ -63,11 +63,4 @@ public class BoardController {
         return Map.of("RESILT", "SUCCESS");
     }
 
-
-
-
-
-
-
-
 }

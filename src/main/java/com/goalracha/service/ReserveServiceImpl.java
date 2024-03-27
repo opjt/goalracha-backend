@@ -53,7 +53,7 @@ public class ReserveServiceImpl implements ReserveService {
     public Map<String, Object> getAllList(String reqDate, String reqTime, List<String> reqInout, String search) {
         Map<String, Object> result = new HashMap<>(); //최종리턴맵
 
-        List<Ground> groundList2 = groundRepository.findByState(2L); //수정필요
+        List<Ground> groundList2 = groundRepository.findByState(2L); //state 2 = 구장 오픈 상태
         log.info(groundList2.toString());
         List<GroundDTO> dtoList = groundList2.stream()
                 .filter(ground -> ground.getMember() != null) // member가 null이 아닌 경우만 필터링
@@ -82,7 +82,6 @@ public class ReserveServiceImpl implements ReserveService {
                 "AND g.inAndOut IN :inout ";
         if (search != null) {
             jpql += "AND (g.addr LIKE :searchParam OR g.name LIKE :searchParam) ";
-            // searchParam에 %1%를 포함하는 문자열을 설정
         }
         jpql += "GROUP BY g.gNo";
         Query query = entityManager.createQuery(jpql);
@@ -122,9 +121,7 @@ public class ReserveServiceImpl implements ReserveService {
             }
         }
         result.put("groundreservList", reservList);
-
         return result;
-
 
     }
 
@@ -134,7 +131,7 @@ public class ReserveServiceImpl implements ReserveService {
         Map<String, Object> result = new HashMap<>(); //최종리턴맵
         Ground groundE = groundRepository.findById(gno).orElse(null);
         if (groundE == null) {
-            return null;
+            throw new RuntimeException("구장을 찾을 수 없습니다");
         }
         GroundDTO grounddto = GroundDTO.entityToDTO(groundE);
         result.put("groundInfo", grounddto);
