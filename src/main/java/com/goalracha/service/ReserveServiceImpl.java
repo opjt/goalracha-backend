@@ -493,15 +493,11 @@ public class ReserveServiceImpl implements ReserveService {
     }
 
     @Override
-    public PageResponseDTO<UserReserveListDTO> getUserReservationsWithUserInfo(Long uNo, PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<ReservationWithUserInfoDTO> findReservationsWithUserInfoByOwnerUNo(Long uNo, PageRequestDTO pageRequestDTO) {
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
-        Page<UserReserveListDTO> page = reserveRepository.userReserveListWithUserInfo(uNo, pageable);
+        Page<ReservationWithUserInfoDTO> page = reserveRepository.findByOwnerUNoWithUserInfo(uNo, pageable);
 
-        // PageResponseDTO의 빌더를 사용하여 인스턴스 생성
-        return PageResponseDTO.<UserReserveListDTO>withAll()
-                .dtoList(page.getContent())
-                .pageRequestDTO(pageRequestDTO)
-                .totalCount(page.getTotalElements())
-                .build();
+        return new PageResponseDTO<>(page.getContent(), pageRequestDTO, page.getTotalElements());
     }
+
 }

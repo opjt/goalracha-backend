@@ -55,6 +55,4 @@ public class Reserve {
     public void delete() {
         this.state = 0;
     }
-
-
 }

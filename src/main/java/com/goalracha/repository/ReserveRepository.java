@@ -1,9 +1,6 @@
 package com.goalracha.repository;
 
-import com.goalracha.dto.reserve.AdminReserveListDTO;
-import com.goalracha.dto.reserve.OwnerReserveListDTO;
-import com.goalracha.dto.reserve.ReservDTO;
-import com.goalracha.dto.reserve.UserReserveListDTO;
+import com.goalracha.dto.reserve.*;
 import com.goalracha.entity.Reserve;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -109,12 +106,10 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
             "AND r.state = 1 " )
     List<OwnerReserveListDTO> ownerStatistics(@Param("uNo") Long uNo);
 
-    @Query("SELECT new com.goalracha.dto.reserve.UserReserveListDTO(" +
-            "r.payKey, r.ground.name, r.ground.addr, r.reserveDate, " +
-            "TO_CHAR(r.time), r.createDate, r.price, " +
-            "r.state, r.ground.usageTime, m.name, m.email, m.tel) " +
-            "FROM Reserve r JOIN r.member m " +
-            "WHERE r.member.uNo = :uNo")
-    Page<UserReserveListDTO> userReserveListWithUserInfo(@Param("uNo") Long uNo, Pageable pageable);
+    // 예약 정보와 사용자 정보를 함께 조회하는 쿼리
+    @Query("SELECT new com.goalracha.dto.reserve.ReservationWithUserInfoDTO(r, m) " +
+            "FROM Reserve r JOIN r.member m JOIN r.ground g " +
+            "WHERE g.member.uNo = :uNo ORDER BY r.reserveDate DESC, r.time")
+    Page<ReservationWithUserInfoDTO> findByOwnerUNoWithUserInfo(@Param("uNo") Long uNo, Pageable pageable);
 
 }

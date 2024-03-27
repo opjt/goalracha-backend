@@ -172,11 +172,17 @@ public class ReserveController {
         return reserveService.getOwnerStatistics(uNo);
     }
 
-    @GetMapping("/user-reservations/{uNo}")
-    public ResponseEntity<PageResponseDTO<UserReserveListDTO>> getUserReservationsWithUserInfo(
-            @PathVariable Long uNo, PageRequestDTO pageRequestDTO) {
-        PageResponseDTO<UserReserveListDTO> responseDTO = reserveService.getUserReservationsWithUserInfo(uNo, pageRequestDTO);
-        return ResponseEntity.ok(responseDTO);
+    // 관리자 사업자관리페이지 예약정보 (사용자정보포함)
+    @GetMapping("/g/user-reservations/{uNo}")
+    public ResponseEntity<PageResponseDTO<ReservationWithUserInfoDTO>> getUserReservationsWithUserInfo(
+            @PathVariable Long uNo,
+            PageRequestDTO pageRequestDTO) {
+
+        // Service layer에서 제공하는 메서드를 호출하여 페이징 처리된 예약 정보와 사용자 정보를 조회합니다.
+        PageResponseDTO<ReservationWithUserInfoDTO> response = reserveService.findReservationsWithUserInfoByOwnerUNo(uNo, pageRequestDTO);
+
+        // 조회된 정보를 ResponseEntity 객체에 담아 반환합니다.
+        return ResponseEntity.ok(response);
     }
 }
 

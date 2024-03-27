@@ -46,6 +46,6 @@ public interface ReserveService {
     // 사업자 통계 리스트
     List<OwnerReserveListDTO> getOwnerStatistics(Long uNo);
 
-    PageResponseDTO<UserReserveListDTO> getUserReservationsWithUserInfo(Long uNo, PageRequestDTO pageRequestDTO);
+    PageResponseDTO<ReservationWithUserInfoDTO> findReservationsWithUserInfoByOwnerUNo(Long uNo, PageRequestDTO pageRequestDTO);
 
 }
