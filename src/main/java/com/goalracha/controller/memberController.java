@@ -60,7 +60,7 @@ public class memberController {
         return ResponseEntity.ok(owners);
     }
 
-    @PutMapping("/api/member/user/modify/{uNo}")
+    @PutMapping("/api/member/user/{uNo}")
     public Map<String, String> userModify(@PathVariable(name = "uNo") Long uNo,
                                           @RequestBody MemberModifyDTO memberModifyDTO) {
         memberModifyDTO.setUNo(uNo);
@@ -70,7 +70,7 @@ public class memberController {
         return Map.of("RESULT", "SUCCESS");
     }
 
-    @PutMapping("/api/member/owner/pwmodify/{uNo}")
+    @PutMapping("/api/member/owner/pw/{uNo}")
     public Map<String, String> ownerPwModify(@PathVariable(name = "uNo") Long uNo,
                                              @RequestBody OwnerPwModifyDTO ownerPwModifyDTO) {
         ownerPwModifyDTO.setUNo(uNo);
@@ -80,7 +80,7 @@ public class memberController {
         return Map.of("RESULT", "SUCCESS");
     }
 
-    @PutMapping("/api/member/owner/modify/{uNo}")
+    @PutMapping("/api/member/owner/{uNo}")
     public Map<String, String> ownerNameModify(@PathVariable(name = "uNo") Long uNo,
                                                @RequestBody OwnerNameModifyDTO ownerNameModifyDTO) {
         ownerNameModifyDTO.setUNo(uNo);

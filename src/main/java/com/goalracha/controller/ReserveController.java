@@ -30,7 +30,7 @@ public class ReserveController {
     private final ReserveRepository reserveRepository;
     private final GroundRepository groundRepository;
 
-    //예약 전체목록(테스트)
+
     @PostMapping("/g/list/")
     public ResponseEntity<?> getListondate(@RequestBody Map<String, Object> request) {
 
@@ -57,7 +57,7 @@ public class ReserveController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/cancel")
+    @DeleteMapping("/")
     public ResponseEntity<?> addReserve(@RequestBody Map<String, Object> request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info(authentication.getPrincipal());

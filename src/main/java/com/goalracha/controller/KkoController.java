@@ -28,7 +28,7 @@ public class KkoController {
         claims.put("refreshToken", jwtRefreshToken);
         return claims;
     }
-    @PutMapping("/api/member/{uNo}")
+    @PostMapping("/api/member/{uNo}")
     public Map<String, String> modify(@PathVariable(name="uNo") Long uNo, @RequestBody MemberJoinDTO memberJoinDTO) {
         memberJoinDTO.setUNo(uNo);
         log.info("member modify: " + memberJoinDTO);
