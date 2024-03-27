@@ -98,6 +98,38 @@ public class GroundServiceImpl implements GroundService {
     }
 
     @Override
+    public PageResponseDTO<GroundDTO> listWithImageSearchByUno(Long uNo, String searchName, PageRequestDTO pageRequestDTO) {
+        log.info("ground list");
+
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize(), Sort.by(Sort.Direction.DESC, "gNo"));
+        Page<Object[]> result = groundRepository.selectOnwerListSearch(uNo, searchName, pageable);
+
+        int offset = pageable.getPageNumber() * pageable.getPageSize() + 1; // offset 계산에서 +1
+        int limit = offset + pageable.getPageSize() - 1;
+
+        List<GroundDTO> dtoList = result.get().map(arr -> {
+            Ground ground = (Ground) arr[0];
+            GroundImage groundImage = (GroundImage) arr[1];
+
+            GroundDTO groundDTO = GroundDTO.builder().gNo(ground.getGNo()).name(ground.getName()).addr(ground.getAddr())
+                    .inAndOut(ground.getInAndOut()).width(ground.getWidth()).grassInfo(ground.getGrassInfo())
+                    .recommdMan(ground.getRecommdMan()).usageTime(ground.getUsageTime()).openTime(ground.getOpenTime())
+                    .closeTime(ground.getCloseTime()).fare(ground.getFare()).userGuide(ground.getUserGuide())
+                    .userRules(ground.getUserRules()).refundRules(ground.getRefundRules()).vestIsYn(ground.isVestIsYn())
+                    .footwearIsYn(ground.isFootwearIsYn()).showerIsYn(ground.isShowerIsYn()).roopIsYn(ground.isRoopIsYn())
+                    .airconIsYn(ground.isAirconIsYn()).parkareaIsYn(ground.isParkareaIsYn()).state(ground.getState()).build();
+            String imageStr = groundImage.getFileDirectory();
+            groundDTO.setUploadFileNames(List.of(imageStr));
+
+            return groundDTO;
+        }).collect(Collectors.toList());
+
+        long totalCount = result.getTotalElements();
+
+        return PageResponseDTO.<GroundDTO>withAll().dtoList(dtoList).totalCount(totalCount).pageRequestDTO(pageRequestDTO).build();
+    }
+
+    @Override
     public Long register(GroundDTO groundDTO, Long uNo) {
         Member member = memberRepository.findById(uNo).orElseThrow(() -> new IllegalArgumentException("해당 uNo의 회원이 존재하지 않습니다. uNo=" + uNo));
         Ground ground = GroundDTO.dtoToEntity(groundDTO, member);

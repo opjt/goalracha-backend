@@ -13,6 +13,8 @@ public interface GroundService {
 
     PageResponseDTO<GroundDTO> listWithImage(PageRequestDTO pageRequestDTO);
 
+    PageResponseDTO<GroundDTO> listWithImageSearchByUno(Long uNo, String searchName, PageRequestDTO pageRequestDTO);
+
     // 구장 등록
     Long register(GroundDTO groundDTO, Long uNo);
 
