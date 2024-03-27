@@ -19,8 +19,6 @@ import java.util.Map;
 public class BoardController {
     private final BoardService service;
 
-
-
     @GetMapping("/g/{bno}")
     public BoardDTO get(@PathVariable(name = "bno") Long bno) {
         return service.get(bno);

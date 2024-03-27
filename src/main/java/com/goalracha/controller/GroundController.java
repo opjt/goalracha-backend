@@ -44,6 +44,13 @@ public class GroundController {
         return service.listWithImage(pageRequestDTO);
     }
 
+    @GetMapping("/list/{uNo}/{searchName}")
+    public PageResponseDTO<GroundDTO> listWithImageSearchByUno( @PathVariable Long uNo, @PathVariable String searchName, PageRequestDTO pageRequestDTO) {
+        log.info(pageRequestDTO);
+        log.info(searchName);
+        return service.listWithImageSearchByUno(uNo,searchName,pageRequestDTO);
+    }
+
     @PostMapping("/")
     public Map<String, Long> register(GroundDTO groundDTO) {
         log.info("register: " + groundDTO);
