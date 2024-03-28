@@ -173,7 +173,7 @@ public class ReserveController {
     }
 
     // 관리자 사업자관리페이지 예약정보 (사용자정보포함)
-    @GetMapping("/g/user-reservations/{uNo}")
+    @GetMapping("/user-reservations/{uNo}")
     public ResponseEntity<PageResponseDTO<ReservationWithUserInfoDTO>> getUserReservationsWithUserInfo(
             @PathVariable Long uNo,
             PageRequestDTO pageRequestDTO) {
