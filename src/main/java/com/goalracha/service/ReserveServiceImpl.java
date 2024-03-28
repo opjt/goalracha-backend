@@ -71,13 +71,13 @@ public class ReserveServiceImpl implements ReserveService {
         String jpql = "SELECT g.gNo, LISTAGG(TO_Char(r.time), ',') WITHIN GROUP (ORDER BY r.time) AS gg " +
                 "FROM Ground g " +
                 "LEFT OUTER JOIN Reserve r ON g.gNo = r.ground.gNo AND FUNCTION('to_char', r.reserveDate, 'yyyy-mm-dd') = :date and r.state != 0 " +
-                "WHERE g.state = 2 " +
+                "WHERE g.state = 2 " + //2 = 오픈구장
                 "AND g.gNo NOT IN (" +
                 "    SELECT r2.ground.gNo " +
                 "    FROM Reserve r2" +
-                "    WHERE r2.time IN (" + reqTime + ") " +
+                "    WHERE r2.time IN (:timeList) " +
                 "    GROUP BY r2.ground.gNo " +
-                "    HAVING COUNT(DISTINCT time) =  " + timeCount +
+                "    HAVING COUNT(DISTINCT time) = :timeCount" +
                 ") " +
                 "AND g.inAndOut IN :inout ";
         if (search != null) {
@@ -87,6 +87,8 @@ public class ReserveServiceImpl implements ReserveService {
         Query query = entityManager.createQuery(jpql);
         query.setParameter("date", reqDate);
         query.setParameter("inout", reqInout);
+        query.setParameter("timeList", reqTimeList);
+        query.setParameter("timeCount", timeCount);
         if (search != null) {
             query.setParameter("searchParam", "%" + search + "%"); // searchParam 변수에 값을 설정
         }

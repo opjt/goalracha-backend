@@ -26,6 +26,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<BoardDTO> boardList(Board board) {
+
         // Repository 또는 EntityManager를 사용하여 데이터베이스에서 엔티티를 조회합니다.
         List<Board> boardEntities = boardRepository.findAll(); // 또는 entityManager.createQuery(...).getResultList();
 
