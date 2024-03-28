@@ -13,8 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 public class GroundImageDTO {
 
-    private String fileDirectory;
-    private int ord;
+    private String fileDirectory; // 파일이 저장된 디렉토리 경로
+    private int ord; // 이미지의 순서
 
 }
 
