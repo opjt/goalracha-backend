@@ -1,6 +1,5 @@
 package com.goalracha.service;
 
-
 import com.goalracha.dto.GroundDTO;
 import com.goalracha.dto.PageRequestDTO;
 import com.goalracha.dto.PageResponseDTO;
@@ -33,16 +32,20 @@ public class GroundServiceImpl implements GroundService {
     private final GroundRepository groundRepository;
     private final MemberRepository memberRepository;
 
+    // 특정 사용자가 소유한 구장 목록을 이미지와 함께 페이지네이션하여 반환하는 메서드
     @Override
     public PageResponseDTO<GroundDTO> listWithImageByUno(Long uNo, PageRequestDTO pageRequestDTO) {
         log.info("ground list");
 
+        // 페이지 요청 정보를 기반으로 페이지네이션 설정
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize(), Sort.by(Sort.Direction.DESC, "gNo"));
         Page<Object[]> result = groundRepository.selectOnwerList(uNo, pageable);
 
-        int offset = pageable.getPageNumber() * pageable.getPageSize() + 1; // offset 계산에서 +1
+        // 오프셋 및 한 페이지에 표시될 아이템 수 설정
+        int offset = pageable.getPageNumber() * pageable.getPageSize() + 1;
         int limit = offset + pageable.getPageSize() - 1;
 
+        // 결과를 DTO로 매핑하여 리스트에 추가
         List<GroundDTO> dtoList = result.get().map(arr -> {
             Ground ground = (Ground) arr[0];
             GroundImage groundImage = (GroundImage) arr[1];
@@ -60,21 +63,26 @@ public class GroundServiceImpl implements GroundService {
             return groundDTO;
         }).collect(Collectors.toList());
 
+        // 총 결과 수 계산
         long totalCount = result.getTotalElements();
 
         return PageResponseDTO.<GroundDTO>withAll().dtoList(dtoList).totalCount(totalCount).pageRequestDTO(pageRequestDTO).build();
     }
 
+    // 모든 구장 목록을 이미지와 함께 페이지네이션하여 반환하는 메서드
     @Override
     public PageResponseDTO<GroundDTO> listWithImage(PageRequestDTO pageRequestDTO) {
         log.info("ground list");
 
+        // 페이지 요청 정보를 기반으로 페이지네이션 설정
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize(), Sort.by(Sort.Direction.DESC, "gNo"));
         Page<Object[]> result = groundRepository.selectList(pageable);
 
-        int offset = pageable.getPageNumber() * pageable.getPageSize() + 1; // offset 계산에서 +1
+        // 오프셋 및 한 페이지에 표시될 아이템 수 설정
+        int offset = pageable.getPageNumber() * pageable.getPageSize() + 1;
         int limit = offset + pageable.getPageSize() - 1;
 
+        // 결과를 DTO로 매핑하여 리스트에 추가
         List<GroundDTO> dtoList = result.get().map(arr -> {
             Ground ground = (Ground) arr[0];
             GroundImage groundImage = (GroundImage) arr[1];
@@ -92,21 +100,26 @@ public class GroundServiceImpl implements GroundService {
             return groundDTO;
         }).collect(Collectors.toList());
 
+        // 총 결과 수 계산
         long totalCount = result.getTotalElements();
 
         return PageResponseDTO.<GroundDTO>withAll().dtoList(dtoList).totalCount(totalCount).pageRequestDTO(pageRequestDTO).build();
     }
 
+    // 특정 사용자가 소유한 구장 목록 중 검색 조건에 맞는 구장을 이미지와 함께 페이지네이션하여 반환하는 메서드
     @Override
     public PageResponseDTO<GroundDTO> listWithImageSearchByUno(Long uNo, String searchName, PageRequestDTO pageRequestDTO) {
         log.info("ground list");
 
+        // 페이지 요청 정보를 기반으로 페이지네이션 설정
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize(), Sort.by(Sort.Direction.DESC, "gNo"));
         Page<Object[]> result = groundRepository.selectOnwerListSearch(uNo, searchName, pageable);
 
-        int offset = pageable.getPageNumber() * pageable.getPageSize() + 1; // offset 계산에서 +1
+        // 오프셋 및 한 페이지에 표시될 아이템 수 설정
+        int offset = pageable.getPageNumber() * pageable.getPageSize() + 1;
         int limit = offset + pageable.getPageSize() - 1;
 
+        // 결과를 DTO로 매핑하여 리스트에 추가
         List<GroundDTO> dtoList = result.get().map(arr -> {
             Ground ground = (Ground) arr[0];
             GroundImage groundImage = (GroundImage) arr[1];
@@ -124,11 +137,13 @@ public class GroundServiceImpl implements GroundService {
             return groundDTO;
         }).collect(Collectors.toList());
 
+        // 총 결과 수 계산
         long totalCount = result.getTotalElements();
 
         return PageResponseDTO.<GroundDTO>withAll().dtoList(dtoList).totalCount(totalCount).pageRequestDTO(pageRequestDTO).build();
     }
 
+    // 구장 등록 메서드
     @Override
     public Long register(GroundDTO groundDTO, Long uNo) {
         Member member = memberRepository.findById(uNo).orElseThrow(() -> new IllegalArgumentException("해당 uNo의 회원이 존재하지 않습니다. uNo=" + uNo));
@@ -137,6 +152,7 @@ public class GroundServiceImpl implements GroundService {
         return result.getGNo();
     }
 
+    // 특정 구장 정보 조회 메서드
     @Override
     public GroundDTO get(Long gNo) {
         java.util.Optional<Ground> result = groundRepository.selectOne(gNo);
@@ -144,9 +160,9 @@ public class GroundServiceImpl implements GroundService {
         GroundDTO groundDTO = GroundDTO.entityToDTO(ground);
 
         return groundDTO;
-
     }
 
+    // 구장 정보 수정 메서드
     @Override
     public void modify(GroundDTO groundDTO) {
         Optional<Ground> result = groundRepository.findById(groundDTO.getGNo());
@@ -154,6 +170,7 @@ public class GroundServiceImpl implements GroundService {
         Ground ground = result.orElseThrow();
         log.info(result);
 
+        // 수정할 정보 설정
         ground.changeName(groundDTO.getName());
         ground.changeAddr(groundDTO.getAddr());
         ground.changeInAndOut(groundDTO.getInAndOut());
@@ -176,6 +193,7 @@ public class GroundServiceImpl implements GroundService {
         ground.changeRoopIsYn(groundDTO.isRoopIsYn());
         ground.changeState(groundDTO.getState());
 
+        // 기존 이미지 리스트 초기화 및 새로운 이미지 추가
         ground.clearList();
         List<String> uploadFileNames = groundDTO.getUploadFileNames();
         if (uploadFileNames != null && uploadFileNames.size() > 0) {
@@ -187,11 +205,13 @@ public class GroundServiceImpl implements GroundService {
         groundRepository.save(ground);
     }
 
+    // 구장 삭제 메서드
     @Override
     public void delete(Long gno) {
         groundRepository.deleteById(gno);
     }
 
+    // 구장 상태 변경 메서드
     @Override
     public void changeState(Long gNo, Long newState) {
         Ground ground = groundRepository.findById(gNo)
@@ -200,6 +220,7 @@ public class GroundServiceImpl implements GroundService {
         groundRepository.save(ground);
     }
 
+    // 특정 구장의 이미지 파일명 리스트 조회 메서드
     @Override
     public List<String> findAllImageFileNamesByGNo(Long gNo) {
         return groundRepository.findAllImageFileNamesByGNo(gNo);
