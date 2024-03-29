@@ -57,8 +57,8 @@ public class ReserveController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/")
-    public ResponseEntity<?> addReserve(@RequestBody Map<String, Object> request) {
+    @PostMapping("/cancel")
+    public ResponseEntity<?> cancelReserve(@RequestBody Map<String, Object> request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info(authentication.getPrincipal());
         log.info(authentication.getPrincipal().toString());
