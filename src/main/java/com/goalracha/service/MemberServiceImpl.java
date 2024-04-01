@@ -90,24 +90,23 @@ public class MemberServiceImpl implements MemberService {
         // 회원 번호로 회원 조회
         Optional<Member> result = memberRepository.findById(ownerPwModifyDTO.getUNo());
 
-        // 조회된 회원이 존재하지 않으면 null을 반환합니다.
+        // 조회된 회원이 존재하지 않으면 null을 반환
         Member member = result.orElse(null);
 
-        // 조회된 회원이 없으면 메서드를 종료합니다.
+        // 조회된 회원이 없으면 메서드를 종료
         if (member == null) {
             return;
         }
 
-        // 기존 비밀번호와 수정하려는 비밀번호를 비교하여 동일한지 검사합니다.
+        // 기존 비밀번호와 수정하려는 비밀번호를 비교
         if (passwordEncoder.matches(ownerPwModifyDTO.getOldpw(), member.getPw())) {
-            // 동일하다면 새로운 비밀번호로 회원 정보를 수정합니다.
+            // 동일하면 새로운 비밀번호로 정보 수정
             String encodedNewPassword = passwordEncoder.encode(ownerPwModifyDTO.getNewpw());
             member.ownerPwModify(encodedNewPassword);
-            // 수정된 회원 정보를 저장합니다.
+            // 수정된 회원 정보를 저장
             memberRepository.save(member);
         } else {
-            // 비밀번호가 일치하지 않는 경우에 대한 처리를 수행할 수 있습니다.
-            // 예를 들어, 예외를 던지거나 메시지를 반환하여 클라이언트에게 알릴 수 있습니다.
+            // 비밀번호 다르면 예외처리
             throw new IllegalArgumentException("기존 비밀번호가 일치하지 않습니다.");
         }
     }
@@ -116,21 +115,21 @@ public class MemberServiceImpl implements MemberService {
     @Override   // 개인회원 닉네임, 연락처 변경
     public void userModify(MemberModifyDTO memberModifyDTO) {
 
-        // 회원 번호로 회원을 조회합니다.
+        // 회원 번호로 회원을 조회
         Optional<Member> result = memberRepository.findById(memberModifyDTO.getUNo());
 
-        // 조회된 회원이 존재하지 않으면 null을 반환합니다.
+        // 조회된 회원이 존재하지 않으면 null을 반환
         Member member = result.orElse(null);
 
-        // 조회된 회원이 없으면 메서드를 종료합니다.
+        // 조회된 회원이 없으면 메서드를 종료
         if (member == null) {
             return;
         }
 
-        // 회원 정보를 수정합니다.
+        // 회원 정보를 수정
         member.userModify(memberModifyDTO.getUNo(), memberModifyDTO.getNickname(), memberModifyDTO.getTel());
 
-        // 수정된 회원 정보를 저장합니다.
+        // 수정된 회원 정보를 저장
         memberRepository.save(member);
     }
 
