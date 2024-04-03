@@ -269,7 +269,6 @@ public class ReserveServiceImpl implements ReserveService {
             return null;
         }
         Map<String, Object> tossResult = tossPostCancel(header, payKey);
-
         if (tossResult == null) {
             return null;
         }
@@ -279,7 +278,6 @@ public class ReserveServiceImpl implements ReserveService {
         }
         result.put("res", "good");
         return result;
-
     }
 
     // 사업자 예약 리스트 검색 (구장명, 고객명)
@@ -403,13 +401,11 @@ public class ReserveServiceImpl implements ReserveService {
                 log.error("불가능한 시간 " + ground.getOpenTime() + " " + ground.getCloseTime() + " " + oftime + " " + ground.getUsageTime());
                 return null;
             }
-
             List<Integer> getTimeList = reserveRepository.findReservationTimesByDate(ground.getGNo(), reqDate); //중복시간 있는지 확인
             if (getTimeList.contains(oftime)) {
                 log.error("중복시간 검출" + oftime + " " + getTimeList.toString());
                 return null;
             }
-
             Reserve newreserv = Reserve.builder()
                     .reserveDate(reqDate)
                     .time(oftime)
@@ -426,7 +422,6 @@ public class ReserveServiceImpl implements ReserveService {
         }
         result.put("resTimeList", resTimeList);
         result.put("date", reqDate);
-
 
         return result;
     }

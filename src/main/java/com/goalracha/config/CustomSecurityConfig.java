@@ -48,7 +48,6 @@ public class CustomSecurityConfig  {
         http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.csrf(config -> config.disable());
 
-
         http.formLogin(config -> {
             config.loginPage("/api/member/login");
             config.successHandler(new APILoginSuccessHandler()); // 추가

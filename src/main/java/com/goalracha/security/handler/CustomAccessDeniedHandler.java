@@ -13,7 +13,7 @@ import java.io.PrintWriter;
 import java.util.Map;
 
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
-    @Override
+    @Override //권한에러핸들러
     public void handle(HttpServletRequest request, HttpServletResponse response,
                        AccessDeniedException accessDeniedException) throws IOException, ServletException {
         Gson gson = new Gson();

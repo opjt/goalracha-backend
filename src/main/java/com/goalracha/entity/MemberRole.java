@@ -1,5 +1,5 @@
 package com.goalracha.entity;
 
 public enum MemberRole {
-    USER,OWNER,ADMIN; //유저,사장,어드민
+    USER,OWNER,ADMIN; //유저,사업자,어드민
 }

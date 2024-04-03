@@ -46,7 +46,10 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
     Page<UserReserveListDTO> userReservationStatus(@Param("uNo") Long uNo, Pageable pageable);
 
     // 예약현황 paymentKey
-    @Query("SELECT new com.goalracha.dto.reserve.UserReserveListDTO( r.payKey,max(r.ground.name),max(r.ground.addr),r.reserveDate,LISTAGG(to_char(r.time), ',') WITHIN GROUP (ORDER BY r.rNO), max(r.createDate), sum(r.price),r.state,max(r.ground.usageTime),'1','1','1') " +
+    @Query("SELECT new com.goalracha.dto.reserve.UserReserveListDTO( " +
+            "r.payKey,max(r.ground.name),max(r.ground.addr)," +
+            "r.reserveDate,LISTAGG(to_char(r.time), ',') WITHIN GROUP (ORDER BY r.rNO)," +
+            " max(r.createDate), sum(r.price),r.state,max(r.ground.usageTime),'1','1','1') " +
             "FROM Reserve r " +
             "GROUP BY r.payKey, r.reserveDate, r.ground, r.state,r.member.uNo " +
             "having r.member.uNo =:uNo ")
